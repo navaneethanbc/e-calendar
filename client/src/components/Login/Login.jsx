@@ -1,7 +1,7 @@
-
 import React from 'react'
-import blogo from'../assets/logo.png'
-import clogo from '../assets/background.jpg'
+import './Login.css'
+import blogo from'../../assets/logo.png'
+import clogo from '../../assets/background.jpg'
 const Login = () => {
   return (
     <div className='loginMain'>
