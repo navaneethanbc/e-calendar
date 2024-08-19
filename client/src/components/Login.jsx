@@ -1,6 +1,6 @@
 
 import React from 'react'
-import blogo from'../assets/logo.png'
+import blogo from'../assets/icon.png'
 import clogo from '../assets/background.jpg'
 const Login = () => {
   return (
