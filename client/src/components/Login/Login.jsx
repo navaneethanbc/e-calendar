@@ -1,13 +1,9 @@
-<<<<<<< HEAD:client/src/components/Login/Login.jsx
+
 import React from 'react'
 import './Login.css'
 import blogo from'../../assets/logo.png'
 import clogo from '../../assets/background.jpg'
-=======
-import React from "react";
-import blogo from "../assets/icon.png";
-import clogo from "../assets/background.jpg";
->>>>>>> 3653e1845d681d102c885bd69ffe313cd46d1166:client/src/components/Login.jsx
+
 const Login = () => {
   return (
     <div className="loginMain">
@@ -21,7 +17,7 @@ const Login = () => {
           <img className="callogo" src={clogo} alt="calendar logo" />
         </div>
         <div className="logincontainer">
-          <h1>Login</h1>
+          <h1>Lopgin</h1>
           <form action="">
             <input
               type="email"
