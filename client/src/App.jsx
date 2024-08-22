@@ -4,6 +4,8 @@ import Terms from "./components/Htmlpages/Terms";
 import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
 import Login from "./components/Login/Login";
+import Reset from "./components/ForgotPassword/Reset";
+import OTP from "./components/ForgotPassword/OTP";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -16,6 +18,9 @@ function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/otp" element={<OTP />} />
+          <Route path="/reset" element={<Reset />} />
+
           {/* Other routes */}
         </Routes>
       </BrowserRouter>
