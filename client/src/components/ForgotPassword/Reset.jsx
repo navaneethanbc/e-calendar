@@ -1,26 +1,31 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import clogo from '../../assets/background.jpg';
 
-const Reset = () => {
+const Reset = ({ setPassword }) => {
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Password reset logic here...
     if (newPassword !== confirmPassword) {
       alert("Passwords don't match!");
       return;
     }
-    // Proceed with password reset if passwords match
+    // if (newPassword.length < 8) {
+    //   alert("Password must be at least 8 characters long!");
+    //   return;
+    // }
+    setPassword(newPassword);
+    navigate("/");
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <img className="w-1/2 mx-auto ml-1 mr-5 mb-6" src={clogo} alt="Calendar" />
-      <div className="bg-white p-8 rounded-lg  w-96">
-        
+      <div className="bg-white p-8 rounded-lg w-96">
         <h1 className="text-4xl font-bold text-start mb-6">Change Password</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -34,6 +39,7 @@ const Reset = () => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
+              minLength={8}
             />
           </div>
           <div className="mb-6">
@@ -47,6 +53,7 @@ const Reset = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              minLength={8}
             />
           </div>
           <div className="flex items-center mb-6">
