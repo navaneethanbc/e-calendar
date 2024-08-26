@@ -11,7 +11,7 @@ import { useState } from "react";
 
 function App() {
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [otp,setOtp] = useState('')
 
@@ -20,8 +20,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login 
-          email={email} 
-          setEmail={setEmail}
+          email={username} 
+          setEmail={setUsername}
           password={password}
           setPassword={setPassword}/>} 
           />
@@ -32,8 +32,8 @@ function App() {
           <Route path="/otp" element={<OTP 
           otp={otp}
           setOtp={setOtp}
-          email={email}
-          setEmail={setEmail}/>} 
+          email={username}
+          setEmail={setUsername}/>} 
           />
           <Route path="/reset" element={<Reset 
           setPassword={setPassword}/>} 

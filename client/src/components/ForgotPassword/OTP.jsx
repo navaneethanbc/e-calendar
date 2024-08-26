@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clogo from '../../assets/background.jpg';
 
-const OTP = ({ otp, setOtp, email, setEmail }) => {
+const OTP = ({ otp, setOtp, username, setUsername }) => {
   const [code, setCode] = useState(['', '', '', '']);
   const navigate = useNavigate();
 
@@ -39,16 +39,16 @@ const OTP = ({ otp, setOtp, email, setEmail }) => {
     <div className="flex items-center justify-center min-h-screen bg-white">
       <img className="w-1/2 mx-auto ml-1 mr-5 mb-6" src={clogo} alt="Calendar" />
       <div className="bg-white p-20 rounded-lg w-99">
-        <h1 className="text-2xl font-bold text-center mb-4">Email Verification</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Account Verification</h1>
         <form onSubmit={processOtp}>
-          <label htmlFor="email" className="sr-only">Email address</label>
+          <label htmlFor="username" className="sr-only">username</label>
           <input
-            type="email"
-            id="email"
-            placeholder="Email address"
+            type="text"
+            id="username"
+            placeholder="username"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
           />
           <button 
