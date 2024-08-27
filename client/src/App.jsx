@@ -8,36 +8,45 @@ import Reset from "./components/ForgotPassword/Reset";
 import OTP from "./components/ForgotPassword/OTP";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
+import CalendarView from "./components/CalendarView";
 
 function App() {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [otp,setOtp] = useState('')
+  const [otp, setOtp] = useState("");
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login 
-          email={username} 
-          setEmail={setUsername}
-          password={password}
-          setPassword={setPassword}/>} 
+          <Route
+            path="/"
+            element={
+              <Login
+                email={username}
+                setEmail={setUsername}
+                password={password}
+                setPassword={setPassword}
+              />
+            }
           />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/otp" element={<OTP 
-          otp={otp}
-          setOtp={setOtp}
-          email={username}
-          setEmail={setUsername}/>} 
+          <Route path="/calendar" element={<CalendarView />} />
+          <Route
+            path="/otp"
+            element={
+              <OTP
+                otp={otp}
+                setOtp={setOtp}
+                email={username}
+                setEmail={setUsername}
+              />
+            }
           />
-          <Route path="/reset" element={<Reset 
-          setPassword={setPassword}/>} 
-          />
+          <Route path="/reset" element={<Reset setPassword={setPassword} />} />
 
           {/* Other routes */}
         </Routes>
