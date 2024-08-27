@@ -4,7 +4,8 @@ import axios from "../../api/axios";
 import InputField from "./InputField";
 import RegText from "./RegText";
 import "../.././index.css";
-import image from "../../assets/background.jpg";
+import clogo from "../../assets/background.jpg";
+import Header from "../Header"
 
 const USER_REG = /^[A-z]{3,20}$/;
 const PWD_REG = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -99,10 +100,10 @@ const Register = () => {
           employeeID,
           pwd,
         }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+         {
+           headers: { "Content-Type": "application/json" },
+           withCredentials: true,
+         }
       );
       console.log(response?.data);
       console.log(response?.accessToken);
@@ -128,21 +129,22 @@ const Register = () => {
   };
 
   return (
-    <>
-      <div>
-        <img src={image} alt="Background" />
-      </div>
-      <div>
+    <div className="flex flex-col items-center justify-center min-h-screen w-full p-0 m-0">
+      <Header />
+      <div className="flex flex-col md:flex-row justify-start mt-12 w-full px-6">
+        <div className="flex-1 max-w-full md:max-w-1/2 pr-8">
+          <img className="w-full h-auto" src={clogo} alt="Calendar logo" />
+        </div>
         {success ? (
           <section>
             <h1>Success!</h1>
             <p>
-              <a href="/sign-in">Sign In</a>
+              <a href="#">Sign In</a>
             </p>
           </section>
         ) : (
           <section className="box-border border-none">
-            <h1 className="text-5xl font-bold ">Register</h1>
+            <h1 className="text-3xl font-bold ">Register</h1>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>
               {errMsg}
             </p>
@@ -150,7 +152,7 @@ const Register = () => {
 
             <form
               onSubmit={handleSubmit}
-              className="box-content px-3 border-2 shadow-sm py-7 shadow-black "
+              className="max-w-md flex flex-col p-3"
             >
               <InputField
                 userID="firstName"
@@ -266,7 +268,7 @@ const Register = () => {
                     validPwd &&
                     validConfirm
                   ) {
-                    window.location.href = "/sign-in";
+                    window.location.href = "/";
                   } else {
                     setErrMsg("Invalid Entry");
                   }
@@ -278,7 +280,7 @@ const Register = () => {
           </section>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
