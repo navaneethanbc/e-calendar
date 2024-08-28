@@ -21,6 +21,7 @@ function CalendarView() {
   const [reminderType, setReminderType] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [view, setView] = useState(Views.MONTH);
+
   useEffect(() => {
     handleSearch();
   }, [
@@ -100,58 +101,68 @@ function CalendarView() {
   };
 
   return (
-    <div className="calendar-container">
-      <SearchBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        category={category}
-        setCategory={setCategory}
-        recurrenceType={recurrenceType}
-        setRecurrenceType={setRecurrenceType}
-        reminderType={reminderType}
-        setReminderType={setReminderType}
-        onSearch={handleSearch}
-      />
-
-      <Sidebar
-        setView={setView}
-        ViewsDAY={Views.DAY}
-        ViewsWEEK={Views.WEEK}
-        ViewsMONTH={Views.MONTH}
-        eventFcn={() => {
-          setSelectedEvent(null);
-          toggleOffcanvas();
-        }}
-      />
-      <AddEventBar
-        show={showOffcanvas}
-        onHide={() => setShowOffcanvas(false)}
-        onAddEvent={handleAddEvent}
-        onEditEvent={handleEditEvent}
-        onDeleteEvent={handleDeleteEvent}
-        selectedEvent={selectedEvent}
-      />
-
-      <Calendar
-        localizer={localizer}
-        events={filteredEvents}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "100vh", margin: "30px", textAlign: "center" }}
-        onSelectEvent={handleSelectEvent}
-        components={{
-          event: Event,
-        }}
-        eventPropGetter={(event) => ({
-          style: getEventStyle(event),
-        })}
-        view={view}
-        onView={(newView) => setView(newView)}
-      />
+    <div className="flex flex-col min-h-screen">
+      <div className="w-full p-4">
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          category={category}
+          setCategory={setCategory}
+          recurrenceType={recurrenceType}
+          setRecurrenceType={setRecurrenceType}
+          reminderType={reminderType}
+          setReminderType={setReminderType}
+          onSearch={handleSearch}
+        />
+      </div>
+      <div className="flex flex-grow">
+        <div className="w-full p-4 md:w-1/4">
+          <Sidebar
+            setView={setView}
+            ViewsDAY={Views.DAY}
+            ViewsWEEK={Views.WEEK}
+            ViewsMONTH={Views.MONTH}
+            eventFcn={() => {
+              setSelectedEvent(null);
+              toggleOffcanvas();
+            }}
+          />
+        </div>
+        <div className="w-full p-4 md:w-3/4">
+          <AddEventBar
+            show={showOffcanvas}
+            onHide={() => setShowOffcanvas(false)}
+            onAddEvent={handleAddEvent}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
+            selectedEvent={selectedEvent}
+          />
+          <Calendar
+            localizer={localizer}
+            events={filteredEvents}
+            startAccessor="start"
+            endAccessor="end"
+            style={{
+              height: "calc(100vh - 64px)",
+              margin: "0 auto",
+              textAlign: "center",
+            }}
+            onSelectEvent={handleSelectEvent}
+            components={{
+              event: Event,
+            }}
+            eventPropGetter={(event) => ({
+              style: getEventStyle(event),
+            })}
+            view={view}
+            onView={(newView) => setView(newView)}
+          />
+        </div>
+      </div>
     </div>
   );
 }

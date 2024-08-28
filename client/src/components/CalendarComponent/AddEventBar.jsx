@@ -121,9 +121,10 @@ const AddEventBar = ({
     >
       <div className="sidebar-content">
         <div className="sidebar-header">
-          <h3 id="sidebar-title">
+          <h1 id="sidebar-title" className="font-bold">
             {selectedEvent ? "Edit Event" : "Add Event"}
-          </h3>
+          </h1>
+
           <button
             className="close-btn"
             onClick={onHide}
@@ -217,16 +218,17 @@ const AddEventBar = ({
             <option value="1 day before">1 day before</option>
           </select>
 
-          <input
-            id="isGuest"
-            type="checkbox"
-            checked={isGuest}
-            onChange={(e) => setIsGuest(e.target.checked)}
-          />
-          <label htmlFor="isGuest">Invite Guests?</label>
+          <br />
 
-          <br />
-          <br />
+          <div className="flex px-4 py-2 space-x-3 items-left">
+            <input
+              id="isGuest"
+              type="checkbox"
+              checked={isGuest}
+              onChange={(e) => setIsGuest(e.target.checked)}
+            />
+            <label htmlFor="isGuest">Invite Guests?</label>
+          </div>
 
           <button className="btn btn-primary" onClick={handleSubmit}>
             {selectedEvent ? "Update" : "Submit"}

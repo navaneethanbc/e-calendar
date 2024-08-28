@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import logo from "../../assets/logo.png";
 
 const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
@@ -33,7 +34,11 @@ const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
 
   return (
     <div className="ml-6">
-      <div className="flex flex-col min-w-56 max-w-72 ">
+      <div className="flex flex-col max-w-72">
+        <img src={logo} alt="Logo" className="w-48 h-auto" />
+      </div>
+
+      <div className="flex flex-col max-w-72 ">
         <button
           className="flex items-center px-4 py-2 font-bold border-t-4 border-gray-300 btn"
           onClick={() => setView(ViewsDAY)}
@@ -55,9 +60,8 @@ const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
         </button>
       </div>
       <br />
-      <br />
 
-      <div className="flex flex-col min-w-56 max-w-72">
+      <div className="flex flex-col max-w-72">
         <button
           className="flex items-center px-4 py-2 bg-green-500 border-t-4 border-b-4 border-gray-300 btn"
           onClick={eventFcn}
@@ -67,11 +71,8 @@ const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
       </div>
 
       <br />
-      <br />
-      <br />
-      <br />
 
-      <div className="flex flex-col min-w-56 max-w-72">
+      <div className="flex flex-col max-w-72">
         <div className="flex items-center px-4 py-2 border-b-4 border-gray-300">
           <h2 className="text-lg font-semibold">Other Calendars</h2>
           <a
@@ -179,6 +180,14 @@ const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
             </label>
           </div>
         </div>
+      </div>
+
+      <br />
+      <div className="flex items-center px-4 mt-2 space-x-2 border-t-4 border-gray-300 max-w-72">
+        <a href="calendar/help" style={{ textDecoration: "underline" }}>
+          <i className="mr-3 fas fa-question-circle "></i>
+          Help and Feedback
+        </a>
       </div>
     </div>
   );

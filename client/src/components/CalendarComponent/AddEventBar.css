@@ -1,10 +1,12 @@
+/* AddEventBar.css */
+
 .sidebar {
   position: fixed;
   top: 0;
   left: -250px;
   width: 270px;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: #e0dec2;
   transition: left 0.3s ease;
   z-index: 1000;
 }
@@ -31,34 +33,41 @@
   cursor: pointer;
   color: white;
   border-radius: 10px;
+  padding: 10px;
 }
 
 .sidebar-body {
   overflow-y: auto;
   height: calc(100% - 60px);
 }
-.form-group {
-  margin-bottom: 15px;
-}
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 input[type="text"],
-input[type="date"],
-input[type="time"] {
-  width: 90%;
+input[type="url"],
+input[type="datetime-local"],
+textarea,
+select {
+  width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box; /* Ensure padding is included in width */
+  margin-bottom: 10px; /* Adds space between form elements */
+}
+
+textarea {
+  resize: vertical; /* Allow vertical resizing for textarea */
 }
 
 button {
   margin-top: 15px;
 }
+
 .btn-primary {
   background-color: green;
   border: none;
@@ -67,6 +76,7 @@ button {
   color: white;
   border-radius: 10px;
 }
+
 .btn-danger {
   background-color: red;
   border: none;
@@ -74,4 +84,5 @@ button {
   cursor: pointer;
   color: white;
   margin-left: 10px;
+  border-radius: 10px;
 }
