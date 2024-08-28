@@ -9,6 +9,7 @@ import OTP from "./components/ForgotPassword/OTP";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CalendarView from "./components/CalendarView";
+import Sidebar from "./components/CalendarComponent/Sidebar";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -30,6 +31,7 @@ function App() {
               />
             }
           />
+          <Route path="/a" element={<Sidebar />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

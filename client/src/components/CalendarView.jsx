@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
-import Sidebar from "./CalendarComponent/AddEventBar";
+import AddEventBar from "./CalendarComponent/AddEventBar";
 import Event from "./CalendarComponent/Event";
 import SearchBar from "./CalendarComponent/SearchBar";
+import Sidebar from "./CalendarComponent/Sidebar";
 
 const localizer = momentLocalizer(moment);
 
@@ -115,21 +116,18 @@ function CalendarView() {
         setReminderType={setReminderType}
         onSearch={handleSearch}
       />
-      <div className="btn-container">
-        <button
-          className="btn-event"
-          onClick={() => {
-            setSelectedEvent(null);
-            toggleOffcanvas();
-          }}
-        >
-          Add Event
-        </button>
-        <button onClick={() => setView(Views.DAY)}>Day View</button>
-        <button onClick={() => setView(Views.WEEK)}>Week View</button>
-        <button onClick={() => setView(Views.MONTH)}>Month View</button>
-      </div>
+
       <Sidebar
+        setView={setView}
+        ViewsDAY={Views.DAY}
+        ViewsWEEK={Views.WEEK}
+        ViewsMONTH={Views.MONTH}
+        eventFcn={() => {
+          setSelectedEvent(null);
+          toggleOffcanvas();
+        }}
+      />
+      <AddEventBar
         show={showOffcanvas}
         onHide={() => setShowOffcanvas(false)}
         onAddEvent={handleAddEvent}
@@ -137,6 +135,7 @@ function CalendarView() {
         onDeleteEvent={handleDeleteEvent}
         selectedEvent={selectedEvent}
       />
+
       <Calendar
         localizer={localizer}
         events={filteredEvents}

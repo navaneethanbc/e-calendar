@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./Sidebar.css";
+import "./AddEventBar.css";
 import moment from "moment";
 
-const Sidebar = ({
+const AddEventBar = ({
   show,
   onHide,
   onAddEvent,
@@ -217,14 +217,15 @@ const Sidebar = ({
             <option value="1 day before">1 day before</option>
           </select>
 
-          <label htmlFor="isGuest">Invite Guests?</label>
           <input
             id="isGuest"
             type="checkbox"
             checked={isGuest}
             onChange={(e) => setIsGuest(e.target.checked)}
           />
+          <label htmlFor="isGuest">Invite Guests?</label>
 
+          <br />
           <br />
 
           <button className="btn btn-primary" onClick={handleSubmit}>
@@ -242,4 +243,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default AddEventBar;
