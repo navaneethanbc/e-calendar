@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
-import Sidebar from "./CalendarComponent/Sidebar";
+import Sidebar from "./CalendarComponent/AddEventBar";
 import Event from "./CalendarComponent/Event";
 import SearchBar from "./CalendarComponent/SearchBar";
 
@@ -19,7 +19,7 @@ function CalendarView() {
   const [recurrenceType, setRecurrenceType] = useState("");
   const [reminderType, setReminderType] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
-
+  const [view, setView] = useState(Views.MONTH);
   useEffect(() => {
     handleSearch();
   }, [
@@ -92,9 +92,9 @@ function CalendarView() {
 
     const height = 100 / eventCount;
     return {
-      backgroundColor: event.color || "#F6C839",
+      backgroundColor: "#F6C839",
       height: `${height}%`,
-      borderLeft: `5px solid ${event.color || "#F6C839"}`,
+      borderLeft: `5px solid #F6C839`,
     };
   };
 
@@ -125,6 +125,9 @@ function CalendarView() {
         >
           Add Event
         </button>
+        <button onClick={() => setView(Views.DAY)}>Day View</button>
+        <button onClick={() => setView(Views.WEEK)}>Week View</button>
+        <button onClick={() => setView(Views.MONTH)}>Month View</button>
       </div>
       <Sidebar
         show={showOffcanvas}
@@ -147,6 +150,8 @@ function CalendarView() {
         eventPropGetter={(event) => ({
           style: getEventStyle(event),
         })}
+        view={view}
+        onView={(newView) => setView(newView)}
       />
     </div>
   );

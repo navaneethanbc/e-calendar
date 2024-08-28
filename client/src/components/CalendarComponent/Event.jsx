@@ -4,12 +4,7 @@ import "./Event.css";
 const Event = ({ event }) => (
   <div
     className="event-container"
-    style={{
-      backgroundColor: event.color,
-      borderLeft: `5px solid ${event.color}`,
-      height: `${event.height}px`,
-      position: "relative",
-    }}
+    style={{ height: `${event.height}px`, position: "relative" }}
   >
     <div className="event-title">
       <strong>{event.title}</strong>
