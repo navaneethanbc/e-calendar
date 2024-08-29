@@ -9,8 +9,8 @@ import OTP from "./components/ForgotPassword/OTP";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CalendarView from "./components/CalendarView";
-import Sidebar from "./components/CalendarComponent/Sidebar";
 import Help from "./components/CalendarComponent/Help";
+import Notification from "./components/Notification";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -32,6 +32,7 @@ function App() {
               />
             }
           />
+          <Route path="notification" element={<Notification />} />
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
