@@ -1,9 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import background from "../assets/background.jpg";
 import NavigationBAr from "./NavigationBar";
+import axios from "axios";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:10001/api/notification"
+        );
+        setNotifications(response.data);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   function markAllUnread() {
     setNotifications((prev) => prev.map((n) => ({ ...n, hasBeenRead: true })));

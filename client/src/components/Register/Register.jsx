@@ -5,7 +5,8 @@ import InputField from "./InputField";
 import RegText from "./RegText";
 import "../.././index.css";
 import clogo from "../../assets/background.jpg";
-import Header from "../Header"
+import Header from "../Header";
+import { useNavigate } from "react-router-dom";
 
 const USER_REG = /^[A-z]{3,20}$/;
 const PWD_REG = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -14,6 +15,7 @@ const EMP_ID = /^(?:\d{8,12}|[A-Za-z0-9]{7}[A-Za-z])$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Register = () => {
+  const navigate = useNavigate();
   const errRef = useRef();
 
   const [firstName, setFirstName] = useState("");
@@ -100,10 +102,10 @@ const Register = () => {
           employeeID,
           pwd,
         }),
-         {
-           headers: { "Content-Type": "application/json" },
-           withCredentials: true,
-         }
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
       console.log(response?.data);
       console.log(response?.accessToken);
@@ -129,10 +131,10 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full p-0 m-0">
+    <div className="flex flex-col items-center justify-center w-full min-h-screen p-0 m-0">
       <Header />
-      <div className="flex flex-col md:flex-row justify-start mt-12 w-full px-6">
-        <div className="flex-1 max-w-full md:max-w-1/2 pr-8">
+      <div className="flex flex-col justify-start w-full px-6 mt-12 md:flex-row">
+        <div className="flex-1 max-w-full pr-8 md:max-w-1/2">
           <img className="w-full h-auto" src={clogo} alt="Calendar logo" />
         </div>
         {success ? (
@@ -152,7 +154,7 @@ const Register = () => {
 
             <form
               onSubmit={handleSubmit}
-              className="max-w-md flex flex-col p-3"
+              className="flex flex-col max-w-md p-3"
             >
               <InputField
                 userID="firstName"
@@ -268,7 +270,7 @@ const Register = () => {
                     validPwd &&
                     validConfirm
                   ) {
-                    window.location.href = "/";
+                    navigate("/");
                   } else {
                     setErrMsg("Invalid Entry");
                   }

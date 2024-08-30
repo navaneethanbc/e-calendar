@@ -32,7 +32,7 @@ function App() {
               />
             }
           />
-          <Route path="notification" element={<Notification />} />
+          <Route path="/notification" element={<Notification />} />
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
