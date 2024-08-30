@@ -1,43 +1,29 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import React from "react";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 
 const Header = () => {
   return (
     <div>
-      <AppBar
-        position="absolute"
-        elevation={0}
-        sx={{
-          top: 0,
-          bottom: "auto",
-          bgcolor: "white",
-          borderBottom: 0.1,
-          borderBottomColor: "silver",
-          maxHeight: "88px",
-        }}
-      >
+      <AppBar color="transparent" position="fixed" elevation={1}>
         <Toolbar>
           <Box
             component="img"
             src="src/assets/icon.png"
             alt="Logo"
-            sx={{
-              height: 100,
-              mr: 3,
-              ml: 3,
-            }}
+            height={{ xs: 70, sm: 100 }}
+            mr={{ xs: 1, sm: 3 }}
+            ml={{ xs: -1, sm: 3 }}
+            display={{ xs: "block", sm: "block" }}
           />
+
           <Typography
-            variant="h3"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "Kanit",
-              fontWeight: "bold",
-              color: "rgb(54,53,51)",
-              mt: 2.75,
-              display: { xs: "inline-block", sm: "block" },
-            }}
+            component="text"
+            fontSize={{ xs: 35, sm: 50 }}
+            fontFamily="Kanit"
+            fontWeight="bold"
+            color="rgb(54,53,51)"
+            mt={{ xs: 1.85, sm: 2.75 }}
+            display={{ xs: "block", sm: "block" }}
           >
             Calendar
           </Typography>
