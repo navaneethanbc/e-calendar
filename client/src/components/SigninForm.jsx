@@ -96,7 +96,7 @@ const SigninForm = () => {
         >
           Sign in
         </button>
-        <Link to="/resetpassword" className="text-indigo-600 text-sm ">
+        <Link to="/reset" className="text-indigo-600 text-sm ">
           Forgot password?
         </Link>
       </div>
