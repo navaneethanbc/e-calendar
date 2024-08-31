@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
 import Joi from "joi";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import jwt from "jsonwebtoken";
 import passwordComplexity from "joi-password-complexity";
 import {
   generateAuthToken,
@@ -14,8 +13,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: [true, "Username is required"],
-      unique: [true, "Username is already taken"],
-      match: [/^[a-zA-Z0-9]+$/, "Username is invalid"],
+      unique: true,
       trim: true,
       index: true,
     },
@@ -28,23 +26,21 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email is required"],
+      unique: true,
       trim: true,
       index: true,
     },
     fullname: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "Names are required"],
       trim: true,
     },
     employee_id: {
       type: String,
       required: [true, "Employee ID is required"],
-      // unique: true,
+      unique: true,
       trim: true,
-    },
-    last_login: {
-      type: Date,
-      required: true,
+      index: true,
     },
     branch: {
       type: String,
@@ -52,6 +48,12 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
+      default: "user",
+      required: true,
+    },
+    last_login: {
+      type: Date,
+      default: null,
       required: true,
     },
   },
@@ -85,24 +87,4 @@ userSchema.methods.generateRefreshToken = function () {
 
 userSchema.plugin(mongooseAggregatePaginate);
 
-const User = mongoose.model("User", userSchema);
-
-// validate user
-const validateUser = (user) => {
-  const schema = Joi.object({
-    username: Joi.string().alphanum().required().label("Username"),
-    password: passwordComplexity().required().label("Password"),
-    email: Joi.string().email().required().label("Email"),
-    fullname: Joi.string()
-      .required()
-      .label("Fullname")
-      .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)+$")),
-    employee_id: Joi.string().alphanum().required(),
-    branch: Joi.string().required(),
-    role: Joi.string().valid("admin", "user").required(),
-  });
-
-  return schema.validate(user);
-};
-
-export { User, validateUser };
+export const User = mongoose.model("User", userSchema);
