@@ -10,7 +10,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import CalendarView from "./components/CalendarView";
 import Help from "./components/CalendarComponent/Help";
-import Notification from "./components/Notification1";
+import Notification from "./components/Notification";
 
 function App() {
   const [username, setUsername] = useState("");
