@@ -1,7 +1,7 @@
 import Joi from "joi";
 import passwordComplexity from "joi-password-complexity";
 
-export const validateUser = (user) => {
+export const validateRegister = (user) => {
   const schema = Joi.object({
     username: Joi.string().alphanum().required().label("Username"),
     password: passwordComplexity().required().label("Password"),
@@ -12,6 +12,15 @@ export const validateUser = (user) => {
       .pattern(new RegExp("^[A-Za-z]+( [A-Za-z]+)+$")),
     employee_id: Joi.string().alphanum().required().label("Employee ID"),
     branch: Joi.string().required().label("Branch"),
+  });
+
+  return schema.validate(user);
+};
+
+export const validateLogin = (user) => {
+  const schema = Joi.object({
+    username: Joi.string().alphanum().required().label("Username"),
+    password: Joi.string().required().label("Password"),
   });
 
   return schema.validate(user);

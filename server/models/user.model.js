@@ -1,8 +1,6 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
-import Joi from "joi";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import passwordComplexity from "joi-password-complexity";
 import {
   generateAuthToken,
   generateRefreshToken,
