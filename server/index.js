@@ -9,7 +9,12 @@ dotenv.config({ path: "./.env" });
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: `${process.env.CORS_ORIGIN}`,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // routes
