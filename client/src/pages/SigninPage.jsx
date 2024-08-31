@@ -14,16 +14,6 @@ function SigninPage() {
         alignItems={"center"}
       >
         <Box
-          // flex={5}
-          component="img"
-          src="src/assets/background.jpg"
-          alt="background"
-          height={550}
-          mt={17}
-          borderColor="transparent"
-          display={{ xs: "none", sm: "block" }}
-        />
-        <Box
           component="img"
           src="src/assets/mobilebg.jpg"
           alt="background"
@@ -36,12 +26,22 @@ function SigninPage() {
         <Box
           // flex={2}
           mt={{ xs: -1.5, sm: 25 }}
-          ml={{ xs: 7.75, sm: 20 }}
+          ml={{ xs: 7.75, sm: 15 }}
           mr={{ xs: 0, sm: 15 }}
           width={{ xs: 250, sm: 300 }}
         >
           <SigninForm />
         </Box>
+        <Box
+          // flex={5}
+          component="img"
+          src="src/assets/background.jpg"
+          alt="background"
+          height={550}
+          mt={17}
+          borderColor="transparent"
+          display={{ xs: "none", sm: "block" }}
+        />
       </Box>
       <Footer />
     </>
