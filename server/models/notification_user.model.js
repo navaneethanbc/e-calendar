@@ -12,3 +12,8 @@ const notificationUserSchema = new Schema({
     ref: "Notification",
   },
 });
+
+export const NotificationUser = mongoose.model(
+  "NotificationUser",
+  notificationUserSchema
+);

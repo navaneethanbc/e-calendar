@@ -1,15 +1,14 @@
 import React from "react";
-import "./Event.css";
 
 const Event = ({ event }) => (
   <div
-    className="event-container"
+    className={`p-2 rounded-md text-white overflow-hidden flex flex-col justify-center hover:bg-gray-800 cursor-pointer`}
     style={{ height: `${event.height}px`, position: "relative" }}
   >
-    <div className="event-title">
+    <div className="mb-1 font-bold">
       <strong>{event.title}</strong>
     </div>
-    <div className="event-details">
+    <div className="text-xs">
       <p>{event.description}</p>
       {event.meetingLink && (
         <p>
