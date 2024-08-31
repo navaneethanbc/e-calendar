@@ -1,44 +1,35 @@
-import "./App.css";
-import Register from "./components/Register/Register";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import SigninPage from "./pages/SigninPage";
+import RegisterPage from "./pages/RegisterPage";
+import CalendarView from "./components/CalendarView";
+import Notification from "./components/Notification";
+import Help from "./components/CalendarComponent/Help";
 import Terms from "./components/Htmlpages/Terms";
 import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
-import Login from "./components/Login/Login";
 import Reset from "./components/ForgotPassword/Reset";
 import OTP from "./components/ForgotPassword/OTP";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
-import CalendarView from "./components/CalendarView";
-import Help from "./components/CalendarComponent/Help";
-import Notification from "./components/Notification";
 
 function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const user = localStorage.getItem("token");
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Login
-                email={username}
-                setEmail={setUsername}
-                password={password}
-                setPassword={setPassword}
-              />
-            }
-          />
+          <Route path="/" element={<SigninPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          {user && <Route path="/calendar" element={<CalendarView />} />}
           <Route path="/notification" element={<Notification />} />
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/calendar" element={<CalendarView />} />
+          <Route path="/reset" element={<Reset setPassword={setPassword} />} />
           <Route
             path="/otp"
             element={
@@ -50,7 +41,6 @@ function App() {
               />
             }
           />
-          <Route path="/reset" element={<Reset setPassword={setPassword} />} />
 
           {/* Other routes */}
         </Routes>
