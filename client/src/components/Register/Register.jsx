@@ -4,7 +4,9 @@ import axios from "../../api/axios";
 import InputField from "./InputField";
 import RegText from "./RegText";
 import "../.././index.css";
-import image from "../../assets/background.jpg";
+import clogo from "../../assets/background.jpg";
+import Header from "../Header";
+import { useNavigate } from "react-router-dom";
 
 const USER_REG = /^[A-z]{3,20}$/;
 const PWD_REG = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -13,6 +15,7 @@ const EMP_ID = /^(?:\d{8,12}|[A-Za-z0-9]{7}[A-Za-z])$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Register = () => {
+  const navigate = useNavigate();
   const errRef = useRef();
 
   const [firstName, setFirstName] = useState("");
@@ -128,21 +131,22 @@ const Register = () => {
   };
 
   return (
-    <>
-      <div>
-        <img src={image} alt="Background" />
-      </div>
-      <div>
+    <div className="flex flex-col items-center justify-center w-full min-h-screen p-0 m-0">
+      <Header />
+      <div className="flex flex-col justify-start w-full px-6 mt-12 md:flex-row">
+        <div className="flex-1 max-w-full pr-8 md:max-w-1/2">
+          <img className="w-full h-auto" src={clogo} alt="Calendar logo" />
+        </div>
         {success ? (
           <section>
             <h1>Success!</h1>
             <p>
-              <a href="/sign-in">Sign In</a>
+              <a href="#">Sign In</a>
             </p>
           </section>
         ) : (
           <section className="box-border border-none">
-            <h1 className="text-5xl font-bold ">Register</h1>
+            <h1 className="text-3xl font-bold ">Register</h1>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>
               {errMsg}
             </p>
@@ -150,7 +154,7 @@ const Register = () => {
 
             <form
               onSubmit={handleSubmit}
-              className="box-content px-3 border-2 shadow-sm py-7 shadow-black "
+              className="flex flex-col max-w-md p-3"
             >
               <InputField
                 userID="firstName"
@@ -266,7 +270,7 @@ const Register = () => {
                     validPwd &&
                     validConfirm
                   ) {
-                    window.location.href = "/sign-in";
+                    navigate("/");
                   } else {
                     setErrMsg("Invalid Entry");
                   }
@@ -278,7 +282,7 @@ const Register = () => {
           </section>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

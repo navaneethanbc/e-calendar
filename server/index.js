@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/user.route.js";
-// import authRoutes from "./routes/auth.route.js";
 
 dotenv.config({ path: "./.env" });
 
