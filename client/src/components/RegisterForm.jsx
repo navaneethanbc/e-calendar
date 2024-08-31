@@ -15,7 +15,7 @@ const RegisterForm = () => {
     firstname: "",
     surname: "",
     email: "",
-    employeeID: "",
+    employee_id: "",
     branch: "",
     username: "",
     password: "",
@@ -49,19 +49,27 @@ const RegisterForm = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
 
+    const { firstname, surname, confirmPassword, ...restUserData } = user;
+
+    const fullname = `${firstname.trim()} ${surname.trim()}`;
+
     if (user.password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
     }
 
     if (user.password !== user.confirmPassword) {
-      setError("Password does not match");
+      setError("Passwords do not match");
       return;
     }
 
+    const userData = { fullname, ...restUserData };
+
+    console.log("User data before sending:", userData);
+
     try {
-      const url = "http://localhost:8000/api/users";
-      const res = await axios.post(url, user);
+      const url = "http://localhost:8000/api/users/register";
+      const res = await axios.post(url, userData);
       navigate("/");
       console.log(res.message);
     } catch (error) {
@@ -72,6 +80,7 @@ const RegisterForm = () => {
       ) {
         setError(error.response.data.message);
       } else {
+        console.error("Unexpected error:", error);
         setError("Something went wrong. Please try again later.");
       }
     }
@@ -122,10 +131,10 @@ const RegisterForm = () => {
         <TextField
           type="email"
           placeholder="Email address"
-          required
           name="email"
           onChange={handleChange}
           value={user.email}
+          required
           size="small"
           fullWidth
           margin="dense"
@@ -136,9 +145,9 @@ const RegisterForm = () => {
         <TextField
           type="text"
           placeholder="Employee ID"
-          name="employeeID"
+          name="employee_id"
           onChange={handleChange}
-          value={user.employeeID}
+          value={user.employee_id}
           required
           size="small"
           fullWidth
