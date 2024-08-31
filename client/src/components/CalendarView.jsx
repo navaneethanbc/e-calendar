@@ -46,7 +46,7 @@ function CalendarView() {
   const handleEditEvent = (updatedEvent) => {
     setEvents(
       events.map((event) =>
-        event.id === updatedEvent.id ? updatedEvent : event
+        event._id === updatedEvent._id ? updatedEvent : event
       )
     );
     setShowOffcanvas(false);
@@ -54,7 +54,7 @@ function CalendarView() {
 
   const handleDeleteEvent = (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      setEvents(events.filter((event) => event.id !== id));
+      setEvents(events.filter((event) => event._id !== id));
       setShowOffcanvas(false);
     }
   };
@@ -66,7 +66,7 @@ function CalendarView() {
 
   const handleSearch = () => {
     const filtered = events.filter((event) => {
-      const eventStartDate = moment(event.start).format("YYYY-MM-DD");
+      const eventStartDate = moment(event.starts_at).format("YYYY-MM-DD");
       const isWithinDateRange =
         (!startDate || eventStartDate >= startDate) &&
         (!endDate || eventStartDate <= endDate);
@@ -79,8 +79,8 @@ function CalendarView() {
               .toLowerCase()
               .includes(searchQuery.toLowerCase()))) &&
         (category === "" || event.category === category) &&
-        (recurrenceType === "" || event.recurrenceType === recurrenceType) &&
-        (reminderType === "" || event.reminderType === reminderType)
+        (recurrenceType === "" || event.reccurence === recurrenceType) &&
+        (reminderType === "" || event.reminder === reminderType)
       );
     });
 
@@ -89,7 +89,7 @@ function CalendarView() {
 
   const getEventStyle = (event) => {
     const eventCount = events.filter((e) =>
-      moment(e.start).isSame(event.start, "day")
+      moment(e.starts_at).isSame(event.starts_at, "day")
     ).length;
 
     const height = 100 / eventCount;
@@ -144,8 +144,8 @@ function CalendarView() {
           <Calendar
             localizer={localizer}
             events={filteredEvents}
-            startAccessor="start"
-            endAccessor="end"
+            startAccessor="starts_at"
+            endAccessor="ends_at"
             style={{
               height: "calc(100vh - 64px)",
               margin: "0 auto",

@@ -5,13 +5,13 @@ import axios from "axios";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
-  const [error, setError] = useState(null); // Added state for error
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchNotifications = async (userID) => {
+    const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/notifications:${userId}`
+          "http://localhost:8000/api/notifications"
         );
         setNotifications(response.data);
       } catch (error) {
@@ -23,18 +23,24 @@ const Notifications = () => {
     fetchNotifications();
   }, []);
 
-  function markAllUnread() {
+  const markAllUnread = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, hasBeenRead: true })));
-  }
+  };
 
-  function handleNotificationClick(id) {
-    setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, hasBeenRead: true } : n))
-    );
-  }
+  const handleNotificationClick = async (id) => {
+    try {
+      await axios.post(`http://localhost:8000/api/notifications/read/${id}`);
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, hasBeenRead: true } : n))
+      );
+    } catch (error) {
+      setError(error.response ? error.response.data : error.message);
+      console.error("Error marking notification as read:", error);
+    }
+  };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <NavigationBAr className="w-full p-4 bg-white shadow-md" />
 
       <div className="flex flex-grow">
@@ -61,8 +67,7 @@ const Notifications = () => {
               Mark all as read
             </button>
           </header>
-          {error && <p className="text-red-500">{error}</p>}{" "}
-          {/* Display error if any */}
+          {error && <p className="text-red-500">{error}</p>}
           <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
             {notifications.map((n) => (
               <div
