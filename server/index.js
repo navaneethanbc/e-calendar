@@ -14,7 +14,6 @@ app.use(express.json());
 
 // routes
 app.use("/api/users", userRoutes);
-// app.use("/", authRoutes);
 
 // connect to MongoDB
 const port = process.env.PORT || 8001;

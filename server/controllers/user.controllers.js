@@ -1,10 +1,11 @@
 import { User } from "../models/user.model.js";
-import { validateUser } from "../utils/userValidator.js";
-import { adminID } from "../constants.js";
+import { validateLogin, validateRegister } from "../utils/userValidator.js";
+import { admin_id } from "../constants.js";
+import { generateAuthToken } from "../utils/tokenUtils.js";
 
-export const registerUser = async (req, res, next) => {
+export const registerUser = async (req, res) => {
   try {
-    const { error } = validateUser(req.body);
+    const { error } = validateRegister(req.body);
     if (error)
       return res
         .status(400)
@@ -23,7 +24,7 @@ export const registerUser = async (req, res, next) => {
 
     const user = new User(req.body);
 
-    user.role = adminID.includes(req.body.employee_id) ? "admin" : "user";
+    user.role = admin_id.includes(req.body.employee_id) ? "admin" : "user";
     user.last_login = new Date();
 
     await user.save();
@@ -34,6 +35,35 @@ export const registerUser = async (req, res, next) => {
 
     res.status(201).send({ message: "User registered successfully." });
   } catch (error) {
+    // res.status(500).send({ message: "Something went wrong!" });
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { error } = validateLogin(req.body);
+    if (error)
+      return res
+        .status(400)
+        .send({ message: "Username or Password is not valid." });
+    //   return res.status(400).send({ message: error.details[0].message });
+
+    const user = await User.findOne({ username: req.body.username });
+    if (!user)
+      return res.status(401).send({ message: "Invalid username or password." });
+
+    const isPasswordValid = await user.isPasswordCorrect(req.body.password);
+    if (!isPasswordValid)
+      return res.status(401).send({ message: "Invalid username or password." });
+
+    const accessToken = generateAuthToken(user);
+
+    user.last_login = new Date();
+
+    res.status(200).send({ accessToken, message: "Successfully signed in." });
+  } catch (error) {
+    // res.status(500).send({ message: "Something went wrong!" });
     res.status(500).send({ message: error.message });
   }
 };
