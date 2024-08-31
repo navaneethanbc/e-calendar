@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {user && <Route path="/calendar" element={<CalendarView />} />}
+          {<Route path="/calendar" element={<CalendarView />} />}
           <Route path="/notification" element={<Notification />} />
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
