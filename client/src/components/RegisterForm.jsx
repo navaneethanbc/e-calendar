@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../index.css";
 
 const RegisterForm = () => {
   const [user, setUser] = useState({
@@ -64,8 +65,6 @@ const RegisterForm = () => {
     }
 
     const userData = { fullname, ...restUserData };
-
-    console.log("User data before sending:", userData);
 
     try {
       const url = "http://localhost:8000/api/users/register";

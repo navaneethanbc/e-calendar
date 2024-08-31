@@ -2,6 +2,7 @@ import { Box, TextField, Typography, Button } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import "../index.css";
 
 const SigninForm = () => {
   const [user, setUser] = useState({
@@ -30,10 +31,10 @@ const SigninForm = () => {
     }
 
     try {
-      const url = "http://localhost:8000/api/auth";
+      const url = "http://localhost:8000/api/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
-      window.location = "/dummypage";
+      window.location = "/dummyhome";
     } catch (error) {
       if (
         error.response &&
@@ -95,7 +96,7 @@ const SigninForm = () => {
         >
           Sign in
         </button>
-        <Link to="/PasswordReset" className="text-indigo-600 text-sm ">
+        <Link to="/reset" className="text-indigo-600 text-sm ">
           Forgot password?
         </Link>
       </div>
