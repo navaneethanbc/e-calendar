@@ -34,7 +34,7 @@ const SigninForm = () => {
       const url = "http://localhost:8000/api/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
-      window.location = "/dummyhome";
+      window.location = "/calendar";
     } catch (error) {
       if (
         error.response &&
@@ -61,7 +61,7 @@ const SigninForm = () => {
 
       <div>
         <TextField
-          type="text"
+          type=""
           placeholder="Username"
           name="username"
           onChange={handleChange}

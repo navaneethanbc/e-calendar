@@ -99,7 +99,7 @@ const RegisterForm = () => {
       <Box display={"flex"} mb={0}>
         <Box mr={0.5}>
           <TextField
-            type="text"
+            type=""
             placeholder="First name"
             name="firstname"
             onChange={handleChange}
@@ -113,7 +113,7 @@ const RegisterForm = () => {
 
         <Box>
           <TextField
-            type="text"
+            type=""
             placeholder="Surname"
             name="surname"
             onChange={handleChange}
@@ -142,7 +142,7 @@ const RegisterForm = () => {
 
       <div>
         <TextField
-          type="text"
+          type=""
           placeholder="Employee ID"
           name="employee_id"
           onChange={handleChange}
@@ -160,6 +160,7 @@ const RegisterForm = () => {
         onChange={handleBranchChange}
         renderInput={(params) => (
           <TextField
+            type=""
             {...params}
             label="Branch"
             required
@@ -172,7 +173,7 @@ const RegisterForm = () => {
 
       <div>
         <TextField
-          type="text"
+          type=""
           placeholder="Username"
           name="username"
           onChange={handleChange}
