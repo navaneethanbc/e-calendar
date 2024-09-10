@@ -5,7 +5,7 @@ import connectDB from "./db/db.js";
 import userRoutes from "./routes/user.route.js";
 
 import notifyRoutes from "./routes/notification.route.js";
-
+import eventRoutes from "./routes/event.route.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 
 app.use("/api/notifications", notifyRoutes);
-
+app.use("/api/events", eventRoutes);
 
 // connect to MongoDB
 const port = process.env.PORT || 8001;

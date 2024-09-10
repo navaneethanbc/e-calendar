@@ -18,7 +18,7 @@ const AddEventBar = ({
   const [category, setCategory] = useState("");
   const [recurrenceType, setRecurrenceType] = useState("");
   const [reminderType, setReminderType] = useState("");
-  const [isGuest, setIsGuest] = useState(false);
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     if (selectedEvent) {

@@ -10,6 +10,7 @@ import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
 import Reset from "./components/ForgotPassword/Reset";
 import OTP from "./components/ForgotPassword/OTP";
+import Cal from "./components/cal2";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -21,10 +22,12 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route path="/cal" element={<Cal />} />
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {user && <Route path="/calendar" element={<CalendarView />} />}
+          <Route path="/calendar" element={<CalendarView />} />
           <Route path="/notification" element={<Notification />} />
+
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
