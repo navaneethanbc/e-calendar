@@ -4,13 +4,12 @@ import SigninPage from "./pages/SigninPage";
 import RegisterPage from "./pages/RegisterPage";
 import CalendarView from "./components/CalendarView";
 import Notification from "./components/Notification";
-import Help from "./components/CalendarComponent/Help";
+import Help from "./components/CalendarFunction/Help";
 import Terms from "./components/Htmlpages/Terms";
 import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
 import Reset from "./components/ForgotPassword/Reset";
 import OTP from "./components/ForgotPassword/OTP";
-import Cal from "./components/cal2";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -22,7 +21,6 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/cal" element={<Cal />} />
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/calendar" element={<CalendarView />} />
