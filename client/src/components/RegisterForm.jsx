@@ -213,7 +213,7 @@ const RegisterForm = () => {
         ></TextField>
       </div>
 
-      <div className="my-1 mb-3">
+      <div className="mb-3 my-1">
         <p className="text-xs text-gray-600">
           By clicking "Get Started", you agree to our{" "}
           <Link to="/termsofservice" className="text-indigo-600">
@@ -227,10 +227,10 @@ const RegisterForm = () => {
       </div>
 
       <div className="mb-4">
-        {error && <div className="mt-1 text-sm text-red-500">{error}</div>}
+        {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
         <button
           type="submit"
-          className="flex justify-center w-full p-2 mt-2 text-white bg-black rounded-md hover:bg-yellow-500"
+          className="w-full flex mt-2 justify-center bg-black text-white p-2 rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started
