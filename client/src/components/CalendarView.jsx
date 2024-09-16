@@ -7,6 +7,9 @@ import Event from "./CalendarComponent/Event";
 import SearchBar from "./CalendarComponent/SearchBar";
 import Sidebar from "./CalendarComponent/Sidebar";
 
+
+import SearchAvailable from "./CalendarComponent/SearchAvailable";
+
 const localizer = momentLocalizer(moment);
 
 function CalendarView() {
@@ -21,6 +24,15 @@ function CalendarView() {
   const [reminderType, setReminderType] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [view, setView] = useState(Views.MONTH);
+
+  // const [searchresult,setSearchResult]= useState({})
+  const [notifications,setNotifications] = useState([])
+
+  const handleSubmit =(e)=>{
+    e.preventDefault()
+    console.log("mmok")
+
+  }
 
   useEffect(() => {
     handleSearch();
@@ -103,7 +115,18 @@ function CalendarView() {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="w-full p-4">
-        <SearchBar
+        <SearchAvailable 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          category={category}
+          setCategory={setCategory}
+          handleSubmit={handleSubmit}
+          notifications={notifications} />
+        {/* <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           startDate={startDate}
@@ -117,7 +140,7 @@ function CalendarView() {
           reminderType={reminderType}
           setReminderType={setReminderType}
           onSearch={handleSearch}
-        />
+        /> */}
       </div>
       <div className="flex flex-grow">
         <div className="w-full p-4 md:w-1/4">

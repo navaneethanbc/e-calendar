@@ -1,0 +1,44 @@
+{
+    "events":[
+        {
+            "id":1,
+            "title":"sample event1",
+            "description":"this is the sample event one",
+            "startdate":"2024-09-13T10:30:00Z",
+            "end date":"2024-09-14T10:30:00Z",
+            "category":"personal"
+        },
+        {
+            "id":2,
+            "title":"sample event2",
+            "description":"this is the sample event two",
+            "startdate":"2024-10-13T10:30:00Z",
+            "end date":"2024-10-14T10:30:00Z",
+            "category":"personal"
+        },
+        {
+            "id":1,
+            "title":"sample event3",
+            "description":"this is the sample event three",
+            "startdate":"2024-09-13T10:30:00Z",
+            "end date":"2024-09-15T10:30:00Z",
+            "category":"organization"
+        },
+        {
+            "id":1,
+            "title":"sample event4",
+            "description":"this is the sample event four",
+            "startdate":"2024-09-23T10:30:00Z",
+            "end date":"2024-09-24T10:30:00Z",
+            "category":"branch"
+        },
+        {
+            "id":1,
+            "title":"sample event5",
+            "description":"this is the sample event five",
+            "startdate":"2024-09-3T10:30:00Z",
+            "end date":"2024-09-14T10:30:00Z",
+            "category":"branch"
+        }
+    ]
+}

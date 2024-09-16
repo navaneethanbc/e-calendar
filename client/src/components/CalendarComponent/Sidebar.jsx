@@ -34,9 +34,9 @@ const Sidebar = ({ setView, ViewsDAY, ViewsWEEK, ViewsMONTH, eventFcn }) => {
 
   return (
     <div className="ml-6">
-      <div className="flex flex-col max-w-72">
+    <div className="flex flex-col max-w-72">
         <img src={logo} alt="Logo" className="w-48 h-auto" />
-      </div>
+      </div> 
 
       <div className="flex flex-col max-w-72 ">
         <button

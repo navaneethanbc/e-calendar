@@ -36,7 +36,7 @@ function App() {
               <OTP
                 otp={otp}
                 setOtp={setOtp}
-                email={username}
+                username={username}
                 setEmail={setUsername}
               />
             }
