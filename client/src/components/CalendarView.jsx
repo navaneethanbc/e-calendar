@@ -7,6 +7,8 @@ import AddFunc from "./CalendarFunction/AddEvent";
 import EditFunc from "./CalendarFunction/EditEvent";
 import axios from "axios";
 import Sidebar from "./CalendarFunction/Sidebar";
+import SearchAvailable from "./CalendarFunction/SearchAvailable";
+import ShowEvents from "./CalendarFunction/ShowEvents"
 
 const CalendarView = () => {
   const [showAddOffcanvas, setShowAddOffcanvas] = useState(false);
@@ -14,6 +16,49 @@ const CalendarView = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedView, setSelectedView] = useState("dayGridMonth");
+  const [searchQuery, setSearchQuery] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
+  const [category, setCategory] = useState("")
+  const [searchResult, setSearchResult] = useState(events)
+  const [notifications,setNotifications] = useState([])
+  const [showSearch, setShowSearch] = useState(false);
+
+
+  useEffect(() => {
+    // to get date as  mm/dd/yyyy
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    })
+
+    //to filter the events according to  search title
+    const filterTitle = events.filter((event) => 
+      event.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    // to filter the events according to search category
+    const filterCategory = filterTitle.filter((event) => 
+      event.extendedProps.category.toLowerCase().includes(category.toLowerCase())
+    )
+
+    //if start date exist then filter otherwise skip the filtering
+    const filterStart = startDate 
+      ? filterCategory.filter((event) => 
+          formatter.format(new Date(event.start)) == formatter.format(new Date(startDate))
+        )
+      : filterCategory
+    //if end date exist then filter otherwise skip the filtering
+    const filterEnd = endDate
+      ? filterStart.filter((event) => 
+          formatter.format(new Date(event.end)) == formatter.format(new Date(endDate))
+        )
+      : filterStart;
+  
+    setSearchResult(filterEnd) // update search result array according to  searches
+    
+  }, [searchQuery, startDate, endDate, category]);
 
   const calendarRef = createRef();
 
@@ -48,6 +93,7 @@ const CalendarView = () => {
       );
 
       setShowEditOffcanvas(false);
+      
     } catch (error) {
       console.log("Error updating event:", error);
     }
@@ -123,6 +169,21 @@ const CalendarView = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      
+      
+      <SearchAvailable  // search bar, availability checker, notification
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        category={category}
+        setCategory={setCategory}
+        notifications={notifications}
+        showSearch ={showSearch}
+        setShowSearch ={setShowSearch}
+      />
       <div className="flex justify-end p-4">
         <label htmlFor="viewSelect" className="sr-only">
           Select View
@@ -156,7 +217,8 @@ const CalendarView = () => {
           />
         </div>
 
-        <div className="flex-1 h-full p-4">
+        { !showSearch?
+        (<div className="flex-1 h-full p-4">
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, multiMonthPlugin]}
@@ -172,7 +234,9 @@ const CalendarView = () => {
             height="100%"
             contentHeight="auto"
           />
-        </div>
+        </div>):
+        <ShowEvents 
+        searchResult = {searchResult} />} 
       </div>
 
       <AddFunc
