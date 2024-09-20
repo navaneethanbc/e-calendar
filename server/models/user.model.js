@@ -10,32 +10,32 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: true,
       unique: true,
       trim: true,
       index: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: true,
       minlength: 6,
       maxlength: 1024,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       trim: true,
       index: true,
     },
     fullname: {
       type: String,
-      required: [true, "Names are required"],
+      required: true,
       trim: true,
     },
     employee_id: {
       type: String,
-      required: [true, "Employee ID is required"],
+      required: true,
       unique: true,
       trim: true,
       index: true,
@@ -46,13 +46,16 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      default: "user",
+      // default: "user",
       required: true,
     },
     last_login: {
       type: Date,
       default: null,
-      required: true,
+    },
+    timezone: {
+      type: String,
+      default: "+5:30",
     },
   },
   {
