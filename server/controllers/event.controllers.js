@@ -37,7 +37,7 @@ export const createEvent = async (req, res) => {
             [
               {
                 event_id: e._id,
-                username: guest,
+                guest: guest,
               },
             ],
             { session }
@@ -178,29 +178,26 @@ export const editEvent = async (req, res) => {
   try {
     const { guests, editType, ...rest } = req.body;
 
-    const updatedEvents = [];
+    // edit the main event
+    await Event.findByIdAndUpdate(req.params.id, rest, { session });
 
-    const oldEvent = await Event.findById(req.params.id);
+    // delete the old event guests
+    await EventGuest.deleteMany({ event_id: req.params.id }, { session });
 
-    if (rest.recurrence !== oldEvent.recurrence) {
-      let query;
-      if (editType === "this and following events") {
-        if (oldEvent.parent_event_id) {
-        }
-      }
-    } else {
-    }
-
-    const event = await Event.findByIdAndUpdate(req.params.id, rest, {
-      new: true,
-      session,
-    });
-
-    updatedEvents.push(event);
-
-    const startDifference =
-      new Date(event.starts_at) - new Date(oldEvent.starts_at);
-    const endDifference = new Date(event.ends_at) - new Date(oldEvent.ends_at);
+    // create the new event guests
+    await Promise.all(
+      guests.map(async (guest) => {
+        await EventGuest.create(
+          [
+            {
+              event_id: req.params.id,
+              guest: guest,
+            },
+          ],
+          { session }
+        );
+      })
+    );
 
     await session.commitTransaction();
   } catch (error) {
@@ -232,12 +229,7 @@ export const deleteEvent = async (req, res) => {
         if (deleteType === "this and following events") {
           query = {
             $and: [
-              {
-                $or: [
-                  { parent_event_id: event.parent_event_id },
-                  { _id: event.parent_event_id },
-                ],
-              },
+              { parent_event_id: event.parent_event_id },
               { starts_at: { $gt: event.starts_at } },
             ],
           };
@@ -287,7 +279,7 @@ export const getAvailablity = async (req, res) => {
     const events = await Event.find(
       {
         $and: [
-          { username: username },
+          { owner: username },
           {
             $or: [
               { starts_at: { $gte: from, $lte: to } },
@@ -300,7 +292,7 @@ export const getAvailablity = async (req, res) => {
     );
 
     const invitedEvents = await EventGuest.find(
-      { $and: [{ username: username }, { status: "Accepted" }] },
+      { $and: [{ guest: username }, { status: "Accepted" }] },
       { event_id: 1 }
     );
 

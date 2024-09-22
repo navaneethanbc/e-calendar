@@ -6,7 +6,7 @@ const eventGuestSchema = new Schema({
     required: true,
     ref: "Event",
   },
-  username: {
+  guest: {
     type: String,
     required: true,
     ref: "User",
