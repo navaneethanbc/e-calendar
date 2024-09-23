@@ -2,8 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import SigninPage from "./pages/SigninPage";
 import RegisterPage from "./pages/RegisterPage";
-import CalendarView from "./components/CalendarView";
-import Notification from "./components/Notification";
+import CalendarView from "./pages/CalendarView";
 import Help from "./components/CalendarFunction/Help";
 import Terms from "./components/Htmlpages/Terms";
 import Cookies from "./components/Htmlpages/Cookies_policy";
@@ -24,7 +23,6 @@ function App() {
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/calendar" element={<CalendarView />} />
-          <Route path="/notification" element={<Notification />} />
 
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
@@ -37,7 +35,7 @@ function App() {
               <OTP
                 otp={otp}
                 setOtp={setOtp}
-                username={username}
+                email={username}
                 setEmail={setUsername}
               />
             }

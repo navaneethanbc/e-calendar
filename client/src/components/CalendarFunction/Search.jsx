@@ -21,7 +21,6 @@ import {
   AccountCircle as AccountCircleIcon,
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
-import Notifications from "../NotificationPopUp";
 
 const SearchAvailable = ({
   searchQuery,
@@ -39,7 +38,6 @@ const SearchAvailable = ({
   handleSelectView,
 }) => {
   const [openAvailability, setOpenAvailability] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false); // State for Notifications popup
   const [anchorElement, setAnchorElement] = useState(null);
 
   const toggleSearch = () => {
@@ -50,8 +48,8 @@ const SearchAvailable = ({
     setOpenAvailability(!openAvailability);
   };
 
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
+  const handleNotificationClick = (e) => {
+    setAnchorElement(e.currentTarget);
   };
 
   const handleNotificationClose = () => {
@@ -150,10 +148,6 @@ const SearchAvailable = ({
       <IconButton className="ml-4 ">
         <AccountCircleIcon />
       </IconButton>
-
-      {showNotifications && (
-        <Notifications onHide={() => setShowNotifications(false)} />
-      )}
 
       <Popover
         open={openNotifications}
