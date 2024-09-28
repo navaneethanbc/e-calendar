@@ -12,13 +12,12 @@ const app = express();
 // mongoose.set("debug", true);
 
 // middlewares
-// app.use(
-//   cors({
-//     origin: `${process.env.CORS_ORIGIN}`,
-//     credentials: true,
-//   })
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: `${process.env.CORS_ORIGIN}`,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // routes
