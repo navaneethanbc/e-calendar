@@ -27,6 +27,7 @@ const EditFunc = ({
     reccurence: "Non-recurring",
     reminder: "No reminder",
     location: "",
+    guest: "",
   });
   const [errors, setErrors] = useState({
     startDateTime: "",
@@ -65,6 +66,7 @@ const EditFunc = ({
         reccurence: selectedEvent.extendedProps?.reccurence || "Non-recurring",
         reminder: selectedEvent.extendedProps?.reminder || "No reminder",
         location: selectedEvent.extendedProps?.location || "",
+        guest: selectedEvent.extendedProps?.guest || "",
       };
 
       setFormData(updatedFormData);
@@ -115,6 +117,7 @@ const EditFunc = ({
       reccurence: formData.reccurence,
       reminder: formData.reminder,
       location: formData.location,
+      guest: formData.guest,
     };
 
     if (formData.id) {
@@ -168,6 +171,7 @@ const EditFunc = ({
       category={formData.category}
       reccurence={formData.reccurence}
       reminder={formData.reminder}
+      guest={formData.guest}
       handleChange={handleChange}
       errStart={errors.startDateTime}
       errEnd={errors.endDateTime}

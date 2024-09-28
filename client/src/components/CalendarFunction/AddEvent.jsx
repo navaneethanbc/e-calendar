@@ -15,6 +15,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
     reccurence: "Non-recurring",
     reminder: "No reminder",
     location: "",
+    guest: "",
   });
 
   const [errors, setErrors] = useState({
@@ -72,6 +73,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       reccurence: formData.reccurence,
       reminder: formData.reminder,
       location: formData.location,
+      guest: formData.guest,
     };
     onAddEvent(eventDetails);
 
@@ -91,6 +93,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       reccurence: "Non-recurring",
       reminder: "No reminder",
       location: "",
+      guest: "",
     });
     setErrors({});
   };
@@ -124,6 +127,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       category={formData.category}
       reccurence={formData.reccurence}
       reminder={formData.reminder}
+      guest={formData.guest}
       handleChange={handleChange}
       errStart={errors.startDateTime}
       errEnd={errors.endDateTime}

@@ -1,16 +1,15 @@
 import { User } from "../models/user.model.js";
 import { validateLogin, validateRegister } from "../utils/userValidator.js";
-import { admin_id } from "../constants.js";
 import { generateAuthToken } from "../utils/tokenUtils.js";
 
 export const registerUser = async (req, res) => {
   try {
     const { error } = validateRegister(req.body);
     if (error)
-      return res
-        .status(400)
-        .send({ message: "All fields should be filled correctly" });
-    //   return res.status(400).send({ message: error.details[0].message });
+      // return res
+      //   .status(400)
+      //   .send({ message: "All fields should be filled correctly" });
+      return res.status(400).send({ message: error.details[0].message });
 
     const existingUser = await User.findOne({
       $or: [
@@ -24,7 +23,14 @@ export const registerUser = async (req, res) => {
 
     const user = new User(req.body);
 
-    user.role = admin_id.includes(req.body.employee_id) ? "admin" : "user";
+    user.role = req.body.employee_id.includes("ADM")
+      ? "admin"
+      : req.body.employee_id.includes("MNG")
+      ? "manager"
+      : req.body.employee_id.includes("EMP")
+      ? "employee"
+      : "trainee";
+
     user.last_login = new Date();
 
     await user.save();
@@ -62,6 +68,16 @@ export const loginUser = async (req, res) => {
     user.last_login = new Date();
 
     res.status(200).send({ accessToken, message: "Successfully signed in." });
+  } catch (error) {
+    // res.status(500).send({ message: "Something went wrong!" });
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    return res.status(200).json({ user });
   } catch (error) {
     // res.status(500).send({ message: "Something went wrong!" });
     res.status(500).send({ message: error.message });

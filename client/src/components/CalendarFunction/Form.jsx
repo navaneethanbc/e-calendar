@@ -15,6 +15,7 @@ const Form = ({
   category,
   reccurence,
   reminder,
+  guest,
   handleChange,
   errStart,
   errEnd,
@@ -174,6 +175,18 @@ const Form = ({
               />
             </div>
           </div>
+
+          <label htmlFor="Guest" className="block mb-1 font-bold">
+            Guest
+          </label>
+          <input
+            id="guest"
+            name="guest"
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded"
+            value={guest}
+            onChange={handleChange}
+          />
 
           <div className="flex space-x-4">
             <div className="flex-1">

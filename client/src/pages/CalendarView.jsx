@@ -42,7 +42,7 @@ const CalendarView = () => {
   const handleAddEvent = async (newEvent) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/events/addevent",
+        "http://localhost:8001/events/",
         newEvent
       );
       const updatedEvents = [...events, response.data];
@@ -57,7 +57,7 @@ const CalendarView = () => {
   const handleEditEvent = async (updatedEvent) => {
     try {
       await axios.put(
-        `http://localhost:8000/api/events/updateevent/${updatedEvent.id}`,
+        `http://localhost:8001/events/${updatedEvent.id}`,
         updatedEvent
       );
       const updatedEvents = events.map((event) =>
@@ -73,7 +73,7 @@ const CalendarView = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/events/deleteevent/${id}`);
+      await axios.delete(`http://localhost:8001/events/${id}`);
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
@@ -85,11 +85,9 @@ const CalendarView = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/events/viewevent"
-      );
+      const response = await axios.get("http://localhost:8001/events/");
 
-      const transformedEvents = response.data.existingEvents.map((event) => ({
+      const transformedEvents = response.data.events.map((event) => ({
         title: event.title,
         start: event.starts_at,
         end: event.ends_at,
@@ -101,6 +99,7 @@ const CalendarView = () => {
           location: event.location,
           reminder: event.reminder,
           reccurence: event.reccurence,
+          guest: event.guest,
         },
         color:
           event.category === "Personal"

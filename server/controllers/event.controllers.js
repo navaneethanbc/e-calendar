@@ -1,170 +1,314 @@
 import { Event } from "../models/event.model.js";
+
+import { EventGuest } from "../models/event_guest.model.js";
+import { incrementDate, dateLimit } from "../utils/eventUtils.js";
+import { Notification } from "../models/notification.model.js";
 import mongoose from "mongoose";
-import moment from "moment";
 
-// Function to generate recurring events
-const generateRecurringEvents = (
-  event,
-  recurrenceType,
-  recurrenceEnd,
-  recurrenceGroupId
-) => {
-  const events = [];
-  let currentStart = moment(event.starts_at);
-  let currentEnd = moment(event.ends_at);
+export const createEvent = async (req, res) => {
+  const session = await Event.startSession();
+  session.startTransaction();
 
-  while (currentStart.isBefore(recurrenceEnd)) {
-    const newEvent = {
-      ...event._doc,
-      _id: new mongoose.Types.ObjectId(), // Ensure unique _id for each recurring event
-      starts_at: currentStart.toDate(),
-      ends_at: currentEnd.toDate(),
-      recurrence_group_id: recurrenceGroupId, // Common ID for all related recurrences
-    };
+  try {
+    const { guests, ...rest } = req.body;
 
-    events.push(newEvent);
+    const events = [];
 
-    // Adjust date based on recurrence type
-    switch (recurrenceType) {
-      case "Daily":
-        currentStart.add(1, "day");
-        currentEnd.add(1, "day");
-        break;
-      case "Weekly":
-        currentStart.add(1, "week");
-        currentEnd.add(1, "week");
-        break;
-      case "Monthly":
-        currentStart.add(1, "month");
-        currentEnd.add(1, "month");
-        break;
-      case "Yearly":
-        currentStart.add(1, "year");
-        currentEnd.add(1, "year");
-        break;
-      default:
-        throw new Error("Invalid recurrence type");
+    // create the parent event
+    const event = await Event.create([rest], { session });
+
+    events.push(event[0]); // add the parent event to the events array
+
+    // create the recurring events
+    if (req.body.recurrence) {
+      const recurringEvents = await createRecurringEvents(
+        rest,
+        event[0]._id,
+        session
+      );
+
+      events.push(...recurringEvents); // add the recurring events to the events array
     }
-  }
 
-  return events;
+    // create the event guests relationships
+    for (const e of events) {
+      await Promise.all(
+        guests.map(async (guest) => {
+          await EventGuest.create(
+            [
+              {
+                event_id: e._id,
+                guest: guest,
+              },
+            ],
+            { session }
+          );
+        })
+      );
+    }
+
+    // await Promise.all(
+    //   guests.map((guest) => {
+    //     Notification.create(
+    //       [
+    //         {
+    //           username: guest,
+    //           category: "Invite",
+    //           description: "",
+    //           designated_time: new Date(),
+    //           event_id: event[0]._id,
+    //         },
+    //       ],
+    //       { session }
+    //     );
+    //   })
+    // );
+
+    await session.commitTransaction();
+    res.status(201).json({ message: "Event created successfully." });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(500).json({ message: error.message });
+  } finally {
+    session.endSession();
+  }
 };
 
-// Function to add event
-export const AddEvent = async (req, res) => {
+const createRecurringEvents = async (event, parent_event_id, session) => {
+  const { starts_at, ends_at, ...remaining } = event;
+  const recurringEvents = [];
+
   try {
-    const { reccurence, recurrence_end } = req.body;
-    let newEvent = new Event(req.body);
+    let current = incrementDate(new Date(event.starts_at), event.recurrence);
+    const recurrenceEnd = dateLimit(
+      new Date(event.starts_at),
+      event.recurrence
+    );
+    const eventDuration = new Date(event.ends_at) - new Date(event.starts_at);
 
-    if (reccurence && reccurence !== "Non-recurring") {
-      // Generate a unique recurrence group ID
-      const recurrenceGroupId = new mongoose.Types.ObjectId();
+    while (current <= recurrenceEnd) {
+      const recurringEvent = {
+        starts_at: current,
+        ends_at: new Date(current.getTime() + eventDuration),
+        parent_event_id: parent_event_id,
+        ...remaining,
+      };
 
-      // Validate and parse recurrence end date
-      const recurrenceEnd = recurrence_end
-        ? moment(recurrence_end)
-        : moment().add(1, "year"); // Default to 1 year if no end date
+      recurringEvents.push(recurringEvent);
 
-      if (!recurrenceEnd.isValid()) {
-        throw new Error("Invalid recurrence end date");
+      current = incrementDate(current, event.recurrence);
+    }
+
+    return await Event.create(recurringEvents, { session });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getEvents = async (req, res) => {
+  try {
+    const { username, categories, from, to, title } = req.body;
+
+    const addConditions = (queryArray) => {
+      if (categories) {
+        queryArray.push({ category: { $in: categories } });
       }
 
-      // Generate all recurring events
-      const recurringEvents = generateRecurringEvents(
-        newEvent,
-        reccurence,
-        recurrenceEnd,
-        recurrenceGroupId
-      );
+      if (from && to) {
+        queryArray.push({
+          $or: [
+            { starts_at: { $gte: from, $lte: to } },
+            { ends_at: { $gte: from, $lte: to } },
+          ],
+        });
+      }
 
-      await Event.insertMany(recurringEvents);
-    } else {
-      await newEvent.save();
-    }
+      if (title) {
+        queryArray.push({ title: { $regex: title, $options: "i" } });
+      }
+    };
 
-    return res.status(200).json({
-      success: "Event saved successfully",
+    const ownEventQuery = [{ owner: username }];
+    addConditions(ownEventQuery);
+
+    const ownEvents = await Event.find({
+      $and: ownEventQuery,
     });
-  } catch (error) {
-    console.error("Error saving event:", error);
-    res.status(500).send({ message: error.message });
-  }
-};
 
-// Function to view all events
-export const ViewEvent = async (req, res) => {
-  try {
-    const events = await Event.find().exec();
+    const eventGuests = await EventGuest.find(
+      { $and: [{ username: username }, { status: "Accepted" }] },
+      { event_id: 1 }
+    );
 
-    return res.status(200).json({
-      success: true,
-      existingEvents: events,
-    });
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    res.status(500).send({ message: error.message });
-  }
-};
+    let invitedEvents = [];
 
-// Function to update an event
-export const UpdateEvent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updateAll = req.query.updateAll === "true"; // Optional flag to update all recurrences
-    const event = await Event.findById(id);
+    if (eventGuests) {
+      const inviteEventQuery = [
+        { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
+      ];
 
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
+      addConditions(inviteEventQuery);
 
-    if (updateAll && event.recurrence_group_id) {
-      // Update all events with the same recurrence_group_id
-      await Event.updateMany(
-        { recurrence_group_id: event.recurrence_group_id },
-        { $set: req.body }
-      );
-    } else {
-      // Update only the specific instance
-      await Event.findByIdAndUpdate(
-        id,
-        { $set: req.body },
-        { new: true, runValidators: true }
-      );
-    }
-
-    return res.status(200).json({
-      success: "Event updated successfully",
-    });
-  } catch (error) {
-    console.error("Error updating event:", error);
-    res.status(500).send({ message: error.message });
-  }
-};
-
-// Function to delete an event
-export const DeleteEvent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleteAll = req.query.deleteAll === "true"; // Optional flag to delete all recurrences
-    const event = await Event.findById(id);
-
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
-    }
-
-    if (deleteAll && event.recurrence_group_id) {
-      // Delete all events with the same recurrence_group_id
-      await Event.deleteMany({
-        recurrence_group_id: event.recurrence_group_id,
+      invitedEvents = await Event.find({
+        $and: inviteEventQuery,
       });
-    } else {
-      // Delete only the specific instance
-      await Event.findByIdAndDelete(id);
     }
 
-    return res.json({ message: "Delete successful" });
+    const events = ownEvents.concat(invitedEvents);
+
+    res.status(200).json({ events });
   } catch (error) {
-    console.error("Error deleting event:", error);
-    res.status(500).send({ message: error.message });
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+
+    res.status(200).json({ event });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const editEvent = async (req, res) => {
+  const session = await Event.startSession();
+  session.startTransaction();
+
+  try {
+    const { guests, editType, ...rest } = req.body;
+
+    // edit the main event
+    await Event.findByIdAndUpdate(req.params.id, rest, { session });
+
+    // delete the old event guests
+    await EventGuest.deleteMany({ event_id: req.params.id }, { session });
+
+    // create the new event guests
+    await Promise.all(
+      guests.map(async (guest) => {
+        await EventGuest.create(
+          [
+            {
+              event_id: req.params.id,
+              guest: guest,
+            },
+          ],
+          { session }
+        );
+      })
+    );
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(500).json({ message: error.message });
+  } finally {
+    session.endSession();
+    res.status(200).json({ message: "Event updated successfully." });
+  }
+};
+
+export const deleteEvent = async (req, res) => {
+  // have to add creating notifications for the guests
+  const session = await Event.startSession();
+  session.startTransaction();
+
+  try {
+    const { deleteType } = req.body;
+    let deletedEvents = [];
+
+    const event = await Event.findByIdAndDelete(req.params.id, { session });
+
+    deletedEvents.push(event._id);
+
+    if (deleteType !== "this event") {
+      let query;
+
+      if (event.parent_event_id) {
+        if (deleteType === "this and following events") {
+          query = {
+            $and: [
+              { parent_event_id: event.parent_event_id },
+              { starts_at: { $gt: event.starts_at } },
+            ],
+          };
+        } else {
+          query = {
+            $or: [
+              { parent_event_id: event.parent_event_id },
+              { _id: event.parent_event_id },
+            ],
+          };
+        }
+      } else {
+        query = { parent_event_id: event._id };
+      }
+
+      const eventsToDelete = await Event.find(query, { _id: 1 }, { session })
+        .select("_id")
+        .then((events) => events.map((e) => e._id));
+
+      if (eventsToDelete.length > 0) {
+        await Event.deleteMany({ _id: { $in: eventsToDelete } }, { session });
+      }
+
+      deletedEvents.push(...eventsToDelete);
+    }
+
+    await EventGuest.deleteMany(
+      { event_id: { $in: deletedEvents } },
+      { session }
+    );
+
+    await session.commitTransaction();
+    res.status(200).json({ message: "Event deleted successfully." });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(500).json({ message: error.message });
+  } finally {
+    session.endSession();
+  }
+};
+
+// get availability of a user
+export const getAvailablity = async (req, res) => {
+  try {
+    const { username, from, to } = req.body;
+
+    const events = await Event.find(
+      {
+        $and: [
+          { owner: username },
+          {
+            $or: [
+              { starts_at: { $gte: from, $lte: to } },
+              { ends_at: { $gte: from, $lte: to } },
+            ],
+          },
+        ],
+      },
+      { _id: 0, category: 1, starts_at: 1, ends_at: 1 }
+    );
+
+    const invitedEvents = await EventGuest.find(
+      { $and: [{ guest: username }, { status: "Accepted" }] },
+      { event_id: 1 }
+    );
+
+    invitedEvents.forEach(async (invitedEvent) => {
+      const event = await Event.findById(invitedEvent.event_id, {
+        category: 1,
+        starts_at: 1,
+        ends_at: 1,
+        _id: 0,
+      });
+      events.push(event);
+    });
+
+    res.status(200).json({ events });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

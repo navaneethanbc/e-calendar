@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
+import { EventGuest } from "./event_guest.model.js";
 
 const eventSchema = new Schema({
   title: {
     type: String,
-    required: false,
+    required: true,
     trim: true,
     index: true,
   },
@@ -18,22 +19,18 @@ const eventSchema = new Schema({
     required: true,
     enum: ["Personal", "Branch", "Bank"],
   },
-  reccurence: {
+  recurrence: {
     type: String,
-    required: true,
-    enum: ["Non-recurring", "Daily", "Weekly", "Monthly", "Yearly"],
+    required: false,
   },
   reminder: {
     type: String,
-    required: true,
-    enum: [
-      "No reminder",
-      "15 minutes",
-      "30 minutes",
-      "1 hour",
-      "1 day",
-      "1 week",
-    ],
+    required: false,
+  },
+  guests: {
+    type: [String],
+    required: false,
+    ref: "User",
   },
   meeting_link: {
     type: String,
@@ -53,6 +50,16 @@ const eventSchema = new Schema({
     type: String,
     required: false,
     trim: true,
+  },
+  owner: {
+    type: String,
+    required: true,
+    ref: "User",
+  },
+  parent_event_id: {
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: "Event",
   },
 });
 
