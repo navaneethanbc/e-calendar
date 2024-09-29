@@ -19,7 +19,7 @@ function SigninPage() {
         >
           <Box
             component="img"
-            src="src/assets/mobilebg.jpg"
+            src="src/assets/mobilebg.png"
             alt="background"
             height={300}
             mt={10}

@@ -1,95 +1,161 @@
-import React from 'react'
-import {AppBar,Toolbar,IconButton,Typography,InputBase,Box,Avatar,useMediaQuery} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import SearchIcon from '@mui/icons-material/Search'
-import {styled,useTheme } from '@mui/material/styles'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Box,
+  Avatar,
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  Menu as DropMenu,
+} from "@mui/material";
+import {
+  Menu,
+  ArrowBackIosNew,
+  ArrowForwardIos,
+  Search,
+  EventAvailableTwoTone,
+  Notifications,
+} from "@mui/icons-material";
 
+const NavigationBar = ({
+  handleDrawer,
+  handleToday,
+  handlePrev,
+  handleNext,
+  headerTitle,
+  selectedView,
+  handleSelectView,
+}) => {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const navigate = useNavigate();
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: 22,
-    backgroundColor: '#e0e0e0',
-    '&:hover': {
-      backgroundColor: '#e0e0e0',
-    },
-    marginLeft: theme.spacing(2),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }))
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.1, 1.2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }))
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-          width: '20ch',
-        },
-      },
-    },
-  }))
-  
-  function NavigationBar() {
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  
-    return (
-      <AppBar position="static" sx={{bgcolor: '#ffffff'}}>
-        <Toolbar>
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
+  return (
+    <AppBar
+      position="static"
+      variant="outlined"
+      sx={{ bgcolor: "#febe00", height: 64 }}
+    >
+      <Toolbar>
+        <Box display={"flex"} alignItems={"center"}>
           <IconButton
             edge="start"
             color="#616161"
             aria-label="menu"
-            sx={{ mr: 1.5 }}
+            onClick={handleDrawer}
           >
-            <MenuIcon />
+            <Menu />
           </IconButton>
           <Box
             component="img"
             src="src/assets/icon.png"
             alt="Logo"
-            sx={{ height: 80, mr: 1, ml: -2.5 }}
+            height={50}
+            mr={1}
           />
-          <Typography
-            variant="h4"
-            component="div"
-            sx={{ flexGrow: 1, fontFamily: 'Kanit', fontWeight: 'bold', color: '#212121', ml: -1, mb: -2, display: { xs: 'inline-block', sm: 'block' } }}
-          >
-            Calendar
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-          <IconButton sx={{ml: 2, mr: -2}}>
-            <Avatar alt="N" src="/profile.jpg" />
+          <div className="flex justify-start">
+            <Typography
+              variant="h1"
+              fontFamily={"Kanit"}
+              fontSize={{ xs: 20, sm: 24 }}
+              color={"#363533"}
+              flexGrow={1}
+            >
+              Calendar
+            </Typography>
+          </div>
+          <div className="p-2 ml-10 mr-8 flex justify-start">
+            <Button
+              onClick={handleToday}
+              variant="contained"
+              size="small"
+              disableElevation
+              sx={{
+                backgroundColor: "beige",
+                ":hover": {
+                  backgroundColor: "#dedede",
+                },
+              }}
+            >
+              <Typography
+                textTransform={"none"}
+                color={"#363533"}
+                fontFamily={"Kanit"}
+              >
+                Today
+              </Typography>
+            </Button>
+            <IconButton
+              onClick={handlePrev}
+              sx={{ color: "#363533", ml: 3, mr: 1 }}
+            >
+              <ArrowBackIosNew />
+            </IconButton>
+            <IconButton onClick={handleNext} sx={{ color: "#363533" }}>
+              <ArrowForwardIos />
+            </IconButton>
+          </div>
+          <div className="flex justify-center mr-8">
+            <Typography
+              variant="h4"
+              align="center"
+              width={{ xs: 120, sm: 280 }}
+              overflow={"hidden"}
+              fontFamily={"Kanit"}
+              fontSize={{ xs: 12, sm: 20 }}
+              color={"#363533"}
+            >
+              {headerTitle}
+            </Typography>
+          </div>
+        </Box>
+        <Box
+          flexGrow={1}
+          justifyContent={"right"}
+          display={"flex"}
+          alignItems={"center"}
+        >
+          <IconButton>
+            <Search sx={{ height: 32, width: 32 }} />
           </IconButton>
-        </Toolbar>
-      </AppBar>
-    )
-  }
-  
-  export default NavigationBar
+          <IconButton>
+            <EventAvailableTwoTone sx={{ height: 32, width: 32 }} />
+          </IconButton>
+          <IconButton>
+            <Notifications sx={{ height: 32, width: 32 }} />
+          </IconButton>
+          <div className="flex ml-4 mr-4 justify-end">
+            <FormControl variant="outlined" size="small" sx={{ width: 95 }}>
+              <Select
+                size="small"
+                labelId="viewSelect-label"
+                id="viewSelect"
+                value={selectedView}
+                onChange={(e) => handleSelectView(e.target.value)}
+              >
+                <MenuItem value="timeGridDay">Day</MenuItem>
+                <MenuItem value="timeGridWeek">Week</MenuItem>
+                <MenuItem value="dayGridMonth">Month</MenuItem>
+                <MenuItem value="listWeek">List</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <IconButton onClick={handleLogout} sx={{ mr: -2 }}>
+            <Avatar />
+          </IconButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default NavigationBar;

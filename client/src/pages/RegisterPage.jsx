@@ -31,7 +31,7 @@ function RegisterPage() {
           ml={{ xs: 7.75, sm: 15 }}
           mr={{ xs: 0, sm: 15 }}
           width={{ xs: 250, sm: 640 }}
-          height={560}
+          height={{ xs: 200, sm: 560 }}
           bgcolor={"white"}
           borderRadius={3}
         >

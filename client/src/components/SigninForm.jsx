@@ -34,6 +34,7 @@ const SigninForm = () => {
       const url = "http://localhost:8000/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", user.username);
       window.location = "/calendar";
     } catch (error) {
       if (
