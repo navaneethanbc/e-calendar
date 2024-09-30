@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import SigninPage from "./pages/SigninPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/calendar" element={<CalendarView />} />
+          {user && <Route path="/calendar" element={<CalendarView />} />}
 
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
@@ -42,6 +42,7 @@ function App() {
           />
 
           {/* Other routes */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>

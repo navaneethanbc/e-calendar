@@ -7,8 +7,8 @@ const Footer = () => {
       <AppBar
         color="transparent"
         position="fixed"
-        elevation={1}
-        sx={{ top: "auto", bottom: 0 }}
+        elevation={0}
+        sx={{ top: "auto", bottom: 0, bgcolor: "#ffec80", height: 60 }}
       >
         <Toolbar></Toolbar>
       </AppBar>

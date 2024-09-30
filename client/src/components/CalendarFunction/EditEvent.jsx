@@ -24,10 +24,10 @@ const EditFunc = ({
     startDateTime: "",
     endDateTime: "",
     category: "Personal",
-    reccurence: "Non-recurring",
+    recurrence: "Non-recurring",
     reminder: "No reminder",
     location: "",
-    guest: "",
+    guests: [],
   });
   const [errors, setErrors] = useState({
     startDateTime: "",
@@ -63,10 +63,10 @@ const EditFunc = ({
           ? moment(selectedEvent.end).format("YYYY-MM-DDTHH:mm")
           : "",
         category: selectedEvent.extendedProps?.category || "Personal",
-        reccurence: selectedEvent.extendedProps?.reccurence || "Non-recurring",
+        recurrence: selectedEvent.extendedProps?.recurrence || "Non-recurring",
         reminder: selectedEvent.extendedProps?.reminder || "No reminder",
         location: selectedEvent.extendedProps?.location || "",
-        guest: selectedEvent.extendedProps?.guest || "",
+        guests: selectedEvent.extendedProps?.guests || [],
       };
 
       setFormData(updatedFormData);
@@ -114,10 +114,10 @@ const EditFunc = ({
       starts_at: moment(formData.startDateTime).toDate(),
       ends_at: moment(formData.endDateTime).toDate(),
       category: formData.category,
-      reccurence: formData.reccurence,
+      recurrence: formData.recurrence,
       reminder: formData.reminder,
       location: formData.location,
-      guest: formData.guest,
+      guests: formData.guests,
     };
 
     if (formData.id) {
@@ -169,9 +169,9 @@ const EditFunc = ({
       meeting_link={formData.meeting_link}
       location={formData.location}
       category={formData.category}
-      reccurence={formData.reccurence}
+      recurrence={formData.recurrence}
       reminder={formData.reminder}
-      guest={formData.guest}
+      guests={formData.guests}
       handleChange={handleChange}
       errStart={errors.startDateTime}
       errEnd={errors.endDateTime}

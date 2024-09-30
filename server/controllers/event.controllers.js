@@ -1,5 +1,4 @@
 import { Event } from "../models/event.model.js";
-
 import { EventGuest } from "../models/event_guest.model.js";
 import { incrementDate, dateLimit } from "../utils/eventUtils.js";
 import { Notification } from "../models/notification.model.js";
@@ -31,20 +30,22 @@ export const createEvent = async (req, res) => {
     }
 
     // create the event guests relationships
-    for (const e of events) {
-      await Promise.all(
-        guests.map(async (guest) => {
-          await EventGuest.create(
-            [
-              {
-                event_id: e._id,
-                guest: guest,
-              },
-            ],
-            { session }
-          );
-        })
-      );
+    if (guests && guests.length > 0) {
+      for (const e of events) {
+        await Promise.all(
+          guests.map(async (guest) => {
+            await EventGuest.create(
+              [
+                {
+                  event_id: e._id,
+                  guest: guest,
+                },
+              ],
+              { session }
+            );
+          })
+        );
+      }
     }
 
     // await Promise.all(

@@ -10,8 +10,8 @@ import {
 
 const router = Router();
 
-router.route("/").post(createEvent);
-router.route("/").get(getEvents);
+router.route("/create/").post(createEvent);
+router.route("/find/").post(getEvents);
 router.route("/availability/").get(getAvailablity);
 
 router.route("/:id").get(getEvent);

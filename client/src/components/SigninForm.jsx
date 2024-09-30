@@ -31,9 +31,10 @@ const SigninForm = () => {
     }
 
     try {
-      const url = "http://localhost:8000/api/users/login";
+      const url = "http://localhost:8000/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", user.username);
       window.location = "/calendar";
     } catch (error) {
       if (
@@ -49,12 +50,13 @@ const SigninForm = () => {
   };
 
   return (
-    <>
+    <Box width={320} margin={2}>
       <Typography
-        fontFamily={"Kanit, sans-serif"}
+        fontFamily={"Kanit"}
         fontSize={{ xs: 25, sm: 45 }}
         fontWeight={"bold"}
-        mb={{ xs: 0, sm: 2 }}
+        mt={{ xs: 0, sm: -2 }}
+        mb={{ xs: 0, sm: -1 }}
       >
         Welcome
       </Typography>
@@ -73,7 +75,7 @@ const SigninForm = () => {
         ></TextField>
       </div>
 
-      <div>
+      <div className="mt-2">
         <TextField
           type="password"
           placeholder="Password"
@@ -87,16 +89,22 @@ const SigninForm = () => {
         ></TextField>
       </div>
 
-      <div className="mb-3">
-        {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+      <div>
+        <div className="mt-1 text-xs">
+          {error ? (
+            <div className="text-red-500">{error}</div>
+          ) : (
+            <div className="invisible">PlaceHolder</div>
+          )}
+        </div>
         <button
           type="submit"
-          className="w-full flex mt-4 justify-center bg-black text-white p-2 rounded-md hover:bg-yellow-500"
+          className="flex justify-center w-full p-1 mt-2 text-white bg-black rounded-md hover:bg-yellow-500"
           onClick={handleSignin}
         >
           Sign in
         </button>
-        <Link to="/reset" className="text-indigo-600 text-sm ">
+        <Link to="/otp" className="text-sm text-indigo-600 ">
           Forgot password?
         </Link>
       </div>
@@ -109,7 +117,7 @@ const SigninForm = () => {
           </Link>
         </p>
       </div>
-    </>
+    </Box>
   );
 };
 

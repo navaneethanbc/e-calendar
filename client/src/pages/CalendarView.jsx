@@ -1,15 +1,19 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import multiMonthPlugin from "@fullcalendar/multimonth";
+import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from "@fullcalendar/list";
 import AddFunc from "../components/CalendarFunction/AddEvent";
 import EditFunc from "../components/CalendarFunction/EditEvent";
 import axios from "axios";
-import Sidebar from "../components/CalendarFunction/Sidebar";
 import { debounce } from "lodash";
-import SearchAvailable from "../components/CalendarFunction/SearchAvailable";
 import ShowEvents from "../components/CalendarFunction/ShowEvents";
+import SideDrawer from "../components/CalendarFunction/SideDrawer";
+
+import NavigationBar from "../components/NavigationBar";
+import { CreateButton } from "../components/CreateButton";
+import { Box } from "@mui/material";
 
 const CalendarView = () => {
   const [showAddOffcanvas, setShowAddOffcanvas] = useState(false);
@@ -22,7 +26,13 @@ const CalendarView = () => {
     Bank: true,
   });
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedView, setSelectedView] = useState("dayGridMonth");
+  const [open, setOpen] = useState(() => {
+    return localStorage.getItem("drawerOpen") === "true"; // Restore drawer state from local storage
+  });
+  const [selectedView, setSelectedView] = useState(
+    () => localStorage.getItem("calendarView") || "dayGridMonth"
+  );
+  const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +43,7 @@ const CalendarView = () => {
   const [notifications, setNotifications] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
 
-  const calendarRef = createRef();
+  const calendarRef = useRef(null);
 
   const toggleAddOffcanvas = () => {
     setShowAddOffcanvas(!showAddOffcanvas);
@@ -41,9 +51,13 @@ const CalendarView = () => {
 
   const handleAddEvent = async (newEvent) => {
     try {
+      console.log("Adding new event:", newEvent);
+      const ownerId = localStorage.getItem("userId");
+
       const response = await axios.post(
-        "http://localhost:8001/events/",
-        newEvent
+        "http://localhost:8000/events/",
+        newEvent,
+        ownerId
       );
       const updatedEvents = [...events, response.data];
       setEvents(updatedEvents);
@@ -57,7 +71,7 @@ const CalendarView = () => {
   const handleEditEvent = async (updatedEvent) => {
     try {
       await axios.put(
-        `http://localhost:8001/events/${updatedEvent.id}`,
+        `http://localhost:8000/events/${updatedEvent.id}`,
         updatedEvent
       );
       const updatedEvents = events.map((event) =>
@@ -73,7 +87,7 @@ const CalendarView = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`http://localhost:8001/events/${id}`);
+      await axios.delete(`http://localhost:8000/events/${id}`);
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
@@ -83,9 +97,14 @@ const CalendarView = () => {
     }
   };
 
+  // const username = "hari27";
+
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:8001/events/");
+      const response = await axios.post("http://localhost:8000/events/find/", {
+        username: localStorage.getItem("username"),
+        // username: username,
+      });
 
       const transformedEvents = response.data.events.map((event) => ({
         title: event.title,
@@ -98,17 +117,15 @@ const CalendarView = () => {
           description: event.description,
           location: event.location,
           reminder: event.reminder,
-          reccurence: event.reccurence,
-          guest: event.guest,
+          recurrence: event.recurrence,
+          guests: event.guests,
         },
         color:
           event.category === "Personal"
             ? "#b8860b"
             : event.category === "Bank"
             ? "red"
-            : event.category === "Branch"
-            ? "#00008b"
-            : "#3788d8",
+            : "#00008b",
       }));
 
       setEvents(transformedEvents);
@@ -138,6 +155,24 @@ const CalendarView = () => {
     setSelectedEvent(event.event); // Set the selected event
     setShowEditOffcanvas(true);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (calendarRef.current) {
+        calendarRef.current.getApi().updateSize();
+      }
+    };
+
+    // Trigger resize continuously during the transition
+    let animationFrameId;
+    const continuousResize = () => {
+      handleResize();
+      animationFrameId = requestAnimationFrame(continuousResize);
+    };
+
+    continuousResize(); // Start resizing
+    return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
+  }, [open]);
 
   useEffect(() => {
     // to get date as  mm/dd/yyyy
@@ -179,12 +214,13 @@ const CalendarView = () => {
     setSearchResult(filterEnd); // update search result array according to  searches
   }, [searchQuery, startDate, endDate, category]);
 
-  const handleSelectView = (view) => {
-    setSelectedView(view); // Update the selected view state
-    const calendar = calendarRef.current;
-    if (calendar) {
-      const calendarApi = calendar.getApi();
-      calendarApi.changeView(view);
+  const handleSelectView = (value) => {
+    setSelectedView(value);
+    localStorage.setItem("calendarView", value); // Save the selected view to local storage
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.changeView(value);
+      setHeaderTitle(calendarApi.view.title);
     }
   };
 
@@ -202,76 +238,129 @@ const CalendarView = () => {
     setSelectedCategories((prev) => ({ ...prev, [category]: isChecked }));
   };
 
+  //Navigation bar component handle
+
+  const handleDrawer = () => {
+    setOpen((prevOpen) => {
+      const newOpen = !prevOpen;
+      localStorage.setItem("drawerOpen", newOpen); // Save new state to local storage
+      return newOpen;
+    });
+  };
+  const handlePrev = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().prev();
+      setHeaderTitle(calendarRef.current.getApi().view.title);
+    }
+  };
+
+  // NEW: Function to handle "Next" button click
+  const handleNext = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().next();
+      setHeaderTitle(calendarRef.current.getApi().view.title);
+    }
+  };
+
+  // NEW: Function to handle "Today" button click
+  const handleToday = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().today();
+      setHeaderTitle(calendarRef.current.getApi().view.title);
+    }
+  };
+
+  const handleViewDidMount = (info) => {
+    setHeaderTitle(info.view.title);
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="w-[365px] min-w-[365px]">
-        <Sidebar
-          eventFcn={() => {
-            setSelectedEvent(null);
-            toggleAddOffcanvas();
-          }}
-          selected={dayPicker}
-          onSelect={handleDayPicker}
-          onCategoryChange={handleCategoryChange}
+    <>
+      <NavigationBar
+        open={open}
+        handleDrawer={handleDrawer}
+        handleToday={handleToday}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
+        headerTitle={headerTitle}
+        selectedView={selectedView}
+        handleSelectView={handleSelectView}
+      />
+      <CreateButton
+        open={open}
+        handleModalOpen={() => {
+          setSelectedEvent(null);
+          toggleAddOffcanvas();
+        }}
+      />
+      <div>
+        <Box display={"flex"}>
+          <SideDrawer
+            open={open}
+            eventFcn={() => {
+              setSelectedEvent(null);
+              toggleAddOffcanvas();
+            }}
+            selected={dayPicker}
+            onSelect={handleDayPicker}
+            onCategoryChange={handleCategoryChange}
+            handleSelectView={handleSelectView}
+            select={selectedView}
+          />
+
+          <Box
+            height="calc(100vh - 64px)"
+            width={"100%"}
+            sx={{
+              transition: "width 0.3s",
+              overflow: "hidden",
+            }}
+          >
+            {!showSearch ? (
+              <FullCalendar
+                ref={calendarRef}
+                plugins={[
+                  dayGridPlugin,
+                  timeGridPlugin,
+                  interactionPlugin,
+                  listPlugin,
+                ]}
+                initialView={selectedView}
+                events={filteredEvents}
+                selectable={true}
+                dateClick={() => {
+                  setSelectedEvent(null);
+                  toggleAddOffcanvas();
+                }}
+                eventClick={handleSelectEvent}
+                headerToolbar={false}
+                footerToolbar={false}
+                locale={"en-GB"}
+                viewDidMount={handleViewDidMount}
+                datesSet={(dateInfo) => setHeaderTitle(dateInfo.view.title)}
+                eventDisplay="block"
+                height="100%"
+              />
+            ) : (
+              <ShowEvents searchResult={searchResult} />
+            )}
+          </Box>
+        </Box>
+        <AddFunc
+          show={showAddOffcanvas}
+          onHide={() => setShowAddOffcanvas(false)}
+          onAddEvent={handleAddEvent}
+        />
+        <EditFunc
+          show={showEditOffcanvas}
+          onHide={() => setShowEditOffcanvas(false)}
+          onEditEvent={handleEditEvent}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+          onDeleteEvent={handleDeleteEvent}
         />
       </div>
-
-      <div className="flex flex-col flex-1 p-0 mr-4 overflow-x-hidden">
-        <div className="flex">
-          <SearchAvailable // search bar, availability checker, notification
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            category={category}
-            setCategory={setCategory}
-            notifications={notifications}
-            showSearch={showSearch}
-            setShowSearch={setShowSearch}
-            selectedView={selectedView}
-            handleSelectView={(e) => handleSelectView(e.target.value)}
-          />
-        </div>
-
-        {!showSearch ? (
-          <div className="flex-1 overflow-y-auto overflow-x-hidden max-h-[calc(100vh-80px)]">
-            <FullCalendar
-              ref={calendarRef}
-              plugins={[dayGridPlugin, timeGridPlugin, multiMonthPlugin]}
-              initialView={selectedView}
-              events={filteredEvents}
-              eventClick={handleSelectEvent}
-              headerToolbar={{
-                right: "today,prev,next",
-                center: "title",
-                left: false,
-              }}
-              eventColor="#ff9f40"
-              eventDisplay="block"
-              height="100%"
-            />
-          </div>
-        ) : (
-          <ShowEvents searchResult={searchResult} />
-        )}
-      </div>
-
-      <AddFunc
-        show={showAddOffcanvas}
-        onHide={() => setShowAddOffcanvas(false)}
-        onAddEvent={handleAddEvent}
-      />
-      <EditFunc
-        show={showEditOffcanvas}
-        onHide={() => setShowEditOffcanvas(false)}
-        onEditEvent={handleEditEvent}
-        selectedEvent={selectedEvent}
-        setSelectedEvent={setSelectedEvent}
-        onDeleteEvent={handleDeleteEvent}
-      />
-    </div>
+    </>
   );
 };
 

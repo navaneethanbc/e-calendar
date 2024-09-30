@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Joi from "joi";
+import passwordComplexity from "joi-password-complexity";
 import axios from "axios";
 import "../index.css";
 
@@ -52,22 +54,23 @@ const RegisterForm = () => {
 
     const { firstname, surname, confirmPassword, ...restUserData } = user;
 
-    const fullname = `${firstname.trim()} ${surname.trim()}`;
-
-    if (user.password.length < 8) {
-      setError("Password must be at least 8 characters");
+    if (!firstname || !surname) {
+      setError("Please fill both the name fields");
       return;
     }
 
-    if (user.password !== user.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    const firstName =
+      firstname.trim().charAt(0).toUpperCase() +
+      firstname.trim().slice(1).toLowerCase();
+    const surName =
+      surname.trim().charAt(0).toUpperCase() +
+      surname.trim().slice(1).toLowerCase();
+    const fullname = `${firstName} ${surName}`;
 
     const userData = { fullname, ...restUserData };
 
     try {
-      const url = "http://localhost:8000/api/users/register";
+      const url = "http://localhost:8000/users/register";
       const res = await axios.post(url, userData);
       navigate("/");
       console.log(res.message);
@@ -86,12 +89,13 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box width={320}>
+    <Box width={320} margin={2}>
       <Typography
-        fontFamily={"Kanit, sans-serif"}
+        fontFamily={"Kanit"}
         fontSize={{ xs: 25, sm: 45 }}
         fontWeight={"bold"}
-        mb={{ xs: 0, sm: 1 }}
+        mt={{ xs: 0, sm: -2 }}
+        mb={{ xs: 0, sm: -1 }}
       >
         Register
       </Typography>
@@ -197,6 +201,11 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
+        {/* {passwordStrength && (
+          <div className="text-sm">
+            <span className="text-gray-600">{passwordStrength}</span>
+          </div>
+        )} */}
       </div>
 
       <div>
@@ -211,6 +220,11 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
+        {user.confirmPassword && user.confirmPassword !== user.password && (
+          <div className="mt-0 text-sm text-red-500">
+            Passwords do not match
+          </div>
+        )}
       </div>
 
       <div className="my-1 mb-3">
@@ -227,10 +241,16 @@ const RegisterForm = () => {
       </div>
 
       <div className="mb-4">
-        {error && <div className="mt-1 text-sm text-red-500">{error}</div>}
+        <div className="mt-1 text-xs">
+          {error ? (
+            <div className="text-red-500">{error}</div>
+          ) : (
+            <div className="invisible">PlaceHolder</div>
+          )}
+        </div>
         <button
           type="submit"
-          className="flex justify-center w-full p-2 mt-2 text-white bg-black rounded-md hover:bg-yellow-500"
+          className="flex justify-center w-full p-1 mt-0 text-white bg-black rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started

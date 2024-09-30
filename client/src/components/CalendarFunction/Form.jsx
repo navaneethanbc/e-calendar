@@ -13,9 +13,9 @@ const Form = ({
   meeting_link,
   location,
   category,
-  reccurence,
+  recurrence,
   reminder,
-  guest,
+  guests,
   handleChange,
   errStart,
   errEnd,
@@ -180,11 +180,11 @@ const Form = ({
             Guest
           </label>
           <input
-            id="guest"
-            name="guest"
+            id="guests"
+            name="guests"
             type="text"
             className="w-full p-2 border border-gray-300 rounded"
-            value={guest}
+            value={guests}
             onChange={handleChange}
           />
 
@@ -207,14 +207,14 @@ const Form = ({
             </div>
 
             <div className="flex-1">
-              <label htmlFor="reccurence" className="block mb-1 font-bold">
+              <label htmlFor="recurrence" className="block mb-1 font-bold">
                 Recurrence
               </label>
               <select
-                id="reccurence"
-                name="reccurence"
+                id="recurrence"
+                name="recurrence"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={reccurence}
+                value={recurrence}
                 onChange={handleChange}
               >
                 <option value="Non-recurring">Non-recurring</option>
