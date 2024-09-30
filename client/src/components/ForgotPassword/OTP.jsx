@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import clogo from '../../assets/background.jpg';
+// import clogo from '../../assets/background.jpg';
 
 const OTP = ({ otp, setOtp, username, setUsername }) => {
   const [code, setCode] = useState(['', '', '', '']);
@@ -37,7 +37,7 @@ const OTP = ({ otp, setOtp, username, setUsername }) => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-      <img className="w-1/2 mx-auto ml-1 mr-5 mb-6" src={clogo} alt="Calendar" />
+      {/* <img className="w-1/2 mx-auto ml-1 mr-5 mb-6" src={clogo} alt="Calendar" /> */}
       <div className="bg-white p-20 rounded-lg w-99">
         <h1 className="text-2xl font-bold text-center mb-4">Account Verification</h1>
         <form onSubmit={processOtp}>

@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import "../index.css";
 
@@ -32,10 +33,10 @@ const RegisterForm = () => {
     { label: "Branch B", value: "option2" },
     { label: "Branch C", value: "option3" },
     { label: "Branch D", value: "option4" },
-    { label: "Branch E", value: "option5" },
-    { label: "Branch F", value: "option6" },
-    { label: "Branch G", value: "option7" },
-    { label: "Branch H", value: "option8" },
+    //{ label: "Branch E", value: "option5" },
+    //{ label: "Branch F", value: "option6" },
+    //{ label: "Branch G", value: "option7" },
+    //{ label: "Branch H", value: "option8" },
   ];
 
   const handleChange = ({ currentTarget: input }) => {
@@ -52,22 +53,23 @@ const RegisterForm = () => {
 
     const { firstname, surname, confirmPassword, ...restUserData } = user;
 
-    const fullname = `${firstname.trim()} ${surname.trim()}`;
-
-    if (user.password.length < 8) {
-      setError("Password must be at least 8 characters");
+    if (!firstname || !surname) {
+      setError("Please fill both the name fields");
       return;
     }
 
-    if (user.password !== user.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    const firstName =
+      firstname.trim().charAt(0).toUpperCase() +
+      firstname.trim().slice(1).toLowerCase();
+    const surName =
+      surname.trim().charAt(0).toUpperCase() +
+      surname.trim().slice(1).toLowerCase();
+    const fullname = `${firstName} ${surName}`;
 
     const userData = { fullname, ...restUserData };
 
     try {
-      const url = "http://localhost:8000/api/users/register";
+      const url = "http://localhost:8000/users/register";
       const res = await axios.post(url, userData);
       navigate("/");
       console.log(res.message);
@@ -86,12 +88,13 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box width={320}>
+    <Box width={320} margin={2}>
       <Typography
-        fontFamily={"Kanit, sans-serif"}
+        fontFamily={"Kanit"}
         fontSize={{ xs: 25, sm: 45 }}
         fontWeight={"bold"}
-        mb={{ xs: 0, sm: 1 }}
+        mt={{ xs: 0, sm: -2 }}
+        mb={{ xs: 0, sm: -1 }}
       >
         Register
       </Typography>
@@ -114,7 +117,7 @@ const RegisterForm = () => {
         <Box>
           <TextField
             type=""
-            placeholder="Surname"
+            placeholder="Last name"
             name="surname"
             onChange={handleChange}
             value={user.surname}
@@ -197,6 +200,11 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
+        {/* {passwordStrength && (
+          <div className="text-sm">
+            <span className="text-gray-600">{passwordStrength}</span>
+          </div>
+        )} */}
       </div>
 
       <div>
@@ -211,9 +219,14 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
+        {user.confirmPassword && user.confirmPassword !== user.password && (
+          <div className="text-red-500 text-sm mt-0">
+            Passwords do not match
+          </div>
+        )}
       </div>
 
-      <div className="my-1 mb-3">
+      <div className="mb-3 my-1">
         <p className="text-xs text-gray-600">
           By clicking "Get Started", you agree to our{" "}
           <Link to="/termsofservice" className="text-indigo-600">
@@ -227,10 +240,16 @@ const RegisterForm = () => {
       </div>
 
       <div className="mb-4">
-        {error && <div className="mt-1 text-sm text-red-500">{error}</div>}
+        <div className="text-xs mt-1">
+          {error ? (
+            <div className="text-red-500">{error}</div>
+          ) : (
+            <div className="invisible">PlaceHolder</div>
+          )}
+        </div>
         <button
           type="submit"
-          className="flex justify-center w-full p-2 mt-2 text-white bg-black rounded-md hover:bg-yellow-500"
+          className="w-full flex mt-0 justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started

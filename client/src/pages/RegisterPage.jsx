@@ -8,24 +8,33 @@ function RegisterPage() {
   return (
     <>
       <Header />
-      <Box display={"flex"} alignItems={"center"}>
+      <Box
+        display={{ sm: "flex", xs: "block" }}
+        mt={10}
+        height={"calc(100vh - 140px)"}
+        width={"100%"}
+        alignItems={"center"}
+        bgcolor={"#e6f5e8"}
+      >
         <Box
           component="img"
-          src="src/assets/background.jpg"
+          src="src/assets/background.png"
           alt="background"
-          // flex={5}
-          height={550}
-          mt={17}
+          height={540}
+          mt={10}
           borderColor="transparent"
           display={{ xs: "none", sm: "block" }}
         ></Box>
         <Box
           component={"form"}
-          // flex={2}
-          mt={{ xs: -1.5, sm: 15 }}
+          mt={{ xs: -1.5, sm: 5 }}
           ml={{ xs: 7.75, sm: 15 }}
-          mr={{ xs: 0, sm: 20 }}
-          width={{ xs: 250, sm: 600 }}
+          mr={{ xs: 0, sm: 15 }}
+          width={{ xs: 250, sm: 640 }}
+          height={560}
+          bgcolor={"white"}
+          borderRadius={3}
+          
         >
           <RegisterForm />
         </Box>

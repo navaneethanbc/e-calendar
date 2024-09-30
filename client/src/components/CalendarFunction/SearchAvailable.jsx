@@ -22,6 +22,7 @@ import {
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import Notifications from "../NotificationPopUp";
+import AvailabilityCheck from "./AvailabilityCheck";
 
 const SearchAvailable = ({
   searchQuery,
@@ -41,6 +42,9 @@ const SearchAvailable = ({
   const [openAvailability, setOpenAvailability] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false); // State for Notifications popup
   const [anchorElement, setAnchorElement] = useState(null);
+  const[username, setUserName]= useState('')
+  const [isavailablefrom, setIsAvailableFrom]= useState('')
+  const [isavailableto, setIsAvailableTo]= useState('')
 
   const toggleSearch = () => {
     setShowSearch(!showSearch);
@@ -132,7 +136,9 @@ const SearchAvailable = ({
       <IconButton onClick={handleNotificationClick} className="ml-4">
         <NotificationsIcon />
       </IconButton>
-      <label htmlFor="viewSelect" className="sr-only">
+
+      {/* this  select portion should be move to anoter place in calendar component */}
+      {/* <label htmlFor="viewSelect" className="sr-only">
         Select View
       </label>
       <select
@@ -146,7 +152,7 @@ const SearchAvailable = ({
         <option value="timeGridWeek">Week</option>
         <option value="dayGridMonth">Month</option>
         <option value="multiMonthYear">Year</option>
-      </select>
+      </select> */}
       <IconButton className="ml-4 ">
         <AccountCircleIcon />
       </IconButton>
@@ -208,8 +214,14 @@ const SearchAvailable = ({
       <Dialog open={openAvailability} onClose={toggleAvailability}>
         <DialogTitle>Availability</DialogTitle>
         <DialogContent>
-          This is the availability popup content. Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit.
+          <AvailabilityCheck 
+            username={username}
+            setUserName={setUserName}
+            isavailablefrom={isavailablefrom}
+            setIsAvailableFrom={setIsAvailableFrom}
+            isavailableto={isavailableto}
+            setIsAvailableTo = {setIsAvailableTo}/>
+            
         </DialogContent>
         <DialogActions>
           <Button onClick={toggleAvailability}>Close</Button>

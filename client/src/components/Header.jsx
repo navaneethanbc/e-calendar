@@ -4,7 +4,11 @@ import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 const Header = () => {
   return (
     <div>
-      <AppBar color="transparent" position="fixed" elevation={1}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{ bgcolor: "#ffec80", height: 80 }}
+      >
         <Toolbar>
           <Box
             component="img"
@@ -18,11 +22,10 @@ const Header = () => {
 
           <Typography
             component="text"
-            fontSize={{ xs: 35, sm: 50 }}
+            fontSize={{ xs: 35, sm: 45 }}
             fontFamily="Kanit"
             fontWeight="bold"
             color="rgb(54,53,51)"
-            mt={{ xs: 1.85, sm: 2.75 }}
             display={{ xs: "block", sm: "block" }}
           >
             Calendar
