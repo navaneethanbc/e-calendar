@@ -1,18 +1,24 @@
 import React from "react";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Toolbar, Box } from "@mui/material";
 
 const Footer = () => {
   return (
-    <div>
+    <Box
+      height={{ md: "8vh", sm: "4vh" }}
+      display={{ xs: "none", md: "block" }}
+    >
       <AppBar
-        color="transparent"
         position="fixed"
         elevation={0}
-        sx={{ top: "auto", bottom: 0, bgcolor: "#ffec80", height: 60 }}
+        sx={{
+          top: "auto",
+          bottom: 0,
+          bgcolor: "#ffec80",
+        }}
       >
         <Toolbar></Toolbar>
       </AppBar>
-    </div>
+    </Box>
   );
 };
 

@@ -1,55 +1,62 @@
 import React from "react";
 import Header from "../components/Header";
 import { Box } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
 import SigninForm from "../components/SigninForm";
 
-function SigninPage() {
+const SigninPage = () => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      height={"100vh"}
+      width={"100vw"}
+      sx={{ flexFlow: "nowrap" }}
+    >
       <Header />
-      <div>
+      <Box
+        display={"flex"}
+        gap={1}
+        flexDirection={{ xs: "column", md: "row" }}
+        flex={"auto"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        bgcolor={"#e6f5e8"}
+      >
         <Box
-          display={{ sm: "flex", xs: "block" }}
-          mt={10}
-          height="calc(100vh - 140px)"
-          width={"100%"}
-          alignItems={"center"}
-          bgcolor={"#e6f5e8"}
+          alignContent={"center"}
+          padding={{ xs: 0, md: 4 }}
+          display={{ xs: "block", md: "none" }}
         >
           <Box
             component="img"
-            src="src/assets/mobilebg.png"
+            src={isSm ? "src/assets/mobilebg.png" : "src/assets/background.png"}
             alt="background"
-            height={300}
-            mt={10}
-            ml={3.5}
-            borderColor="transparent"
-            display={{ xs: "block", sm: "none" }}
+            height={{ xs: "45vh", md: "60vh" }}
           />
-          <Box
-            mt={{ xs: -1.5, sm: 25 }}
-            ml={{ xs: 7.75, sm: 10 }}
-            mr={{ xs: 0, sm: 15 }}
-            height={{ sm: 280 }}
-            bgcolor={"white"}
-            borderRadius={3}
-          >
-            <SigninForm />
-          </Box>
+        </Box>
+        <Box display={"block"}>
+          <SigninForm />
+        </Box>
+        <Box
+          alignSelf={"center"}
+          padding={2}
+          display={{ xs: "none", md: "block" }}
+        >
           <Box
             component="img"
             src="src/assets/background.png"
             alt="background"
-            height={540}
-            mt={10}
-            display={{ xs: "none", sm: "block" }}
           />
         </Box>
-      </div>
+      </Box>
       <Footer />
-    </>
+    </Box>
   );
-}
+};
 
 export default SigninPage;

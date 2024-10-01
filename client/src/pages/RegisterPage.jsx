@@ -2,45 +2,62 @@ import React from "react";
 import RegisterForm from "../components/RegisterForm";
 import Header from "../components/Header";
 import { Box } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
 
-function RegisterPage() {
+const RegisterPage = () => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMd = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
-    <>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      height={"100vh"}
+      width={"100vw"}
+      sx={{ flexFlow: "nowrap" }}
+    >
       <Header />
       <Box
-        display={{ sm: "flex", xs: "block" }}
-        mt={10}
-        height={"calc(100vh - 140px)"}
-        width={"100%"}
+        display={"flex"}
+        gap={1}
+        flexDirection={{ xs: "column", md: "row" }}
+        flex={"auto"}
         alignItems={"center"}
+        justifyContent={"center"}
         bgcolor={"#e6f5e8"}
       >
         <Box
-          component="img"
-          src="src/assets/background.png"
-          alt="background"
-          height={540}
-          mt={10}
-          borderColor="transparent"
-          display={{ xs: "none", sm: "block" }}
-        ></Box>
-        <Box
-          component={"form"}
-          mt={{ xs: -1.5, sm: 5 }}
-          ml={{ xs: 7.75, sm: 15 }}
-          mr={{ xs: 0, sm: 15 }}
-          width={{ xs: 250, sm: 640 }}
-          height={{ xs: 200, sm: 560 }}
-          bgcolor={"white"}
-          borderRadius={3}
+          alignSelf={"center"}
+          padding={2}
+          display={{ xs: "none", sm: "none", md: "block" }}
         >
+          <Box
+            component="img"
+            src="src/assets/background.png"
+            alt="background"
+          />
+        </Box>
+        <Box
+          alignSelf={"center"}
+          padding={2}
+          display={{ xs: "none", sm: "block", md: "none" }}
+        >
+          <Box
+            component="img"
+            src="src/assets/background.png"
+            alt="background"
+            height={"30vh"}
+          />
+        </Box>
+        <Box display={"block"} alignSelf={"center"}>
           <RegisterForm />
         </Box>
       </Box>
       <Footer />
-    </>
+    </Box>
   );
-}
+};
 
 export default RegisterPage;

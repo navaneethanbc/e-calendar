@@ -34,10 +34,6 @@ const RegisterForm = () => {
     { label: "Branch B", value: "option2" },
     { label: "Branch C", value: "option3" },
     { label: "Branch D", value: "option4" },
-    { label: "Branch E", value: "option5" },
-    { label: "Branch F", value: "option6" },
-    { label: "Branch G", value: "option7" },
-    { label: "Branch H", value: "option8" },
   ];
 
   const handleChange = ({ currentTarget: input }) => {
@@ -89,21 +85,28 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box width={320} margin={2}>
+    <Box
+      width={{ xs: "80vw", sm: "50vw", md: "25vw" }}
+      mr={{ md: 5, xs: 0 }}
+      mt={{ md: 0, sm: 2, xs: 5 }}
+      padding={1}
+      borderRadius={3}
+      bgcolor={"white"}
+    >
       <Typography
         fontFamily={"Kanit"}
-        fontSize={{ xs: 25, sm: 45 }}
+        fontSize={45}
         fontWeight={"bold"}
-        mt={{ xs: 0, sm: -2 }}
-        mb={{ xs: 0, sm: -1 }}
+        height={45}
+        lineHeight={1}
       >
         Register
       </Typography>
 
-      <Box display={"flex"} mb={0}>
-        <Box mr={0.5}>
+      <Box display={"flex"} gap={1}>
+        <Box>
           <TextField
-            type=""
+            type="text"
             placeholder="First name"
             name="firstname"
             onChange={handleChange}
@@ -117,7 +120,7 @@ const RegisterForm = () => {
 
         <Box>
           <TextField
-            type=""
+            type="text"
             placeholder="Surname"
             name="surname"
             onChange={handleChange}
@@ -130,7 +133,7 @@ const RegisterForm = () => {
         </Box>
       </Box>
 
-      <div>
+      <Box>
         <TextField
           type="email"
           placeholder="Email address"
@@ -142,11 +145,11 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <TextField
-          type=""
+          type="text"
           placeholder="Employee ID"
           name="employee_id"
           onChange={handleChange}
@@ -156,7 +159,7 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-      </div>
+      </Box>
 
       <Autocomplete
         size="small"
@@ -164,7 +167,7 @@ const RegisterForm = () => {
         onChange={handleBranchChange}
         renderInput={(params) => (
           <TextField
-            type=""
+            type="text"
             {...params}
             label="Branch"
             required
@@ -175,9 +178,9 @@ const RegisterForm = () => {
         )}
       />
 
-      <div>
+      <Box>
         <TextField
-          type=""
+          type="text"
           placeholder="Username"
           name="username"
           onChange={handleChange}
@@ -187,9 +190,9 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <TextField
           type="password"
           placeholder="Password"
@@ -206,9 +209,9 @@ const RegisterForm = () => {
             <span className="text-gray-600">{passwordStrength}</span>
           </div>
         )} */}
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <TextField
           type="password"
           placeholder="Confirm Password"
@@ -220,14 +223,16 @@ const RegisterForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-        {user.confirmPassword && user.confirmPassword !== user.password && (
-          <div className="text-red-500 text-sm mt-0">
-            Passwords do not match
-          </div>
-        )}
-      </div>
+        <div className="text-sm -mt-1">
+          {user.confirmPassword && user.confirmPassword !== user.password ? (
+            <div className="text-red-500">Passwords do not match</div>
+          ) : (
+            <div className="invisible">PlaceHolder</div>
+          )}
+        </div>
+      </Box>
 
-      <div className="mb-3 my-1">
+      <Box mb={1} mt={1}>
         <p className="text-xs text-gray-600">
           By clicking "Get Started", you agree to our{" "}
           <Link to="/termsofservice" className="text-indigo-600">
@@ -238,10 +243,10 @@ const RegisterForm = () => {
             Privacy Policy
           </Link>
         </p>
-      </div>
+      </Box>
 
-      <div className="mb-4">
-        <div className="text-xs mt-1">
+      <Box mb={1}>
+        <div className="text-sm">
           {error ? (
             <div className="text-red-500">{error}</div>
           ) : (
@@ -250,21 +255,21 @@ const RegisterForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full flex mt-0 justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
+          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started
         </button>
-      </div>
+      </Box>
 
-      <div>
+      <Box>
         <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
           <Link to="/" className="text-indigo-600">
             Sign in
           </Link>
         </p>
-      </div>
+      </Box>
     </Box>
   );
 };

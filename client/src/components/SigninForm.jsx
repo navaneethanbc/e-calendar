@@ -50,20 +50,27 @@ const SigninForm = () => {
   };
 
   return (
-    <Box width={320} margin={2}>
+    <Box
+      width={{ xs: "80vw", sm: "40vw", md: "25vw" }}
+      ml={{ md: 5, xs: 0 }}
+      padding={1}
+      bgcolor={"white"}
+      borderRadius={3}
+    >
       <Typography
         fontFamily={"Kanit"}
-        fontSize={{ xs: 25, sm: 45 }}
+        fontSize={45}
         fontWeight={"bold"}
-        mt={{ xs: 0, sm: -2 }}
-        mb={{ xs: 0, sm: -1 }}
+        height={45}
+        lineHeight={1}
+        ml={1}
       >
         Welcome
       </Typography>
 
-      <div>
+      <Box padding={1}>
         <TextField
-          type=""
+          type="text"
           placeholder="Username"
           name="username"
           onChange={handleChange}
@@ -73,9 +80,9 @@ const SigninForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-      </div>
+      </Box>
 
-      <div className="mt-2">
+      <Box padding={1}>
         <TextField
           type="password"
           placeholder="Password"
@@ -87,10 +94,16 @@ const SigninForm = () => {
           fullWidth
           margin="dense"
         ></TextField>
-      </div>
+        <Link
+          to="/otp"
+          className="-mt-1 text-indigo-600 text-right text-sm block"
+        >
+          Forgot password?
+        </Link>
+      </Box>
 
-      <div>
-        <div className="text-xs mt-1">
+      <Box padding={1}>
+        <div className="text-sm">
           {error ? (
             <div className="text-red-500">{error}</div>
           ) : (
@@ -99,24 +112,21 @@ const SigninForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full flex mt-2 justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
+          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleSignin}
         >
           Sign in
         </button>
-        <Link to="/otp" className="text-indigo-600 text-sm ">
-          Forgot password?
-        </Link>
-      </div>
+      </Box>
 
-      <div>
-        <p className="text-sm text-center text-gray-600">
+      <Box mt={1}>
+        <p className="text-xm text-center text-gray-600">
           New to Calendar?{" "}
           <Link to="/register" className="text-indigo-600">
             Register Now
           </Link>
         </p>
-      </div>
+      </Box>
     </Box>
   );
 };
