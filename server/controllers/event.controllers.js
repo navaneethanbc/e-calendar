@@ -1,6 +1,7 @@
 import { Event } from "../models/event.model.js";
 import { EventGuest } from "../models/event_guest.model.js";
 import { incrementDate, dateLimit } from "../utils/eventUtils.js";
+import { User } from "../models/user.model.js";
 import { Notification } from "../models/notification.model.js";
 import mongoose from "mongoose";
 
@@ -108,13 +109,11 @@ const createRecurringEvents = async (event, parent_event_id, session) => {
 
 export const getEvents = async (req, res) => {
   try {
-    const { username, categories, from, to, title } = req.body;
+    const { username, from, to, title } = req.body;
+
+    let events = [];
 
     const addConditions = (queryArray) => {
-      if (categories) {
-        queryArray.push({ category: { $in: categories } });
-      }
-
       if (from && to) {
         queryArray.push({
           $or: [
@@ -129,21 +128,58 @@ export const getEvents = async (req, res) => {
       }
     };
 
-    const ownEventQuery = [{ owner: username }];
+    const ownEventQuery = [{ owner: username }, { category: "Personal" }];
     addConditions(ownEventQuery);
 
     const ownEvents = await Event.find({
       $and: ownEventQuery,
     });
 
+    events.push(...ownEvents);
+
+    let branchEvents = [];
+
+    const branch = (await User.findOne({ username: username })).branch;
+
+    const sameBranchUsers = (await User.find({ branch: branch })).map(
+      (user) => user.username
+    );
+
+    if (sameBranchUsers.length > 0) {
+      const branchEventQuery = [
+        { owner: { $in: sameBranchUsers } },
+        { category: "Branch" },
+      ];
+
+      addConditions(branchEventQuery);
+
+      branchEvents = await Event.find({
+        $and: branchEventQuery,
+      });
+    }
+
+    events.push(...branchEvents);
+
+    let bankEvents = [];
+
+    const bankEventQuery = [{ category: "Bank" }];
+
+    addConditions(bankEventQuery);
+
+    bankEvents = await Event.find({
+      $and: bankEventQuery,
+    });
+
+    events.push(...bankEvents);
+
+    let invitedEvents = [];
+
     const eventGuests = await EventGuest.find(
       { $and: [{ username: username }, { status: "Accepted" }] },
       { event_id: 1 }
     );
 
-    let invitedEvents = [];
-
-    if (eventGuests) {
+    if (eventGuests.length > 0) {
       const inviteEventQuery = [
         { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
       ];
@@ -155,7 +191,7 @@ export const getEvents = async (req, res) => {
       });
     }
 
-    const events = ownEvents.concat(invitedEvents);
+    events.push(...invitedEvents);
 
     res.status(200).json({ events });
   } catch (error) {
@@ -187,19 +223,21 @@ export const editEvent = async (req, res) => {
     await EventGuest.deleteMany({ event_id: req.params.id }, { session });
 
     // create the new event guests
-    await Promise.all(
-      guests.map(async (guest) => {
-        await EventGuest.create(
-          [
-            {
-              event_id: req.params.id,
-              guest: guest,
-            },
-          ],
-          { session }
-        );
-      })
-    );
+    if (guests && guests.length > 0) {
+      await Promise.all(
+        guests.map(async (guest) => {
+          await EventGuest.create(
+            [
+              {
+                event_id: req.params.id,
+                guest: guest,
+              },
+            ],
+            { session }
+          );
+        })
+      );
+    }
 
     await session.commitTransaction();
   } catch (error) {
