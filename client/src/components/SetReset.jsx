@@ -81,8 +81,8 @@ const SetReset = ({ setIsModalOpen }) => {
         }
     };
 
-    const resetPassword = async (event) => {
-        event.preventDefault();
+    const resetPassword = async (e) => {
+        e.preventDefault();
         if (validatePassword()) {
             try {
                 // API call to check password and update it

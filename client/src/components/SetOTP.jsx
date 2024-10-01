@@ -81,12 +81,33 @@ const SetOTP = ({ setOtpVerified }) => {
     const [username, setUserName] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [code, setCode] = useState('');
+    const [usernameError, setUserNameError] = useState("");
 
-    const sendOTP = async() => {
-     // const response = await axios.post("http://localhost:8000/users/reset",username)
+    const checkUserName = ()=>{
+        if (!username) {
+            setUserNameError("Username can not be empty");
+            return false;
+          }
+    }
+    const sendOTP = async(e) => {
+        e.preventDefault()
+        if (checkUserName()){
+            try {
+                const response = await axios.post("http://localhost:8000/users/otp",{"username":username})
+                if(response.ok){
+                    setOtpSent(true)
+                }
+                
+            }
+            catch{
+
+            }
+        }
+        
+        
+     
         // API call 
         // Search the user by username, retrieve their email address, and send a 6-digit OTP to their email
-        setOtpSent(true);
     };
 
     const verifyOTP = () => {

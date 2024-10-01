@@ -1,6 +1,8 @@
 import { User } from "../models/user.model.js";
 import { validateLogin, validateRegister } from "../utils/userValidator.js";
 import { generateAuthToken } from "../utils/tokenUtils.js";
+import {sendEmail} from "../utils/sendEmail.js"
+import crypto from 'crypto'
 
 export const registerUser = async (req, res) => {
   try {
@@ -76,10 +78,41 @@ export const loginUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ username: req.params.username });
     return res.status(200).json({ user });
   } catch (error) {
     // res.status(500).send({ message: "Something went wrong!" });
     res.status(500).send({ message: error.message });
   }
 };
+
+
+export const sendOtp = async(req,res)=>{
+  try{
+    const {username}= req.body
+    //console.log("Received username:", username);
+
+    const user = await User.findOne({username})
+    //console.log("Found user:", user);
+
+    if(!user){
+      return res.status(404).json({message:"user  is not found"})
+    }
+
+    const token = crypto.randomBytes(8).toString('hex')
+    user.resetToken = token
+    user.resetTokenExpires = new Date(Date.now() + 10*60*1000)
+    await user.save()
+
+    const emailSubject = `Password Reset OTP for ${user.username}`
+    const emailBody = `Use this otp for your password reset. OTP : ${token}. it will expires in 10 minutes`
+
+    //console.log("Attempting to send email to:", user.email);
+    await sendEmail(user.email,emailSubject,emailBody);
+    res.status(200).json({ message: "OTP sent successfully to your email" })
+  }
+  catch (error) {
+    console.error("Detailed error in forgot password process:", error);
+    res.status(500).json({ message: "Error in forgot password process" });
+  }
+}

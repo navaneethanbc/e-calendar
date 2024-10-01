@@ -57,6 +57,12 @@ const userSchema = new Schema(
       type: String,
       default: "+5:30",
     },
+    resetToken:{
+      type:String
+    },
+    resetTokenExpires:{
+      type:Date
+    }
   },
   {
     timestamps: true,
