@@ -33,7 +33,9 @@ export default function MyDatePicker({ selected, onSelect }) {
         }}
         closeOnSelect={false}
         displayStaticWrapperAs="desktop"
-        sx={{ backgroundColor: "beige" }}
+        sx={{
+          backgroundColor: "beige",
+        }}
       />
     </LocalizationProvider>
   );

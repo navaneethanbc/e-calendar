@@ -5,7 +5,7 @@ export const CreateButton = ({ open, handleModalOpen }) => {
   return (
     <Box position={"absolute"} top={100} zIndex={50} ml={2.5}>
       <button
-        class="rounded-full bg-[#febe00] flex items-center justify-center shadow-lg hover:bg-[#febe00]"
+        className="rounded-full bg-[#febe00] flex items-center justify-center shadow-lg hover:bg-[#febe00]"
         onClick={handleModalOpen}
         style={{
           width: open ? 150 : 50,

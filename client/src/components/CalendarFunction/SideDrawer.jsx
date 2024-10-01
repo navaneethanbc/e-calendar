@@ -53,13 +53,17 @@ const SideDrawer = ({
       sx={{
         transition: "width 0.3s",
         overflow: "hidden",
-        "@media (max-width:1200px)": { width: open ? "32%" : "0%" },
-        "@media (max-width:768px)": { width: open ? "100%" : "0%" }, // Full width on mobile
+        "@media (max-width:1440px)": { width: open ? "30%" : "0%" },
+        "@media (max-width:1200px)": { width: open ? "43%" : "0%" },
+        "@media (max-width:768px)": {
+          width: open ? "63%" : "0%",
+        },
+        "@media (max-width:642px)": { width: open ? "100%" : "0%" },
       }}
     >
       <Box position={"relative"} top={100} sx={{ transition: "width 0.3s" }}>
         {!isMobile ? (
-          <div className="items-center mb-4 border-b-4 border-gray-300">
+          <div className="items-center mb-4 border-b-4 border-gray-300 md:h-[300px] lg:h-auto">
             <MyDatePicker selected={selected} onSelect={onSelect} />
           </div>
         ) : (
@@ -75,8 +79,10 @@ const SideDrawer = ({
               <Typography
                 variant="h1"
                 fontFamily={"Kanit"}
-                fontSize={{ xs: 20, sm: 24 }}
-                color={"#363533"}
+                sx={{
+                  fontSize: { xs: "20px", sm: "24px" },
+                  color: "#363533",
+                }}
                 flexGrow={1}
               >
                 Calendar
@@ -85,7 +91,7 @@ const SideDrawer = ({
 
             <br />
 
-            <div className="flex flex-col">
+            <div className="flex flex-col text-[12px] sm:text-[15px] md:text-[14px] lg:text-[16px]">
               <button
                 className={`flex items-center px-4 py-4 font-bold border-t-4 border-gray-300 btn ${
                   isSelected("timeGridDay") ? "text-yellow-700" : "text-black"
@@ -130,7 +136,7 @@ const SideDrawer = ({
           </>
         )}
 
-        <div className="flex flex-col">
+        <div className="flex flex-col text-[12px] sm:text-[15px] md:text-[13px] lg:text-[16px]">
           {["Personal", "Branch", "Bank"].map((category) => (
             <div key={category} className="flex flex-col px-4 mb-3 space-y-2">
               <div className="flex items-center space-x-2">
@@ -157,7 +163,7 @@ const SideDrawer = ({
           ))}
         </div>
 
-        <div className="flex items-center px-4 mt-2 space-x-2 border-t-4 border-gray-300">
+        <div className="flex items-center px-4 mt-2 space-x-2 border-t-4 border-gray-300 text-[12px] sm:text-[15px] md:text-[14px] lg:text-[16px]">
           <a href="calendar/help" style={{ textDecoration: "underline" }}>
             <br />
             <i className="mr-3 fas fa-question-circle"></i>

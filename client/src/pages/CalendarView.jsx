@@ -314,6 +314,10 @@ const CalendarView = () => {
             sx={{
               transition: "width 0.3s",
               overflow: "hidden",
+              "@media (max-width: 600px)": {
+                width: open ? "0%" : "100%",
+                display: open ? "none" : "block",
+              },
             }}
           >
             {!showSearch ? (
