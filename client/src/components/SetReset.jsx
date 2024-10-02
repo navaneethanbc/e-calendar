@@ -1,97 +1,43 @@
-// import React,{useState} from 'react'
-// import {Button,TextField,Box} from "@mui/material"
-
-// const SetReset = ({setIsModalOpen}) => {
-//     const[password, setPassword] = useState("")
-//     const[confirmpassword, setConfirmPassword] = useState("")
-//     const resetPassword = async(event)=>{
-//         event.preventDefault();
-//         if (password.length < 8) {
-//             setError("Password must be at least 8 characters");
-//             return;
-//         }
-      
-//         if (password !== confirmpassword) {
-//             setError("Passwords do not match");
-//             return;
-//         }
-
-//         //api call for check pasword and update the password
-//         setIsModalOpen(false)
-//     }
-//   return (
-//     <div>
-        
-//         <TextField
-//           type="password"
-//           placeholder="New Password"
-//           name="password"
-//           onChange={(e)=>setPassword(e.target.value)}
-//           value={password}
-//           required
-//           size="small"
-//           fullWidth
-//           margin="dense"
-//         ></TextField>
-
-//         <TextField
-//           type="password"
-//           placeholder=" Confirm New Password"
-//           name="password"
-//           onChange={(e)=>setConfirmPassword(e.target.value)}
-//           value={confirmpassword}
-//           required
-//           size="small"
-//           fullWidth
-//           margin="dense"
-//         ></TextField>
-
-//         <Button
-//         fullWidth
-//         variant="contained"
-//         onClick={resetPassword}
-//         sx={{mt:2}}>
-//           Reset password
-//         </Button>
-//     </div>
-//   )
-// }
-
-// export default SetReset
-
 import React, { useState } from 'react';
-import { Button, TextField, Stack, Typography } from "@mui/material";
+import { Button, TextField, Stack, Typography, Alert } from "@mui/material";
 import { LockReset as LockResetIcon } from '@mui/icons-material';
+import axios from 'axios';
 
-const SetReset = ({ setIsModalOpen }) => {
+const SetReset = ({ setIsModalOpen, username }) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+    const [errors, setErrors] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const validatePassword = () => {
-        if (password !== confirmPassword) {
-            setPasswordError("Passwords do not match");
-            return false;
-        } else if (password.length < 8) {
-            setPasswordError("Password must be at least 8 characters long");
-            return false;
-        } else {
-            setPasswordError("");
-            return true;
+        if (!password.trim()) {
+            setErrors("Password cannot be empty")
+            return false
         }
+
+        if (password !== confirmPassword) {
+            setErrors("Passwords do not match")
+            return false
+        }
+        setErrors("")
+        return true
     };
 
     const resetPassword = async (e) => {
         e.preventDefault();
         if (validatePassword()) {
             try {
-                // API call to check password and update it
-                // Replace the following line with your actual API call
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating API call
-                setIsModalOpen(false);
+                const response = await axios.post("http://localhost:8000/users/resetpassword", { username, password });
+                if(response.status === 200){
+                    setSuccessMessage(response.data.message);
+                    setTimeout(() => {
+                        setIsModalOpen(false);
+                    }, 1000);
+                }
+                
             } catch (error) {
-                console.error("Error resetting password:", error);
-                setPasswordError("Failed to reset password. Please try again.");
+                console.error("error occured in reset password", error)
+                setErrors(`${error.response?.data?.message}` || "An error occurred during password reset" )
             }
         }
     };
@@ -102,6 +48,9 @@ const SetReset = ({ setIsModalOpen }) => {
                 Reset Password
             </Typography>
 
+            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+            {errors.api && <Alert severity="error">{errors.api}</Alert>}
+
             <TextField
                 type="password"
                 label="New Password"
@@ -110,8 +59,8 @@ const SetReset = ({ setIsModalOpen }) => {
                 value={password}
                 required
                 fullWidth
-                error={!!passwordError}
-                helperText={passwordError}
+                error={!!errors}
+                helperText={errors}
             />
 
             <TextField
@@ -122,14 +71,14 @@ const SetReset = ({ setIsModalOpen }) => {
                 value={confirmPassword}
                 required
                 fullWidth
-                error={!!passwordError}
+                error={!!errors}
             />
 
             <Button
                 fullWidth
                 variant="contained"
                 type="submit"
-                startIcon={<LockResetIcon />}
+                startIcon={ <LockResetIcon />}
                 disabled={!password || !confirmPassword}
                 sx={{ 
                     mt: 2, 

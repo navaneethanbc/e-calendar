@@ -1,119 +1,61 @@
-// import {useState} from 'react'
-// import {Typography, TextField, Button} from "@mui/material"
-
-// const SetOTP = ({setOtpVerified}) => {
-//   const [username, setUserName] = useState("")
-//   const [otpSent, setOtpSent] = useState(false)
-//   const [code,setCode] = useState('')
-
-//   const sendOTP = ()=>{
-//     // api call 
-//     //Search the user by username, retrieve their email address, and send a 6-digit OTP to their email
-//     setOtpSent(true)
-//   }
-
-//   const verifyOTP = ()=>{
-//     // api call
-//     //check the enterd code correct  
-//     setOtpVerified(true)
-//   }
-
-//   return (
-//     <div>
-//         <Typography
-//         variant="h5"
-//         component="h2"
-//         gutterBottom
-//         align="center"
-//         >
-//           Forgot Password
-//         </Typography>
-
-//         <TextField
-//         fullWidth
-//         label="Username"
-//         variant = "outlined"
-//         value ={username}
-//         onChange={(e)=>setUserName(e.target.value)} 
-//         margin="normal" 
-//         />
-
-//         <Button 
-//         onClick={sendOTP}
-//         variant="text"
-//         sx={{color: '#4f46e5 ', fontSize: '0.875rem',p:0, mt:0.5, textTransform: 'none'}}>
-//           Send OTP
-//         </Button>
-//         {otpSent &&(
-//           <div>
-//             <Typography
-//             >
-//              OTP has been sent to your email 
-//             </Typography>
-
-//             <TextField
-//             fullWidth
-//             label = "Enter the OTP"
-//             value={code}
-//             variant='outlined'
-//             onChange={(e)=>setCode(e.target.value)}
-//             />
-//             <Button 
-//             variant="text"
-//             onClick={verifyOTP}
-//             sx={{color: '#4f46e5 ', fontSize: '0.875rem',p:0, mt:0.5, textTransform: 'none'}}>
-//               Verify OTP
-//             </Button>
-//           </div>
-//         )
-//         }
-//     </div>
-//   )
-// }
-
-// export default SetOTP
 import { useState } from 'react';
-import { Typography, TextField, Button, Stack } from "@mui/material";
+import { Typography, TextField, Button, Stack, Alert, Snackbar } from "@mui/material";
 import { Mail as MailIcon, LockReset as LockResetIcon } from '@mui/icons-material';
 import axios from 'axios';
 
-const SetOTP = ({ setOtpVerified }) => {
-    const [username, setUserName] = useState("");
+const SetOTP = ({ setOtpVerified,username,setUsername }) => {
+    
     const [otpSent, setOtpSent] = useState(false);
     const [code, setCode] = useState('');
-    const [usernameError, setUserNameError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
+    const [otpError, setOtpError] = useState("");
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
-    const checkUserName = ()=>{
-        if (!username) {
-            setUserNameError("Username can not be empty");
+    const checkUsername = () => {
+        if (!username.trim()) {
+            setUsernameError("Username cannot be empty");
             return false;
-          }
-    }
-    const sendOTP = async(e) => {
-        e.preventDefault()
-        if (checkUserName()){
-            try {
-                const response = await axios.post("http://localhost:8000/users/otp",{"username":username})
-                if(response.ok){
-                    setOtpSent(true)
-                }
-                
-            }
-            catch{
-
-            }
         }
-        
-        
-     
-        // API call 
-        // Search the user by username, retrieve their email address, and send a 6-digit OTP to their email
+        setUsernameError("");
+        return true;
     };
 
-    const verifyOTP = () => {
-        // API call
-        // Check if the entered code is correct  
-        setOtpVerified(true);
+    const sendOTP = async (e) => {
+        e.preventDefault();
+        if (checkUsername()) {
+            try {
+                const response = await axios.post("http://localhost:8000/users/otp", { username });
+                setOtpSent(true);
+                setSnackbar({ open: true, message: response?.data?.message, severity: 'success' });
+            } catch (error) {
+                console.error("Error in sending OTP:", error);
+                setSnackbar({ open: true, message: error.response?.data?.message || 'Failed to send OTP', severity: 'error' });
+            } 
+        }
+    };
+
+    const verifyOTP = async (e) => {
+        e.preventDefault()
+        if (!code.trim()) {
+            setOtpError("Please enter the OTP");
+            return;
+        }
+        try {
+            const response = await axios.post("http://localhost:8000/users/otpverify", { username, otp: code });
+            
+            setSnackbar({ open: true, message: response.data.message, severity: 'success' });
+            setTimeout(()=>{
+                setOtpVerified(true)},1000)
+            
+        } catch (error) {
+            console.error("Error in verifying OTP:", error);
+            setOtpError("Invalid OTP. Please try again.");
+            setSnackbar({ open: true, message: error.response?.data?.message || 'Failed to verify OTP', severity: 'error' });
+        }     };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setSnackbar(prev => ({ ...prev, open: false }));
     };
 
     return (
@@ -127,14 +69,17 @@ const SetOTP = ({ setOtpVerified }) => {
                 label="Username"
                 variant="outlined"
                 value={username}
-                onChange={(e) => setUserName(e.target.value)}
+                error={!!usernameError}
+                helperText={usernameError}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={otpSent}
             />
 
             <Button 
                 onClick={sendOTP}
                 variant="contained"
                 startIcon={<MailIcon />}
-                disabled={!username}
+                disabled={otpSent}
                 sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' } }}
             >
                 Send OTP
@@ -142,9 +87,9 @@ const SetOTP = ({ setOtpVerified }) => {
 
             {otpSent && (
                 <>
-                    <Typography variant="body2" color="text.secondary">
-                        OTP has been sent to your email
-                    </Typography>
+                    <Alert severity="info">
+                        OTP has been sent to your Email
+                    </Alert>
 
                     <TextField
                         fullWidth
@@ -152,19 +97,31 @@ const SetOTP = ({ setOtpVerified }) => {
                         value={code}
                         variant='outlined'
                         onChange={(e) => setCode(e.target.value)}
+                        error={ !!otpError}
+                        helperText={ otpError}
                     />
 
                     <Button 
                         variant="contained"
                         onClick={verifyOTP}
                         startIcon={<LockResetIcon />}
-                        disabled={code.length !== 6}
                         sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' } }}
                     >
                         Verify OTP
                     </Button>
                 </>
             )}
+
+            <Snackbar 
+                open={snackbar.open} 
+                autoHideDuration={1000} 
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Stack>
     );
 };

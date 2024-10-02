@@ -62,6 +62,10 @@ const userSchema = new Schema(
     },
     resetTokenExpires:{
       type:Date
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false
     }
   },
   {

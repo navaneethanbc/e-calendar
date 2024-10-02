@@ -55,3 +55,20 @@ export const validateLogin = (user) => {
 
   return schema.validate(user);
 };
+
+export const validateResetPassword = (data)=>{
+  const schema = Joi.object({
+    username:Joi.string().required().label("Username"), password:passwordComplexity().required().label("Password").messages({
+    "passwordComplexity.tooShort":
+      "Password must contain atleast 8 characters.",
+    "passwordComplexity.lowercase":
+      "Password must contain atleast one lowercase letter.",
+    "passwordComplexity.uppercase":
+      "Password must contain atleast one uppercase letter.",
+    "passwordComplexity.numeric": "Password must contain atleast one number.",
+    "passwordComplexity.symbol": "Password must contain atleast one symbol",
+    "string.empty": "Password cannot be empty.",
+  })})
+  return schema.validate(data)
+
+}
