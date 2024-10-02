@@ -29,13 +29,11 @@ const TheCalendar = () => {
   });
   const [events, setEvents] = useState([]);
 
-  const username = "hari27";
-
   // Fetch events from the server
   const fetchEvents = async () => {
     try {
       const response = await axios.post("http://localhost:8000/events/find/", {
-        username: username, // Pass the username in the request body
+        username: localStorage.getItem("username"), // Pass the username in the request body
       });
 
       console.log(response.data);

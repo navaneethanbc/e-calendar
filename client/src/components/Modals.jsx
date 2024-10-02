@@ -45,14 +45,14 @@ export const EventModal = ({ open, handleClose }) => {
               label="Starts At"
               type="datetime-local"
               fullWidth
-              // InputLabelProps={{ shrink: true }}
+              InputLabelProps={{ shrink: true }}
             />
             <TextField
               margin="dense"
               label="Ends At"
               type="datetime-local"
               fullWidth
-              //   InputLabelProps={{ shrink: true }}
+              InputLabelProps={{ shrink: true }}
             />
           </Box>
           <FormControl margin="dense" size="small" variant="standard">
