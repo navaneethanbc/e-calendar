@@ -12,12 +12,12 @@ export const generateAuthToken = (user) => {
   );
 };
 
-export const generateRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      _id: user._id,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_LIFETIME }
-  );
-};
+// export const generateRefreshToken = (user) => {
+//   return jwt.sign(
+//     {
+//       _id: user._id,
+//     },
+//     process.env.REFRESH_TOKEN_SECRET,
+//     { expiresIn: process.env.REFRESH_TOKEN_LIFETIME }
+//   );
+// };

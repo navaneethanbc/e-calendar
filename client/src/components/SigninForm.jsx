@@ -1,10 +1,12 @@
-import { Box, TextField, Typography, Button } from "@mui/material";
+import { Box, TextField, Typography, Modal } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../index.css";
+import ResetPassword from "./ForgotPassword/ResetPassword";
 
 const SigninForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -51,9 +53,9 @@ const SigninForm = () => {
 
   return (
     <Box
-      width={{ xs: "80vw", sm: "40vw", md: "25vw" }}
-      ml={{ md: 5, xs: 0 }}
-      padding={1}
+      width={{ xs: "80vw", sm: "50vw", md: "22vw" }}
+      ml={{ md: "4vw", xs: 0 }}
+      padding={2}
       bgcolor={"white"}
       borderRadius={3}
     >
@@ -63,46 +65,48 @@ const SigninForm = () => {
         fontWeight={"bold"}
         height={45}
         lineHeight={1}
-        ml={1}
+        mb={1}
       >
         Welcome
       </Typography>
 
-      <Box padding={1}>
-        <TextField
-          type="text"
-          placeholder="Username"
-          name="username"
-          onChange={handleChange}
-          value={user.username}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </Box>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="text"
+        placeholder="Username"
+        name="username"
+        onChange={handleChange}
+        value={user.username}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      ></TextField>
+      {/* </div> */}
 
-      <Box padding={1}>
-        <TextField
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          value={user.password}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-        <Link
-          to="/otp"
-          className="-mt-1 text-indigo-600 text-right text-sm block"
-        >
-          Forgot password?
-        </Link>
-      </Box>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="password"
+        placeholder="Password"
+        name="password"
+        onChange={handleChange}
+        value={user.password}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      ></TextField>
+      <Link
+        className="-mt-1 text-indigo-600 text-right text-sm block"
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        Forgot password?
+      </Link>
+      {/* </div> */}
 
-      <Box padding={1}>
+      <div className="p-1 pt-0">
         <div className="text-sm">
           {error ? (
             <div className="text-red-500">{error}</div>
@@ -117,16 +121,24 @@ const SigninForm = () => {
         >
           Sign in
         </button>
-      </Box>
+      </div>
 
-      <Box mt={1}>
+      <div className="pt-1">
         <p className="text-xm text-center text-gray-600">
           New to Calendar?{" "}
           <Link to="/register" className="text-indigo-600">
             Register Now
           </Link>
         </p>
-      </Box>
+      </div>
+      <Modal
+        open={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ResetPassword setIsModalOpen={setIsModalOpen} />
+      </Modal>
     </Box>
   );
 };

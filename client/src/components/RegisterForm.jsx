@@ -86,10 +86,10 @@ const RegisterForm = () => {
 
   return (
     <Box
-      width={{ xs: "80vw", sm: "50vw", md: "25vw" }}
-      mr={{ md: 5, xs: 0 }}
-      mt={{ md: 0, sm: 2, xs: 5 }}
-      padding={1}
+      width={{ xs: "80vw", sm: "50vw", md: "24vw" }}
+      mr={{ md: "3vw", xs: 0 }}
+      mt={{ md: 0, sm: "3vh", xs: "8vh" }}
+      padding={2}
       borderRadius={3}
       bgcolor={"white"}
     >
@@ -99,67 +99,64 @@ const RegisterForm = () => {
         fontWeight={"bold"}
         height={45}
         lineHeight={1}
+        mb={1}
       >
         Register
       </Typography>
 
-      <Box display={"flex"} gap={1}>
-        <Box>
-          <TextField
-            type="text"
-            placeholder="First name"
-            name="firstname"
-            onChange={handleChange}
-            value={user.firstname}
-            required
-            size="small"
-            fullWidth
-            margin="dense"
-          ></TextField>
-        </Box>
-
-        <Box>
-          <TextField
-            type="text"
-            placeholder="Surname"
-            name="surname"
-            onChange={handleChange}
-            value={user.surname}
-            required
-            size="small"
-            fullWidth
-            margin="dense"
-          ></TextField>
-        </Box>
-      </Box>
-
-      <Box>
-        <TextField
-          type="email"
-          placeholder="Email address"
-          name="email"
-          onChange={handleChange}
-          value={user.email}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </Box>
-
-      <Box>
+      <div className="flex gap-1">
         <TextField
           type="text"
-          placeholder="Employee ID"
-          name="employee_id"
+          placeholder="First name"
+          name="firstname"
           onChange={handleChange}
-          value={user.employee_id}
+          value={user.firstname}
           required
           size="small"
           fullWidth
           margin="dense"
-        ></TextField>
-      </Box>
+        />
+
+        <TextField
+          type="text"
+          placeholder="Surname"
+          name="surname"
+          onChange={handleChange}
+          value={user.surname}
+          required
+          size="small"
+          fullWidth
+          margin="dense"
+        />
+      </div>
+
+      {/* <div> */}
+      <TextField
+        type="email"
+        placeholder="Email address"
+        name="email"
+        onChange={handleChange}
+        value={user.email}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      />
+      {/* </div> */}
+
+      {/* <div> */}
+      <TextField
+        type="text"
+        placeholder="Employee ID"
+        name="employee_id"
+        onChange={handleChange}
+        value={user.employee_id}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      />
+      {/* </div> */}
 
       <Autocomplete
         size="small"
@@ -178,61 +175,61 @@ const RegisterForm = () => {
         )}
       />
 
-      <Box>
-        <TextField
-          type="text"
-          placeholder="Username"
-          name="username"
-          onChange={handleChange}
-          value={user.username}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </Box>
+      {/* <div> */}
+      <TextField
+        type="text"
+        placeholder="Username"
+        name="username"
+        onChange={handleChange}
+        value={user.username}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      />
+      {/* </div> */}
 
-      <Box>
-        <TextField
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          value={user.password}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-        {/* {passwordStrength && (
+      {/* <div> */}
+      <TextField
+        type="password"
+        placeholder="Password"
+        name="password"
+        onChange={handleChange}
+        value={user.password}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      />
+      {/* {passwordStrength && (
           <div className="text-sm">
             <span className="text-gray-600">{passwordStrength}</span>
           </div>
         )} */}
-      </Box>
+      {/* </div> */}
 
-      <Box>
-        <TextField
-          type="password"
-          placeholder="Confirm Password"
-          name="confirmPassword"
-          onChange={handleChange}
-          value={user.confirmPassword}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-        <div className="text-sm -mt-1">
-          {user.confirmPassword && user.confirmPassword !== user.password ? (
-            <div className="text-red-500">Passwords do not match</div>
-          ) : (
-            <div className="invisible">PlaceHolder</div>
-          )}
-        </div>
-      </Box>
+      {/* <div> */}
+      <TextField
+        type="password"
+        placeholder="Confirm Password"
+        name="confirmPassword"
+        onChange={handleChange}
+        value={user.confirmPassword}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      />
+      <div className="text-sm -mt-1">
+        {user.confirmPassword && user.confirmPassword !== user.password ? (
+          <div className="text-red-500">Passwords do not match</div>
+        ) : (
+          <div className="invisible">PlaceHolder</div>
+        )}
+      </div>
+      {/* </div> */}
 
-      <Box mb={1} mt={1}>
+      <div className="p-1 pb-0">
         <p className="text-xs text-gray-600">
           By clicking "Get Started", you agree to our{" "}
           <Link to="/termsofservice" className="text-indigo-600">
@@ -243,9 +240,9 @@ const RegisterForm = () => {
             Privacy Policy
           </Link>
         </p>
-      </Box>
+      </div>
 
-      <Box mb={1}>
+      <div className="p-1 pt-0">
         <div className="text-sm">
           {error ? (
             <div className="text-red-500">{error}</div>
@@ -260,16 +257,16 @@ const RegisterForm = () => {
         >
           Get Started
         </button>
-      </Box>
+      </div>
 
-      <Box>
+      <div className="pt-1">
         <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
           <Link to="/" className="text-indigo-600">
             Sign in
           </Link>
         </p>
-      </Box>
+      </div>
     </Box>
   );
 };

@@ -1,10 +1,7 @@
 import bcrypt from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import {
-  generateAuthToken,
-  generateRefreshToken,
-} from "../utils/tokenUtils.js";
+import { generateAuthToken } from "../utils/tokenUtils.js";
 
 const userSchema = new Schema(
   {
@@ -46,7 +43,6 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      // default: "user",
       required: true,
     },
     last_login: {
@@ -56,6 +52,16 @@ const userSchema = new Schema(
     timezone: {
       type: String,
       default: "+5:30",
+    },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpires: {
+      type: Date,
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -82,9 +88,9 @@ userSchema.methods.generateAuthToken = function () {
   return generateAuthToken(this);
 };
 
-userSchema.methods.generateRefreshToken = function () {
-  return generateRefreshToken(this);
-};
+// userSchema.methods.generateRefreshToken = function () {
+//   return generateRefreshToken(this);
+// };
 
 userSchema.plugin(mongooseAggregatePaginate);
 
