@@ -12,9 +12,11 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
     startDateTime: "",
     endDateTime: "",
     category: "Personal",
-    reccurence: "Non-recurring",
+    recurrence: "Non-recurring",
     reminder: "No reminder",
     location: "",
+    owner: localStorage.getItem("username"),
+    guests: [],
   });
 
   const [errors, setErrors] = useState({
@@ -69,9 +71,10 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       starts_at: moment(formData.startDateTime).toDate(),
       ends_at: moment(formData.endDateTime).toDate(),
       category: formData.category,
-      reccurence: formData.reccurence,
+      recurrence: formData.recurrence,
       reminder: formData.reminder,
       location: formData.location,
+      guests: formData.guests,
     };
     onAddEvent(eventDetails);
 
@@ -88,9 +91,10 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       startDateTime: "",
       endDateTime: "",
       category: "Personal",
-      reccurence: "Non-recurring",
+      recurrence: "Non-recurring",
       reminder: "No reminder",
       location: "",
+      guests: [],
     });
     setErrors({});
   };
@@ -122,8 +126,9 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       meeting_link={formData.meeting_link}
       location={formData.location}
       category={formData.category}
-      reccurence={formData.reccurence}
+      recurrence={formData.recurrence}
       reminder={formData.reminder}
+      guests={formData.guests}
       handleChange={handleChange}
       errStart={errors.startDateTime}
       errEnd={errors.endDateTime}

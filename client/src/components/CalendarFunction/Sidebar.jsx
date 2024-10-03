@@ -20,7 +20,6 @@ const Sidebar = ({ eventFcn, selected, onSelect, onCategoryChange }) => {
     <div className="fixed h-full ml-6 w-[325px]">
       <br />
       <div className="flex items-center justify-between mb-4">
-        <img src={logo} alt="Logo" className="w-48 h-auto" />
         <div
           className="flex items-center justify-center p-2 text-white transition-colors bg-black rounded-full cursor-pointer hover:bg-yellow-500"
           onClick={eventFcn}

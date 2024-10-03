@@ -6,6 +6,7 @@ import crypto from 'crypto'
 
 export const registerUser = async (req, res) => {
   try {
+    
     const { error } = validateRegister(req.body);
     if (error)
       // return res

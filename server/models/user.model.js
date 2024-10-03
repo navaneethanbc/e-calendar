@@ -11,6 +11,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
+      required: true,
       unique: true,
       trim: true,
       index: true,
@@ -18,11 +19,13 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      required: true,
       minlength: 6,
       maxlength: 1024,
     },
     email: {
       type: String,
+      required: true,
       required: true,
       unique: true,
       trim: true,
@@ -31,10 +34,12 @@ const userSchema = new Schema(
     fullname: {
       type: String,
       required: true,
+      required: true,
       trim: true,
     },
     employee_id: {
       type: String,
+      required: true,
       required: true,
       unique: true,
       trim: true,
@@ -47,11 +52,16 @@ const userSchema = new Schema(
     role: {
       type: String,
       // default: "user",
+      // default: "user",
       required: true,
     },
     last_login: {
       type: Date,
       default: null,
+    },
+    timezone: {
+      type: String,
+      default: "+5:30",
     },
     timezone: {
       type: String,

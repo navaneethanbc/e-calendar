@@ -105,63 +105,175 @@ const createRecurringEvents = async (event, parent_event_id, session) => {
     throw new Error(error.message);
   }
 };
+// ths is navanee s new code but not support for me need to check
+// export const getEvents = async (req, res) => {
+//   try {
+//     const { username, from, to, title } = req.body;
+
+//     let events = [];
+
+//     const addConditions = (queryArray) => {
+//       if (from && to) {
+//         queryArray.push({
+//           $or: [
+//             { starts_at: { $gte: from, $lte: to } },
+//             { ends_at: { $gte: from, $lte: to } },
+//           ],
+//         });
+//       }
+
+//       if (title) {
+//         queryArray.push({ title: { $regex: title, $options: "i" } });
+//       }
+//     };
+
+//     const ownEventQuery = [{ owner: username }, { category: "Personal" }];
+//     addConditions(ownEventQuery);
+
+//     const ownEvents = await Event.find({
+//       $and: ownEventQuery,
+//     });
+
+//     events.push(...ownEvents);
+
+//     let branchEvents = [];
+
+//     const branch = (await User.findOne({ username: username })).branch;
+
+//     const sameBranchUsers = (await User.find({ branch: branch })).map(
+//       (user) => user.username
+//     );
+
+//     if (sameBranchUsers.length > 0) {
+//       const branchEventQuery = [
+//         { owner: { $in: sameBranchUsers } },
+//         { category: "Branch" },
+//       ];
+
+//       addConditions(branchEventQuery);
+
+//       branchEvents = await Event.find({
+//         $and: branchEventQuery,
+//       });
+//     }
+
+//     events.push(...branchEvents);
+
+//     let bankEvents = [];
+
+//     const bankEventQuery = [{ category: "Bank" }];
+
+//     addConditions(bankEventQuery);
+
+//     bankEvents = await Event.find({
+//       $and: bankEventQuery,
+//     });
+
+//     events.push(...bankEvents);
+
+//     let invitedEvents = [];
+
+//     const eventGuests = await EventGuest.find(
+//       { $and: [{ username: username }, { status: "Accepted" }] },
+//       { event_id: 1 }
+//     );
+
+//     if (eventGuests.length > 0) {
+//       const inviteEventQuery = [
+//         { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
+//       ];
+
+//       addConditions(inviteEventQuery);
+
+//       invitedEvents = await Event.find({
+//         $and: inviteEventQuery,
+//       });
+//     }
+
+//     events.push(...invitedEvents);
+
+//     res.status(200).json({ events });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 export const getEvents = async (req, res) => {
   try {
-    const { username, categories, from, to, title } = req.body;
+   
+    const { username, from, to, title } = req.body;
 
+    //check is "from" before than of  "to" or not
+    if (new Date(from) > new Date(to)) {
+      return res.status(400).json({ message: 'Invalid date range' });
+    }
+    //check username if this usename has any events
+    // if it take more time then comment it
+    const event = await Event.findOne({"owner":username})
+    if(!event){
+      return res.status(404).json({message:"this user have no events or username is  wrong"})
+    } 
     const addConditions = (queryArray) => {
-      if (categories) {
-        queryArray.push({ category: { $in: categories } });
-      }
-
       if (from && to) {
         queryArray.push({
           $or: [
-            { starts_at: { $gte: from, $lte: to } },
-            { ends_at: { $gte: from, $lte: to } },
+            { starts_at: { $gte: new Date(from), $lte: new Date(to) } },
+            { ends_at: { $gte: new Date(from), $lte: new Date(to) } },
           ],
         });
       }
 
-      if (title) {
-        queryArray.push({ title: { $regex: title, $options: "i" } });
+      if (title && title.trim() !== '') {
+        queryArray.push({ title: { $regex: title.trim(), $options: "i" } });
       }
+
+      //check if category exist then 
+      // if (category && category.trim() !== '') {
+      //   queryArray.push({ category: category.trim() });
+      // }
     };
 
-    const ownEventQuery = [{ owner: username }];
-    addConditions(ownEventQuery);
+    const query = { owner: username };
+    const conditions = [];
+    addConditions(conditions);
 
-    const ownEvents = await Event.find({
-      $and: ownEventQuery,
-    });
+    if (conditions.length > 0) {
+      query.$and = conditions;
+    }
+
+    const ownEvents = await Event.find(query);
 
     const eventGuests = await EventGuest.find(
-      { $and: [{ username: username }, { status: "Accepted" }] },
+      { username: username, status: "Accepted" },
       { event_id: 1 }
     );
 
     let invitedEvents = [];
 
-    if (eventGuests) {
-      const inviteEventQuery = [
-        { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
-      ];
+    if (eventGuests.length > 0) {
+      const inviteEventIds = eventGuests.map(guest => guest.event_id);
+      const inviteQuery = { 
+        _id: { $in: inviteEventIds },
+        ...conditions.length > 0 ? { $and: conditions } : {}
+      };
 
-      addConditions(inviteEventQuery);
-
-      invitedEvents = await Event.find({
-        $and: inviteEventQuery,
-      });
+      invitedEvents = await Event.find(inviteQuery);
     }
 
-    const events = ownEvents.concat(invitedEvents);
+    const events = [...ownEvents, ...invitedEvents];
+
+    if (events.length === 0) {
+      return res.status(200).json({ message: 'No events found', events });
+    }
 
     res.status(200).json({ events });
   } catch (error) {
+    console.error('Error in getEvents:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 export const getEvent = async (req, res) => {
   try {

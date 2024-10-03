@@ -13,8 +13,9 @@ const Form = ({
   meeting_link,
   location,
   category,
-  reccurence,
+  recurrence,
   reminder,
+  guests,
   handleChange,
   errStart,
   errEnd,
@@ -42,6 +43,7 @@ const Form = ({
       }
     }
   };
+
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ${
@@ -50,19 +52,22 @@ const Form = ({
     >
       <div
         ref={popupRef}
-        className="relative w-full max-w-2xl p-6 bg-white rounded-lg shadow-xl"
+        className="relative w-full max-w-xs p-6 bg-white rounded-lg shadow-xl sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl"
         role="dialog"
         aria-labelledby="sidebar-title"
+        style={{ maxHeight: "90vh", overflowY: "auto" }}
       >
         <div className="flex items-center justify-between">
-          <h1 id="sidebar-title" className="text-4xl font-bold">
+          <h1
+            id="sidebar-title"
+            className="text-3xl font-bold md:text-2xl lg:text-4xl"
+          >
             {func}
           </h1>
-
           {buttons}
         </div>
 
-        <div className="mt-4 space-y-2 sidebar-body">
+        <div className="mt-4 space-y-2 text-sm sidebar-body sm:text-base md:text-xs lg:text-base">
           <label htmlFor="title" className="block mb-1 font-bold">
             Title
           </label>
@@ -89,7 +94,7 @@ const Form = ({
             onChange={handleChange}
           />
 
-          <div className="flex space-x-4">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
             <div className="flex-1">
               <label htmlFor="startDateTime" className="block mb-1 font-bold">
                 Start Date
@@ -175,6 +180,18 @@ const Form = ({
             </div>
           </div>
 
+          <label htmlFor="Guest" className="block mb-1 font-bold">
+            Guest
+          </label>
+          <input
+            id="guests"
+            name="guests"
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded"
+            value={guests}
+            onChange={handleChange}
+          />
+
           <div className="flex space-x-4">
             <div className="flex-1">
               <label htmlFor="category" className="block mb-1 font-bold">
@@ -194,14 +211,14 @@ const Form = ({
             </div>
 
             <div className="flex-1">
-              <label htmlFor="reccurence" className="block mb-1 font-bold">
+              <label htmlFor="recurrence" className="block mb-1 font-bold">
                 Recurrence
               </label>
               <select
-                id="reccurence"
-                name="reccurence"
+                id="recurrence"
+                name="recurrence"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={reccurence}
+                value={recurrence}
                 onChange={handleChange}
               >
                 <option value="Non-recurring">Non-recurring</option>

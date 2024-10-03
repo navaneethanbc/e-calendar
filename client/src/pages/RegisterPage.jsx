@@ -8,6 +8,7 @@ function RegisterPage() {
   return (
     <>
       <Header />
+      
       <Box
         display={{ sm: "flex", xs: "block" }}
         mt={10}

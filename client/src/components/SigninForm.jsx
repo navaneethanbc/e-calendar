@@ -8,7 +8,7 @@ import ResetPassword from "./ResetPassword";
 const SigninForm = () => {
   const [user, setUser] = useState({
     username: "",
-    password: "",
+    password: ""
   });
 
   const [error, setError] = useState("");
@@ -36,6 +36,7 @@ const SigninForm = () => {
       const url = "http://localhost:8000/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", user.username);
       window.location = "/calendar";
     } catch (error) {
       if (
@@ -51,8 +52,10 @@ const SigninForm = () => {
   }
 
   return (
+    
     <Box width={320} margin={2}>
       <Typography
+        
         fontFamily={"Kanit"}
         fontSize={{ xs: 25, sm: 45 }}
         fontWeight={"bold"}

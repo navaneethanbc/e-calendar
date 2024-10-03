@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import SigninPage from "./pages/SigninPage";
 import RegisterPage from "./pages/RegisterPage";
 import CalendarView from "./pages/CalendarView";
@@ -17,11 +17,13 @@ function App() {
         <Routes>
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/calendar" element={<CalendarView />} />
+          {user && <Route path="/calendar" element={<CalendarView />} />}
+
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -205,6 +205,11 @@ const RegisterForm = () => {
             <span className="text-gray-600">{passwordStrength}</span>
           </div>
         )} */}
+        {/* {passwordStrength && (
+          <div className="text-sm">
+            <span className="text-gray-600">{passwordStrength}</span>
+          </div>
+        )} */}
       </div>
 
       <div>
