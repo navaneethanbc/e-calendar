@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
-import AddEventBar from "./CalendarComponent/AddEventBar";
-import Event from "./CalendarComponent/Event";
-import SearchBar from "./CalendarComponent/SearchBar";
-import Sidebar from "./CalendarComponent/Sidebar";
 
 const localizer = momentLocalizer(moment);
 
@@ -102,45 +98,10 @@ function CalendarView() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="w-full p-4">
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          category={category}
-          setCategory={setCategory}
-          recurrenceType={recurrenceType}
-          setRecurrenceType={setRecurrenceType}
-          reminderType={reminderType}
-          setReminderType={setReminderType}
-          onSearch={handleSearch}
-        />
-      </div>
+      <div className="w-full p-4"></div>
       <div className="flex flex-grow">
-        <div className="w-full p-4 md:w-1/4">
-          <Sidebar
-            setView={setView}
-            ViewsDAY={Views.DAY}
-            ViewsWEEK={Views.WEEK}
-            ViewsMONTH={Views.MONTH}
-            eventFcn={() => {
-              setSelectedEvent(null);
-              toggleOffcanvas();
-            }}
-          />
-        </div>
+        <div className="w-full p-4 md:w-1/4"></div>
         <div className="w-full p-4 md:w-3/4">
-          <AddEventBar
-            show={showOffcanvas}
-            onHide={() => setShowOffcanvas(false)}
-            onAddEvent={handleAddEvent}
-            onEditEvent={handleEditEvent}
-            onDeleteEvent={handleDeleteEvent}
-            selectedEvent={selectedEvent}
-          />
           <Calendar
             localizer={localizer}
             events={filteredEvents}

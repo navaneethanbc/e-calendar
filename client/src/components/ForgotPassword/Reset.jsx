@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import clogo from '../../assets/background.jpg';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import clogo from "../../assets/background.jpg";
 
 const Reset = ({ setPassword }) => {
   const navigate = useNavigate();
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   const handleSubmit = (e) => {
@@ -24,12 +24,19 @@ const Reset = ({ setPassword }) => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-      <img className="w-1/2 mx-auto ml-1 mr-5 mb-6" src={clogo} alt="Calendar" />
+      <img
+        className="w-1/2 mx-auto ml-1 mr-5 mb-6"
+        src={clogo}
+        alt="Calendar"
+      />
       <div className="bg-white p-8 rounded-lg w-96">
         <h1 className="text-4xl font-bold text-start mb-6">Change Password</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               New Password
             </label>
             <input
@@ -43,7 +50,10 @@ const Reset = ({ setPassword }) => {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Confirm Password
             </label>
             <input
@@ -66,7 +76,10 @@ const Reset = ({ setPassword }) => {
               required
             />
             <label htmlFor="terms" className="text-sm text-gray-700">
-              I accept the <a href="/terms" className="text-blue-600 hover:underline">Terms and Conditions</a>
+              I accept the{" "}
+              <a href="/terms" className="text-blue-600 hover:underline">
+                Terms and Conditions
+              </a>
             </label>
           </div>
           <button
