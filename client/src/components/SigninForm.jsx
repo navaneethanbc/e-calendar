@@ -1,10 +1,12 @@
-import { Box, TextField, Typography, Button } from "@mui/material";
+import { Box, TextField, Typography, Modal } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../index.css";
+import ResetPassword from "./ForgotPassword/ResetPassword";
 
 const SigninForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -31,9 +33,10 @@ const SigninForm = () => {
     }
 
     try {
-      const url = "http://localhost:8000/api/users/login";
+      const url = "http://localhost:8000/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("username", user.username);
       window.location = "/calendar";
     } catch (error) {
       if (
@@ -49,67 +52,94 @@ const SigninForm = () => {
   };
 
   return (
-    <>
+    <Box
+      width={{ xs: "80vw", sm: "50vw", md: "22vw" }}
+      ml={{ md: "4vw", xs: 0 }}
+      padding={2}
+      bgcolor={"white"}
+      borderRadius={3}
+    >
       <Typography
-        fontFamily={"Kanit, sans-serif"}
-        fontSize={{ xs: 25, sm: 45 }}
+        fontFamily={"Kanit"}
+        fontSize={45}
         fontWeight={"bold"}
-        mb={{ xs: 0, sm: 2 }}
+        height={45}
+        lineHeight={1}
+        mb={1}
       >
         Welcome
       </Typography>
 
-      <div>
-        <TextField
-          type=""
-          placeholder="Username"
-          name="username"
-          onChange={handleChange}
-          value={user.username}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </div>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="text"
+        placeholder="Username"
+        name="username"
+        onChange={handleChange}
+        value={user.username}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      ></TextField>
+      {/* </div> */}
 
-      <div>
-        <TextField
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          value={user.password}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </div>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="password"
+        placeholder="Password"
+        name="password"
+        onChange={handleChange}
+        value={user.password}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      ></TextField>
+      <Link
+        className="-mt-1 text-indigo-600 text-right text-sm block"
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        Forgot password?
+      </Link>
+      {/* </div> */}
 
-      <div className="mb-3">
-        {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+      <div className="p-1 pt-0">
+        <div className="text-sm">
+          {error ? (
+            <div className="text-red-500">{error}</div>
+          ) : (
+            <div className="invisible">PlaceHolder</div>
+          )}
+        </div>
         <button
           type="submit"
-          className="w-full flex mt-4 justify-center bg-black text-white p-2 rounded-md hover:bg-yellow-500"
+          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleSignin}
         >
           Sign in
         </button>
-        <Link to="/reset" className="text-indigo-600 text-sm ">
-          Forgot password?
-        </Link>
       </div>
 
-      <div>
-        <p className="text-sm text-center text-gray-600">
+      <div className="pt-1">
+        <p className="text-xm text-center text-gray-600">
           New to Calendar?{" "}
           <Link to="/register" className="text-indigo-600">
             Register Now
           </Link>
         </p>
       </div>
-    </>
+      <Modal
+        open={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ResetPassword setIsModalOpen={setIsModalOpen} />
+      </Modal>
+    </Box>
   );
 };
 

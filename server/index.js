@@ -2,11 +2,14 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import connectDB from "./db/db.js";
-import userRoutes from "./routes/user.route.js";
+import userRoutes from "./routes/user.routes.js";
+import eventRoutes from "./routes/event.routes.js";
+import mongoose from "mongoose";
 
 dotenv.config({ path: "./.env" });
-
 const app = express();
+
+// mongoose.set("debug", true);
 
 // middlewares
 app.use(
@@ -19,6 +22,7 @@ app.use(express.json());
 
 // routes
 app.use("/users", userRoutes);
+app.use("/events", eventRoutes);
 
 // connect to MongoDB
 const port = process.env.PORT || 8001;
@@ -29,5 +33,5 @@ connectDB()
     });
   })
   .catch((error) => {
-    console.log("Error connecting to MongoDB", error);
+    console.log("Error connecting to the database", error);
   });

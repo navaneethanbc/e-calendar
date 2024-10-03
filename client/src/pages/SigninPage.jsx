@@ -1,51 +1,62 @@
 import React from "react";
 import Header from "../components/Header";
 import { Box } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
 import SigninForm from "../components/SigninForm";
 
-function SigninPage() {
+const SigninPage = () => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      height={"100vh"}
+      width={"100vw"}
+      sx={{ flexFlow: "nowrap" }}
+    >
       <Header />
       <Box
-        display={{ sm: "flex", xs: "block" }}
-        justifyItems={"flex-start"}
+        display={"flex"}
+        gap={1}
+        flexDirection={{ xs: "column", md: "row" }}
+        flex={"auto"}
         alignItems={"center"}
+        justifyContent={"center"}
+        bgcolor={"#e6f5e8"}
       >
         <Box
-          component="img"
-          src="src/assets/mobilebg.jpg"
-          alt="background"
-          height={300}
-          mt={10}
-          ml={3.5}
-          borderColor="transparent"
-          display={{ xs: "block", sm: "none" }}
-        />
-        <Box
-          // flex={2}
-          mt={{ xs: -1.5, sm: 25 }}
-          ml={{ xs: 7.75, sm: 15 }}
-          mr={{ xs: 0, sm: 15 }}
-          width={{ xs: 250, sm: 300 }}
+          alignContent={"center"}
+          padding={{ xs: 0, md: 4 }}
+          display={{ xs: "block", md: "none" }}
         >
+          <Box
+            component="img"
+            src={isSm ? "src/assets/mobilebg.png" : "src/assets/background.png"}
+            alt="background"
+            height={{ xs: "45vh", md: "60vh" }}
+          />
+        </Box>
+        <Box display={"block"}>
           <SigninForm />
         </Box>
         <Box
-          // flex={5}
-          component="img"
-          src="src/assets/background.jpg"
-          alt="background"
-          height={550}
-          mt={17}
-          borderColor="transparent"
-          display={{ xs: "none", sm: "block" }}
-        />
+          alignSelf={"center"}
+          padding={2}
+          display={{ xs: "none", md: "block" }}
+        >
+          <Box
+            component="img"
+            src="src/assets/background.png"
+            alt="background"
+          />
+        </Box>
       </Box>
       <Footer />
-    </>
+    </Box>
   );
-}
+};
 
 export default SigninPage;

@@ -1,1 +1,4 @@
-export const admin_id = ["EMP001", "EMP002", "EMP003"];
+// ADM : admin
+// MNG : manager
+// EMP : employee
+// TRN : trainee

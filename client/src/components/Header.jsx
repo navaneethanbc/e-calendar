@@ -3,33 +3,38 @@ import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 
 const Header = () => {
   return (
-    <div>
-      <AppBar color="transparent" position="fixed" elevation={1}>
+    <Box height={{ xs: "8vh", md: "11vh" }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          bottom: "auto",
+          top: 0,
+          bgcolor: "#ffec80",
+        }}
+      >
         <Toolbar>
           <Box
             component="img"
             src="src/assets/icon.png"
             alt="Logo"
-            height={{ xs: 70, sm: 100 }}
-            mr={{ xs: 1, sm: 3 }}
-            ml={{ xs: -1, sm: 3 }}
-            display={{ xs: "block", sm: "block" }}
+            height={{ xs: "8vh", md: "11vh" }}
+            mr={{ xs: 2, md: 3 }}
+            ml={{ xs: -1, md: 3 }}
           />
 
           <Typography
             component="text"
-            fontSize={{ xs: 35, sm: 50 }}
+            fontSize={{ xs: "4vh", md: "6vh" }}
             fontFamily="Kanit"
             fontWeight="bold"
-            color="rgb(54,53,51)"
-            mt={{ xs: 1.85, sm: 2.75 }}
-            display={{ xs: "block", sm: "block" }}
+            color="#363533"
           >
             Calendar
           </Typography>
         </Toolbar>
       </AppBar>
-    </div>
+    </Box>
   );
 };
 

@@ -1,96 +1,100 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import clogo from "../../assets/background.jpg";
+import React, { useState } from "react";
+import { Button, TextField, Stack, Typography, Alert } from "@mui/material";
+import { LockReset as LockResetIcon } from "@mui/icons-material";
+import axios from "axios";
 
-const Reset = ({ setPassword }) => {
-  const navigate = useNavigate();
-  const [newPassword, setNewPassword] = useState("");
+const Reset = ({ setIsModalOpen, username }) => {
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [errors, setErrors] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
+  const validatePassword = () => {
+    if (!password.trim()) {
+      setErrors("Password cannot be empty");
+      return false;
     }
-    // if (newPassword.length < 8) {
-    //   alert("Password must be at least 8 characters long!");
-    //   return;
-    // }
-    setPassword(newPassword);
-    navigate("/");
+
+    if (password !== confirmPassword) {
+      setErrors("Passwords do not match");
+      return false;
+    }
+    setErrors("");
+    return true;
+  };
+
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    if (validatePassword()) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/users/resetpassword",
+          { username, password }
+        );
+        if (response.status === 200) {
+          setSuccessMessage(response.data.message);
+          setTimeout(() => {
+            setIsModalOpen(false);
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("error occured in reset password", error);
+        setErrors(
+          `${error.response?.data?.message}` ||
+            "An error occurred during password reset"
+        );
+      }
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <img
-        className="w-1/2 mx-auto ml-1 mr-5 mb-6"
-        src={clogo}
-        alt="Calendar"
+    <Stack spacing={2} component="form" onSubmit={resetPassword}>
+      <Typography variant="h5" component="h2" gutterBottom align="center">
+        Reset Password
+      </Typography>
+
+      {successMessage && <Alert severity="success">{successMessage}</Alert>}
+      {errors.api && <Alert severity="error">{errors.api}</Alert>}
+
+      <TextField
+        type="password"
+        label="New Password"
+        name="password"
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+        required
+        fullWidth
+        error={!!errors}
+        helperText={errors}
       />
-      <div className="bg-white p-8 rounded-lg w-96">
-        <h1 className="text-4xl font-bold text-start mb-6">Change Password</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="newPassword"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              New Password
-            </label>
-            <input
-              type="password"
-              id="newPassword"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              minLength={8}
-            />
-          </div>
-          <div className="mb-6">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
-            />
-          </div>
-          <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              id="terms"
-              className="mr-2"
-              checked={acceptTerms}
-              onChange={(e) => setAcceptTerms(e.target.checked)}
-              required
-            />
-            <label htmlFor="terms" className="text-sm text-gray-700">
-              I accept the{" "}
-              <a href="/terms" className="text-blue-600 hover:underline">
-                Terms and Conditions
-              </a>
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
-          >
-            Reset Password
-          </button>
-        </form>
-      </div>
-    </div>
+
+      <TextField
+        type="password"
+        label="Confirm New Password"
+        name="confirmPassword"
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        value={confirmPassword}
+        required
+        fullWidth
+        error={!!errors}
+      />
+
+      <Button
+        fullWidth
+        variant="contained"
+        type="submit"
+        startIcon={<LockResetIcon />}
+        disabled={!password || !confirmPassword}
+        sx={{
+          mt: 2,
+          bgcolor: "#4f46e5",
+          "&:hover": { bgcolor: "#4338ca" },
+          "&:disabled": { bgcolor: "#9ca3af" },
+        }}
+      >
+        Reset Password
+      </Button>
+    </Stack>
   );
 };
 

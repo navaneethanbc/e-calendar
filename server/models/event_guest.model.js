@@ -6,15 +6,16 @@ const eventGuestSchema = new Schema({
     required: true,
     ref: "Event",
   },
-  user_id: {
-    type: Schema.Types.ObjectId,
+  guest: {
+    type: String,
     required: true,
     ref: "User",
   },
   status: {
     type: String,
     required: false,
-    enum: ["Accepted", "Declined", "Not Responded"],
+    enum: ["Accepted", "Declined", "Pending"],
+    default: "Pending",
   },
 });
 

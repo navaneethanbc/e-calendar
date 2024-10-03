@@ -1,106 +1,165 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import clogo from "../../assets/background.jpg";
+import {
+  Typography,
+  TextField,
+  Button,
+  Stack,
+  Alert,
+  Snackbar,
+} from "@mui/material";
+import {
+  Mail as MailIcon,
+  LockReset as LockResetIcon,
+} from "@mui/icons-material";
+import axios from "axios";
 
-const OTP = ({ otp, setOtp, username, setUsername }) => {
-  const [code, setCode] = useState(["", "", "", ""]);
-  const navigate = useNavigate();
+const OTP = ({ setOtpVerified, username, setUsername }) => {
+  const [otpSent, setOtpSent] = useState(false);
+  const [code, setCode] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
-  const handleChange = (index, value) => {
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    if (value && index < 3) {
-      document.getElementById(`input-${index + 1}`).focus();
+  const checkUsername = () => {
+    if (!username.trim()) {
+      setUsernameError("Username cannot be empty");
+      return false;
     }
+    setUsernameError("");
+    return true;
   };
 
-  const processOtp = (e) => {
+  const sendOTP = async (e) => {
     e.preventDefault();
-    const newOtp = Math.floor(Math.random() * 10000)
-      .toString()
-      .padStart(4, "0");
-    setOtp(newOtp);
-    setTimeout(() => {
-      setOtp("");
-    }, 60000);
-    // console.log(newOtp);
-    // Here you might want to send the OTP to the user's email
+    if (checkUsername()) {
+      try {
+        const response = await axios.post("http://localhost:8000/users/otp", {
+          username,
+        });
+        setOtpSent(true);
+        setSnackbar({
+          open: true,
+          message: response?.data?.message,
+          severity: "success",
+        });
+      } catch (error) {
+        console.error("Error in sending OTP:", error);
+        setSnackbar({
+          open: true,
+          message: error.response?.data?.message || "Failed to send OTP",
+          severity: "error",
+        });
+      }
+    }
   };
 
-  const checkOtp = () => {
-    const otpString = code.join("");
-    if (otpString === otp) {
-      navigate("/reset");
-    } else {
-      alert("Invalid OTP. Please try again.");
+  const verifyOTP = async (e) => {
+    e.preventDefault();
+    if (!code.trim()) {
+      setOtpError("Please enter the OTP");
+      return;
     }
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/users/otpverify",
+        { username, otp: code }
+      );
+
+      setSnackbar({
+        open: true,
+        message: response.data.message,
+        severity: "success",
+      });
+      setTimeout(() => {
+        setOtpVerified(true);
+      }, 1000);
+    } catch (error) {
+      console.error("Error in verifying OTP:", error);
+      setOtpError("Invalid OTP. Please try again.");
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.message || "Failed to verify OTP",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <img
-        className="w-1/2 mx-auto ml-1 mr-5 mb-6"
-        src={clogo}
-        alt="Calendar"
+    <Stack spacing={2}>
+      <Typography variant="h5" component="h2" gutterBottom align="center">
+        Forgot Password
+      </Typography>
+
+      <TextField
+        fullWidth
+        label="Username"
+        variant="outlined"
+        value={username}
+        error={!!usernameError}
+        helperText={usernameError}
+        onChange={(e) => setUsername(e.target.value)}
+        disabled={otpSent}
       />
-      <div className="bg-white p-20 rounded-lg w-99">
-        <h1 className="text-2xl font-bold text-center mb-4">
-          Account Verification
-        </h1>
-        <form onSubmit={processOtp}>
-          <label htmlFor="username" className="sr-only">
-            username
-          </label>
-          <input
-            type="text"
-            id="username"
-            placeholder="username"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+
+      <Button
+        onClick={sendOTP}
+        variant="contained"
+        startIcon={<MailIcon />}
+        disabled={otpSent}
+        sx={{ bgcolor: "#4f46e5", "&:hover": { bgcolor: "#4338ca" } }}
+      >
+        Send OTP
+      </Button>
+
+      {otpSent && (
+        <>
+          <Alert severity="info">OTP has been sent to your Email</Alert>
+
+          <TextField
+            fullWidth
+            label="Enter the OTP"
+            value={code}
+            variant="outlined"
+            onChange={(e) => setCode(e.target.value)}
+            error={!!otpError}
+            helperText={otpError}
           />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded mb-5 w-full"
-          >
-            Send OTP
-          </button>
-        </form>
-        <div className="flex justify-center mb-6">
-          {code.map((digit, index) => (
-            <input
-              key={index}
-              id={`input-${index}`}
-              type="text"
-              maxLength="1"
-              className="w-12 h-12 mx-1 text-center text-2xl border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-            />
-          ))}
-        </div>
 
-        <button
-          onClick={checkOtp}
-          className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300"
+          <Button
+            variant="contained"
+            onClick={verifyOTP}
+            startIcon={<LockResetIcon />}
+            sx={{ bgcolor: "#4f46e5", "&:hover": { bgcolor: "#4338ca" } }}
+          >
+            Verify OTP
+          </Button>
+        </>
+      )}
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={1000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
         >
-          Verify Account
-        </button>
-
-        <p className="text-center mt-4 text-sm text-gray-600">
-          Didn't receive code?{" "}
-          <button
-            onClick={processOtp}
-            className="text-blue-600 hover:underline"
-          >
-            Resend OTP
-          </button>
-        </p>
-      </div>
-    </div>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </Stack>
   );
 };
 
