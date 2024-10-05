@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import SearchEvent from "./SearchEvent"
+import Profile from "./Profile";
 import axios from "axios";
 import {
   AppBar,
@@ -8,7 +8,6 @@ import {
   IconButton,
   Typography,
   Box,
-  Avatar,
   Button,
   FormControl,
   Select,
@@ -49,12 +48,6 @@ const NavigationBar = ({
   //const [errorMessage, setErrorMessage] = useState("") //to store error message from  handle search function
   const [localEvents,setLocalEvents] = useState([]) // to store temporry resultevent 
   //const [openSnackbar,setOpenSnackbar] =useState(false)
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
   
   //check if events required search componentts  not empty
   const checkContent = () => {
@@ -257,9 +250,7 @@ const NavigationBar = ({
                 </Select>
               </FormControl>
             </div>
-            <IconButton onClick={handleLogout} sx={{ mr: -2 }}>
-              <Avatar />
-            </IconButton>
+            <Profile />
           </Box>
         </Toolbar>
       </AppBar>
