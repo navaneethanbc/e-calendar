@@ -54,10 +54,10 @@ const SearchEvent = ({searchevent, setSearchEvent}) => {
           fontSize: '1rem',
         }}
       >
-         <MenuItem value="" >None</MenuItem> 
-        <MenuItem value="personal">Personal</MenuItem>
-        <MenuItem value="branch">Branch</MenuItem>
-        <MenuItem value="bank">Bank</MenuItem>
+         <MenuItem value="" >All</MenuItem> 
+        <MenuItem value="Personal">Personal</MenuItem>
+        <MenuItem value="Branch">Branch</MenuItem>
+        <MenuItem value="Bank">Bank</MenuItem>
       </Select>
       <TextField
         value={searchevent.from}

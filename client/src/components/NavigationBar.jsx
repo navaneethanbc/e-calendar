@@ -32,22 +32,19 @@ const NavigationBar = ({
   headerTitle,
   selectedView,
   handleSelectView, 
+  resultEvents,
   setResultEvents,
   setShowCalendar,
-  resultEvents
+  searchOpen,
+  setSearchOpen,
+  searchevent,
+  setSearchEvent
 }) => {
 
-  // to store search states
-  const [searchevent, setSearchEvent] = useState({
-    username:"",
-    title:"",
-    from:"",
-    to:"",
-    category:"",
-  })
-  const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
+  
   const [errorMessage, setErrorMessage] = useState("") //to store error message from  handle search function
-  //const [localEvents,setLocalEvents] = useState({}) // to store temporry resultevent i need to chek this 
+  const [localEvents,setLocalEvents] = useState([]) // to store temporry resultevent 
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -57,13 +54,14 @@ const NavigationBar = ({
 
   //check if events required search componentts  not empty
   const checkContent = () => {
-    if (searchevent.title || (searchevent.startDate && searchevent.endDate) ) {
-      return true;
+    if (searchevent.title || (searchevent.from && searchevent.to) ) {
+      setErrorMessage("enter title or  selct from  and to")
+      return true; 
     }
     return false;
   };
   
-// function  api call for get searched events
+// function  to send api call for get searched events
   const handleSearch = async () => {
     if (searchOpen && checkContent()) {
       try {
@@ -77,22 +75,22 @@ const NavigationBar = ({
         setShowCalendar(false)
   
         if (response.data.events && response.data.events.length > 0) {
-          setResultEvents(response.data.events);
+          await setResultEvents(response.data.events);
+          await setLocalEvents(response.data.events)
           setErrorMessage("");
         } 
         else {
           setResultEvents([]);
+          setLocalEvents([])
           setErrorMessage(response.data.message || "No events found");
         }
       }
        catch (error) {
         console.error("Error in searching events:", error);
         setResultEvents([]);
+        setLocalEvents([])
         setErrorMessage(error.response?.data?.message || "An error occurred while searching events");
       } 
-      finally {
-        setSearchOpen(false);
-      }
     } 
     else {
       setSearchOpen(!searchOpen);
@@ -100,17 +98,16 @@ const NavigationBar = ({
   };
 
   
-  // useEffect(()=>{
-  //   console.log(localEvents)
-    
-  //   console.log(localEvents)
-  //   //console.log(resultEvents)
-  //   if(searchevent.category !== ""){
-  //     const filteredEvents = localEvents.filter((event)=>((event.category.toLowerCase()).includes(searchevent.category.toLowerCase())))
-  //     setResultEvents(filteredEvents)
-  //   }
+  useEffect(()=>{
+    if(searchevent.category !== ""){
+      const filteredEvents = localEvents.filter((event)=>((event.category.toLowerCase()).includes(searchevent.category.toLowerCase())))
+      setResultEvents(filteredEvents)
+    }
+    else{
+      setResultEvents(localEvents)
+    }
    
-  // },[searchevent.category])
+  },[searchevent])
 
 
   return (

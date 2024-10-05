@@ -8,9 +8,8 @@ import AddFunc from "../components/CalendarFunction/AddEvent";
 import EditFunc from "../components/CalendarFunction/EditEvent";
 import axios from "axios";
 import { debounce } from "lodash";
-import ShowEvents from "../components/ShowEvents";
+import ShowEvents from "../components/ShowEvents"; //by me to show events
 import SideDrawer from "../components/CalendarFunction/SideDrawer";
-
 import NavigationBar from "../components/NavigationBar";
 import { CreateButton } from "../components/CreateButton";
 import { Box } from "@mui/material";
@@ -35,8 +34,17 @@ const CalendarView = () => {
   const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
   
+  const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
   const [resultEvents ,setResultEvents] = useState({}) // to store events got from the backend by search
   const [showCalendar, setShowCalendar] = useState(true) // switch between calendar and show events
+  // to store search states
+  const [searchevent, setSearchEvent] = useState({
+    username:"",
+    title:"",
+    from:"",
+    to:"",
+    category:"",
+  })
   const calendarRef = useRef(null);
 
   const toggleAddOffcanvas = () => {
@@ -239,9 +247,13 @@ const CalendarView = () => {
         headerTitle={headerTitle}
         selectedView={selectedView}
         handleSelectView={handleSelectView} 
-        setResultEvents={setResultEvents}   
-        setShowCalendar ={setShowCalendar} 
-        resultEvents = {resultEvents}   
+        resultEvents = {resultEvents}  
+        setResultEvents={setResultEvents}    
+        setShowCalendar ={setShowCalendar}  
+        searchOpen={searchOpen}    
+        setSearchOpen={setSearchOpen}   
+        searchevent={searchevent}  
+        setSearchEvent={setSearchEvent} 
       />
       <CreateButton
         open={open}
@@ -303,8 +315,10 @@ const CalendarView = () => {
                   height="100%" />
                 )
                 :(<ShowEvents 
-                    resultEvents={resultEvents}
-                    setShowCalendar ={setShowCalendar}/>)
+                    resultEvents={resultEvents} 
+                    setShowCalendar ={setShowCalendar}  
+                    setSearchOpen = {setSearchOpen} 
+                    setSearchEvent={setSearchEvent}/>) 
               )}
           </Box>
         </Box>

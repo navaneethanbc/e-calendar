@@ -1,7 +1,20 @@
 import React from 'react';
 import { Button, Card, CardContent, Typography, Grid, Box } from '@mui/material';
 
-const ShowEvents = ({ resultEvents, setShowCalendar }) => {
+const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent }) => {
+
+  const handleGoToCalendar = ()=>{
+    setShowCalendar(true)
+    setSearchOpen(false)
+    setSearchEvent({
+      username:"",
+      title:"",
+      from:"",
+      to:"",
+      category:"",
+    })
+
+  }
 
   return (
     <Box sx={{ p: 3, bgcolor:"#F5F5DC", height:"100vh", overflow:"auto" }}>
@@ -47,12 +60,12 @@ const ShowEvents = ({ resultEvents, setShowCalendar }) => {
         <Typography variant="h3">No events found.</Typography>
       )}
       <Box
-      sx={{position:"fixed",bottom:"2rem", right:"2rem"}}>
+      sx={{position:"fixed",bottom:"3rem", right:"3rem"}}>
         <Button 
           variant="contained"
           align="right" 
-          onClick={()=>{setShowCalendar(true)}}
-          sx={{ mt: 2 , bgcolor: "#febe00"}}
+          onClick={handleGoToCalendar}
+          sx={{ mt: 2 , bgcolor: "#fea500", color:"black", ":hover":{bgcolor: "#feba00", color:"black"}, fontFamily:"arial"}}
         >
           go To Calendar
         </Button>
@@ -60,5 +73,5 @@ const ShowEvents = ({ resultEvents, setShowCalendar }) => {
     </Box>
   );
 };
-
+//#febe00
 export default ShowEvents;

@@ -130,7 +130,10 @@ const SigninForm = () => {
       </div>
       <Modal
         open={isModalOpen}
-        onClose={()=>{setIsModalOpen(false)}}
+
+        //to avoid modal closing while acciently toclick the out side of the modal
+        //onClose={()=>{setIsModalOpen(false)}} 
+        
       >
         <ResetPassword 
         setIsModalOpen={setIsModalOpen}/>
