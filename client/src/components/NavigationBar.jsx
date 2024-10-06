@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SearchEvent from "./SearchEvent"
+import SearchAvailability from "./SearchAvailability"
 import Profile from "./Profile";
 import axios from "axios";
 import {
@@ -21,11 +22,8 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Search,
-  EventAvailableTwoTone,
   Notifications,
 } from "@mui/icons-material";
-
-
 
 const NavigationBar = ({
   handleDrawer,
@@ -35,13 +33,16 @@ const NavigationBar = ({
   headerTitle,
   selectedView,
   handleSelectView, 
-  resultEvents,
   setResultEvents,
   setShowCalendar,
   searchOpen,
   setSearchOpen,
   searchevent,
-  setSearchEvent
+  setSearchEvent,
+  setResultAvailble,
+  setShowAvailable,
+  searchAvailable,
+  setSearchAvailable
 }) => {
 
   
@@ -79,6 +80,7 @@ const NavigationBar = ({
         });
 
         setShowCalendar(false)
+        setShowAvailable(false)
   
         if (response.data.events && response.data.events.length > 0) {
           setResultEvents(response.data.events);
@@ -122,8 +124,6 @@ const NavigationBar = ({
     }
    
   })
-
-
   return (
     <>
       <AppBar
@@ -223,9 +223,15 @@ const NavigationBar = ({
             <IconButton onClick={handleSearch}>
               <Search sx={{ height: 32, width: 32 }} />
             </IconButton>
-            <IconButton>
-              <EventAvailableTwoTone sx={{ height: 32, width: 32 }} />
-            </IconButton>
+
+            <SearchAvailability 
+              setResultAvailble={setResultAvailble}
+              setShowAvailable={setShowAvailable}
+              searchAvailable={searchAvailable}
+              setSearchAvailable={setSearchAvailable}
+              setShowCalendar={setShowCalendar}
+            />
+
             <IconButton>
               <Notifications sx={{ height: 32, width: 32 }} />
             </IconButton>
@@ -250,7 +256,7 @@ const NavigationBar = ({
                 </Select>
               </FormControl>
             </div>
-            <Profile />
+            <Profile /> 
           </Box>
         </Toolbar>
       </AppBar>

@@ -36,8 +36,10 @@ const CalendarView = () => {
   
   const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
   const [resultEvents ,setResultEvents] = useState({}) // to store events got from the backend by search
-  const [showCalendar, setShowCalendar] = useState(true) // switch between calendar and show events
-  // to store search states
+  const [resultAvailable,setResultAvailble] = useState({}) // to store  availabilitty got from backend 
+  const [showCalendar, setShowCalendar] = useState(true)   // to decide calendar or events to show 
+  const [showAvailable,setShowAvailable] = useState(false) // switch between calendar and show events
+  // to store search event states
   const [searchevent, setSearchEvent] = useState({
     username:"",
     title:"",
@@ -45,6 +47,13 @@ const CalendarView = () => {
     to:"",
     category:"",
   })
+  // to store search availability search
+  const [searchAvailable, setSearchAvailable] = useState({
+    username: '',
+    fromDate: '',
+    toDate: ''
+  });
+
   const calendarRef = useRef(null);
 
   const toggleAddOffcanvas = () => {
@@ -246,14 +255,18 @@ const CalendarView = () => {
         handleNext={handleNext}
         headerTitle={headerTitle}
         selectedView={selectedView}
-        handleSelectView={handleSelectView} 
-        resultEvents = {resultEvents}  
+        handleSelectView={handleSelectView}   
         setResultEvents={setResultEvents}    
         setShowCalendar ={setShowCalendar}  
         searchOpen={searchOpen}    
         setSearchOpen={setSearchOpen}   
         searchevent={searchevent}  
         setSearchEvent={setSearchEvent} 
+        setResultAvailble={setResultAvailble}
+        resultAvailable={resultAvailable}
+        setShowAvailable ={setShowAvailable}
+        searchAvailable={searchAvailable}
+        setSearchAvailable={setSearchAvailable}
       />
       <CreateButton
         open={open}
@@ -318,7 +331,13 @@ const CalendarView = () => {
                     resultEvents={resultEvents} 
                     setShowCalendar ={setShowCalendar}  
                     setSearchOpen = {setSearchOpen} 
-                    setSearchEvent={setSearchEvent}/>) 
+                    setSearchEvent={setSearchEvent}
+                    resultAvailable = {resultAvailable}
+                    showAvailable={showAvailable}
+                    setShowAvailable={setShowAvailable}
+                    setSearchAvailable ={setSearchAvailable}
+                    searchAvailable={searchAvailable}
+                  />) 
               )}
           </Box>
         </Box>

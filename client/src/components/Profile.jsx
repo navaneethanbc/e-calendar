@@ -20,7 +20,7 @@ const Profile = () => {
         navigate("/");
         handleClose();
     };
-    
+
     return (
         <div>
             <IconButton onClick={handleClick} >
@@ -30,7 +30,11 @@ const Profile = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                sx={{width:"500px", height:"700px"}}
+                sx={{ 
+                    "& .MuiPaper-root": {
+                        backgroundColor: "#E8F5E9",  // Change the menu's background color to yellow
+                    }
+                }}
             >
                 <MenuItem >
                     <ListItemIcon>
@@ -53,6 +57,37 @@ const Profile = () => {
                     <ListItemText primary="Logout" />
                 </MenuItem>
             </Menu>
+            {/* <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl)}
+    onClose={handleClose}
+    sx={{ 
+        color: "black",   // Text color (set this if needed)
+        backgroundColor: "yellow"  // Set the background color to yellow
+    }}
+>
+    <MenuItem>
+        <ListItemIcon>
+            <User size={20} color="blue" />  
+        </ListItemIcon>
+        <ListItemText primary="Profile" />
+    </MenuItem>
+
+    <MenuItem>
+        <ListItemIcon>
+            <Settings size={20} color="green" />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
+    </MenuItem>
+
+    <MenuItem onClick={handleLogout}>
+        <ListItemIcon>
+            <LogOut size={20} color="red" />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
+    </MenuItem>
+</Menu> */}
+
         </div>
     );
 }

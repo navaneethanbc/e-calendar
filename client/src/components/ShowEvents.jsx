@@ -1,11 +1,13 @@
 import React from 'react';
 import { Button, Card, CardContent, Typography, Grid, Box } from '@mui/material';
+import ShowAvailability from './ShowAvailability';
 
-const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent }) => {
+const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent,resultAvailable,showAvailable,setShowAvailable,setSearchAvailable,searchAvailable }) => {
 
   const handleGoToCalendar = ()=>{
     setShowCalendar(true)
     setSearchOpen(false)
+    setShowAvailable(false)
     setSearchEvent({
       username:"",
       title:"",
@@ -13,11 +15,22 @@ const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent
       to:"",
       category:"",
     })
+    setSearchAvailable({
+      username:"",
+      fromDate:"",
+      toDate:""
+    })
 
   }
 
-  return (
-    <Box sx={{ p: 3, bgcolor:"#F5F5DC", height:"100vh", overflow:"auto" }}>
+  return ( 
+    <>
+    {showAvailable ?(
+      <ShowAvailability 
+      resultAvailable={resultAvailable}
+      searchAvailable={searchAvailable}/>
+    ):(
+      <Box sx={{ p: 3, bgcolor:"#F5F5DC", height:"100vh", overflow:"auto" }}>
       <Typography variant="h4" gutterBottom align='center' fontFamily={'kanit'}>
         Events
       </Typography>
@@ -59,7 +72,10 @@ const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent
       ) : (
         <Typography variant="h3">No events found.</Typography>
       )}
-      <Box
+
+    </Box>
+  )}
+  <Box
       sx={{position:"fixed",bottom:"3rem", right:"3rem"}}>
         <Button 
           variant="contained"
@@ -70,8 +86,7 @@ const ShowEvents = ({ resultEvents, setShowCalendar,setSearchOpen,setSearchEvent
           go To Calendar
         </Button>
       </Box>
-    </Box>
+    </>
   );
 };
-//#febe00
 export default ShowEvents;
