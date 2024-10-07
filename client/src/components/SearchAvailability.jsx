@@ -42,7 +42,7 @@ const SearchAvailability = ({setResultAvailble,setShowAvailable,searchAvailable,
         
     }
     return (
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: 'relative'}}>
             <IconButton 
                 onClick={handleToggle} 
                 ref={anchorRef}
@@ -75,55 +75,75 @@ const SearchAvailability = ({setResultAvailble,setShowAvailable,searchAvailable,
                     },
                 ]}
                 sx={{ 
-                    zIndex: 1300,
-                    width:"700px"
+                    zIndex: 1300, 
+                    
                 }}
             >
+    
                 <ClickAwayListener onClickAway={handleClose}>
-                    <Paper elevation={3} sx={{ p: 1, backgroundColor: '#F5F5DC', mt:-1,height:"63px" }}>
+                    <Paper elevation={3} sx={{ p:1, backgroundColor: '#febe00', mt:-1,height:"62px",width:"700px" }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <TextField
-                                label="Username"
+                                placeholder="Search title"
                                 name='username'
                                 variant="outlined"
                                 value={searchAvailable.username}
                                 onChange={handleChangeSearch}
                                 size="small"
-                                sx={{ width: 150 }}
+                                InputProps={{
+                                    style: {
+                                      backgroundColor: '#F5F5DC',
+                                      fontSize: '1rem',
+                                      height: '2rem',
+                                    },}}
+                                sx={{ width: 160 }}
                             />
                             <TextField
-                                label="From"
+                                placeholder="Search title"
                                 name='fromDate'
                                 type="datetime-local"
                                 value={searchAvailable.fromDate}
                                 onChange={handleChangeSearch}
                                 InputLabelProps={{ shrink: true }}
                                 size="small"
+                                InputProps={{
+                                    style: {
+                                      backgroundColor: '#F5F5DC',
+                                      fontSize: '1rem',
+                                      height: '2rem',
+                                    },}}
                                 sx={{ width: 200 }}
                             />
                             <TextField
-                                label="To"
+                                placeholder="Search title"
                                 name="toDate"
                                 type="datetime-local"
                                 value={searchAvailable.toDate}
                                 onChange={handleChangeSearch}
                                 InputLabelProps={{ shrink: true }}
                                 size="small"
+                                InputProps={{
+                                    style: {
+                                      backgroundColor: '#F5F5DC',
+                                      fontSize: '1rem',
+                                      height: '2rem',
+                                    },}}
                                 sx={{ width: 200 }}
                             />
                             <Button
                                 variant="contained"
                                 onClick={handleSearchAvailability}
                                 size="small"
-                                sx={{ minWidth: 40, width: 40, height: 40, p: 0, bgcolor:"#fea500",
-                                ":hover":{bgcolor:"#feba00"}
+                                sx={{ minWidth: 40, width: 40, height: 40, p: 0, bgcolor:"#F5F5DC",
+                                ":hover":{bgcolor:"#F5F5DC"}
                                 }}
                             >
-                                <Search />
+                                <Search sx={{ color: "#000" }}/>
                             </Button>
                         </Box>
                     </Paper>
                 </ClickAwayListener>
+                
             </Popper>
         </Box>
     );
