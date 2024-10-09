@@ -6,7 +6,14 @@ import Help from "./components/CalendarFunction/Help";
 import Terms from "./components/Htmlpages/Terms";
 import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
+
 // import TheCalendar from "./components/TheCalendar";
+
+import PageContent from "./components/Admin/PageContent";
+import Users from "./pages/Users";
+import Dashboard from "./pages/Dashboard";
+import EventManage from "./pages/EventManage";
+import Reports from "./pages/Reports";
 
 function App() {
   const user = localStorage.getItem("token");
@@ -26,6 +33,13 @@ function App() {
 
           {/* Catch-all route to redirect invalid URLs to home */}
           <Route path="*" element={<Navigate to="/" />} />
+
+          <Route path="/admin/*" element={<PageContent />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="events" element={<EventManage />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="users" element={<Users />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

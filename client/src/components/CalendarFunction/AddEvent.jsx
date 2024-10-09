@@ -125,7 +125,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
 
   return (
     <Form
-      func="Add Event"
+      EventFunction="Add Event"
       show={show}
       popupRef={popupRef}
       buttons={Button()}

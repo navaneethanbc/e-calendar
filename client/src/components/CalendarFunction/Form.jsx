@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 
 const Form = ({
-  func,
+  EventFunction,
   show,
   popupRef,
   buttons,
@@ -52,7 +52,7 @@ const Form = ({
             id="sidebar-title"
             className="text-3xl font-bold md:text-2xl lg:text-4xl"
           >
-            {func}
+            {EventFunction}
           </h1>
           {buttons}
         </div>
