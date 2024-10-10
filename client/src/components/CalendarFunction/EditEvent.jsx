@@ -188,7 +188,7 @@ const EditFunc = ({
   return (
     <div>
       <Form
-        func="Edit Event"
+        EventFunction="Edit Event"
         show={show}
         popupRef={popupRef}
         buttons={Button()}
@@ -207,9 +207,9 @@ const EditFunc = ({
         autoHideDuration={1800}
         ContentProps={{
           sx: {
-            backgroundColor: "black",
-            color: "yellow",
-            fontSize: "1rem",
+            backgroundColor: "#febe00",
+            color: "black",
+            fontSize: "1.1rem",
             fontWeight: "bold",
             padding: "16px",
           },

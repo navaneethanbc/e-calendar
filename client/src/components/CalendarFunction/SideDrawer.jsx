@@ -67,6 +67,7 @@ const SideDrawer = ({
             <MyDatePicker selected={selected} onSelect={onSelect} />
           </div>
         ) : (
+          // mobile size
           <>
             <Box display="flex" alignItems="center">
               <Box

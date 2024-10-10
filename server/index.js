@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/user.routes.js";
 import eventRoutes from "./routes/event.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import mongoose from "mongoose";
 
 dotenv.config({ path: "./.env" });
@@ -23,6 +24,7 @@ app.use(express.json());
 // routes
 app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
+app.use("/admin", adminRoutes);
 
 // connect to MongoDB
 const port = process.env.PORT || 8001;
