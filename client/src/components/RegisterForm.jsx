@@ -2,9 +2,8 @@ import {
   Box,
   TextField,
   Typography,
-  Button,
   Autocomplete,
-  Grid,
+  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -48,7 +47,7 @@ const RegisterForm = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
 
-    const { firstname, surname, confirmPassword, ...restUserData } = user;
+    const { firstname, surname, ...restUserData } = user;
 
     if (!firstname || !surname) {
       setError("Please fill both the name fields");
@@ -84,6 +83,13 @@ const RegisterForm = () => {
     }
   };
 
+  // Function to handle Enter key release
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      handleRegister(event); // Trigger sign-in on Enter key release
+    }
+  };
+
   return (
     <Box
       width={{ xs: "80vw", sm: "50vw", md: "24vw" }}
@@ -111,7 +117,6 @@ const RegisterForm = () => {
           name="firstname"
           onChange={handleChange}
           value={user.firstname}
-          required
           size="small"
           fullWidth
           margin="dense"
@@ -123,7 +128,6 @@ const RegisterForm = () => {
           name="surname"
           onChange={handleChange}
           value={user.surname}
-          required
           size="small"
           fullWidth
           margin="dense"
@@ -131,31 +135,41 @@ const RegisterForm = () => {
       </div>
 
       {/* <div> */}
-      <TextField
-        type="email"
-        placeholder="Email address"
-        name="email"
-        onChange={handleChange}
-        value={user.email}
-        required
-        size="small"
-        fullWidth
-        margin="dense"
-      />
+      <Tooltip
+        title="Enter a valid email address. e.g., name@example.com"
+        placement="bottom-start"
+        followCursor
+      >
+        <TextField
+          type="email"
+          placeholder="Email address"
+          name="email"
+          onChange={handleChange}
+          value={user.email}
+          size="small"
+          fullWidth
+          margin="dense"
+        />
+      </Tooltip>
       {/* </div> */}
 
       {/* <div> */}
-      <TextField
-        type="text"
-        placeholder="Employee ID"
-        name="employee_id"
-        onChange={handleChange}
-        value={user.employee_id}
-        required
-        size="small"
-        fullWidth
-        margin="dense"
-      />
+      <Tooltip
+        title="Enter a valid Employee ID. e.g., EMP000001"
+        placement="bottom-start"
+        followCursor
+      >
+        <TextField
+          type="text"
+          placeholder="Employee ID"
+          name="employee_id"
+          onChange={handleChange}
+          value={user.employee_id}
+          size="small"
+          fullWidth
+          margin="dense"
+        />
+      </Tooltip>
       {/* </div> */}
 
       <Autocomplete
@@ -167,7 +181,6 @@ const RegisterForm = () => {
             type="text"
             {...params}
             label="Branch"
-            required
             variant="outlined"
             fullWidth
             margin="dense"
@@ -176,36 +189,41 @@ const RegisterForm = () => {
       />
 
       {/* <div> */}
-      <TextField
-        type="text"
-        placeholder="Username"
-        name="username"
-        onChange={handleChange}
-        value={user.username}
-        required
-        size="small"
-        fullWidth
-        margin="dense"
-      />
+      <Tooltip
+        title="Valid username contains only alphabets and numbers."
+        placement="bottom-start"
+        followCursor
+      >
+        <TextField
+          type="text"
+          placeholder="Username"
+          name="username"
+          onChange={handleChange}
+          value={user.username}
+          size="small"
+          fullWidth
+          margin="dense"
+        />
+      </Tooltip>
       {/* </div> */}
 
       {/* <div> */}
-      <TextField
-        type="password"
-        placeholder="Password"
-        name="password"
-        onChange={handleChange}
-        value={user.password}
-        required
-        size="small"
-        fullWidth
-        margin="dense"
-      />
-      {/* {passwordStrength && (
-          <div className="text-sm">
-            <span className="text-gray-600">{passwordStrength}</span>
-          </div>
-        )} */}
+      <Tooltip
+        title="Password should be at least 8 characters long and contain an uppercase letter, a lowercase letter, a number, and a special character"
+        placement="bottom-start"
+        followCursor
+      >
+        <TextField
+          type="password"
+          placeholder="Password"
+          name="password"
+          onChange={handleChange}
+          value={user.password}
+          size="small"
+          fullWidth
+          margin="dense"
+        />
+      </Tooltip>
       {/* </div> */}
 
       {/* <div> */}
@@ -215,10 +233,10 @@ const RegisterForm = () => {
         name="confirmPassword"
         onChange={handleChange}
         value={user.confirmPassword}
-        required
         size="small"
         fullWidth
         margin="dense"
+        onKeyUp={handleKeyUp}
       />
       <div className="text-sm -mt-1">
         {user.confirmPassword && user.confirmPassword !== user.password ? (

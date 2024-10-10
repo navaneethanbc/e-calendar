@@ -51,6 +51,13 @@ const SigninForm = () => {
     }
   };
 
+  // Function to handle Enter key release
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      handleSignin(event); // Trigger sign-in on Enter key release
+    }
+  };
+
   return (
     <Box
       width={{ xs: "80vw", sm: "50vw", md: "22vw" }}
@@ -95,6 +102,7 @@ const SigninForm = () => {
         size="small"
         fullWidth
         margin="dense"
+        onKeyUp={handleKeyUp}
       ></TextField>
       <Link
         className="-mt-1 text-indigo-600 text-right text-sm block"
