@@ -40,7 +40,11 @@ function Users() {
 
   return (
     <Box sx={{ padding: 3, height: "90vh", overflowY: "auto" }}>
-      <Typography variant="h3" gutterBottom>
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{ color: "#febe00", fontSize: "bold" }}
+      >
         User Details
       </Typography>
       {loading ? (
@@ -55,18 +59,32 @@ function Users() {
           <CircularProgress />
         </Box>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ boxShadow: 8 }}>
           <Box>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#b8860b" }}>
-                  <TableCell sx={{ fontWeight: "bold" }}>Employee ID</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>User Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Full Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Role</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Branch</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Last Login</TableCell>
+                <TableRow sx={{ backgroundColor: "black" }}>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Employee ID
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    User Name
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Full Name
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Email
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Role
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Branch
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Last Login
+                  </TableCell>
                 </TableRow>
               </TableHead>
 

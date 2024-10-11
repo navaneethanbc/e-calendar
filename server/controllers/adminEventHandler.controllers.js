@@ -1,54 +1,5 @@
 import { User } from "../models/user.model.js";
 import { Event } from "../models/event.model.js";
-import { EventGuest } from "../models/event_guest.model.js";
-
-export const getUserCount = async (req, res) => {
-  try {
-    const userCount = await User.countDocuments();
-
-    res.status(200).json({ userCount });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// View all users in the database with selected fields
-export const viewUsers = async (req, res) => {
-  try {
-    const users = await User.find({}).select(
-      "username fullname employee_id branch role email last_login"
-    );
-
-    if (users.length === 0) {
-      return res.status(404).json({ message: "No users found" });
-    }
-
-    res.status(200).json({ users });
-  } catch (error) {
-    console.error("Error in fetching users:", error.message);
-    res.status(500).json({ message: "Server error, could not fetch users" });
-  }
-};
-
-const deleteUser = async (req, res) => {
-  try {
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-export const viewUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id); // Find user by ID
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" }); // Handle user not found
-    }
-
-    res.status(200).json({ user }); // Return the single user
-  } catch (error) {
-    res.status(500).json({ message: error.message }); // Handle errors
-  }
-};
 
 export const eventDetails = async (req, res) => {
   try {
@@ -64,6 +15,29 @@ export const eventDetails = async (req, res) => {
       },
       {
         $sort: { _id: 1 }, // Sort by the date in ascending order
+      },
+    ]);
+    res.json(eventData);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Count events per user
+export const eventCountWithUsers = async (req, res) => {
+  try {
+    const eventData = await Event.aggregate([
+      {
+        $match: { category: { $in: ["Bank", "Branch"] } }, // Bank and Branch events
+      },
+      {
+        $group: {
+          _id: "$owner", // Group by user ID or username
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 }, // Sort by count in descending order
       },
     ]);
     res.json(eventData);
@@ -111,25 +85,6 @@ export const eventDetailsBranch = async (req, res) => {
       },
     ]);
     res.json(eventData);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-export const userReport = async (req, res) => {
-  try {
-    const userData = await User.aggregate([
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$last_login" } },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { _id: 1 },
-      },
-    ]);
-    res.json(userData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

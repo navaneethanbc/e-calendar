@@ -10,10 +10,11 @@ import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
 // import TheCalendar from "./components/TheCalendar";
 
 import PageContent from "./components/Admin/PageContent";
-import Users from "./pages/Users";
-import Dashboard from "./pages/Dashboard";
-import EventManage from "./pages/EventManage";
-import Reports from "./pages/Reports";
+import Users from "./pages/AdminPages/Users";
+import Dashboard from "./pages/AdminPages/Dashboard";
+import EventManage from "./pages/AdminPages/EventManage";
+import Reports from "./pages/AdminPages/Reports";
+import Settings from "./pages/AdminPages/Settings";
 
 function App() {
   const user = localStorage.getItem("token");
@@ -36,6 +37,7 @@ function App() {
 
           <Route path="/admin/*" element={<PageContent />}>
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="events" element={<EventManage />} />
             <Route path="reports" element={<Reports />} />
             <Route path="users" element={<Users />} />

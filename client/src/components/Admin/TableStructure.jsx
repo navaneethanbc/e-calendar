@@ -19,7 +19,11 @@ const TableStructure = ({ headers, loading, dataSource }) => {
   };
   return (
     <div>
-      <Typography variant="h3" gutterBottom>
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{ color: "#febe00", fontSize: "bold" }}
+      >
         {headers}
       </Typography>
       {loading ? (
@@ -34,16 +38,26 @@ const TableStructure = ({ headers, loading, dataSource }) => {
           <CircularProgress />
         </Box>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ boxShadow: 8 }}>
           <Box>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#b8860b" }}>
-                  <TableCell sx={{ fontWeight: "bold" }}>Title</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Owner</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Start Date</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>End Date</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Guests</TableCell>
+                <TableRow sx={{ backgroundColor: "black" }}>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Title
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Owner
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Start Date
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    End Date
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold", color: "#FFFFFF" }}>
+                    Guests
+                  </TableCell>
                 </TableRow>
               </TableHead>
 

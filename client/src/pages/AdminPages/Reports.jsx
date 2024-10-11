@@ -13,6 +13,8 @@ import {
 } from "chart.js";
 import axios from "axios";
 
+import { Box } from "@mui/material";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -189,70 +191,72 @@ const Reports = () => {
   };
 
   return (
-    <div className="relative ">
-      <div className="mt-2 mb-4 ml-2">
-        <button
-          onClick={() => handleGraphTypeChange("userReports")}
-          className="px-4 py-2 mr-2 text-white transition bg-green-900 rounded hover:bg-green-900"
-        >
-          User
-        </button>
-        <button
-          onClick={() => handleGraphTypeChange("events")}
-          className="px-4 py-2 mr-2 text-white transition bg-[#b8860b] rounded hover:bg-[#b8860c]"
-        >
-          Events
-        </button>
+    <Box sx={{ padding: 3, height: "90vh", overflowY: "auto" }}>
+      <div className="relative ">
+        <div className="mt-2 mb-4 ml-2">
+          <button
+            onClick={() => handleGraphTypeChange("userReports")}
+            className="px-4 py-2 mr-2 text-white transition bg-green-900 rounded hover:bg-green-900"
+          >
+            User
+          </button>
+          <button
+            onClick={() => handleGraphTypeChange("events")}
+            className="px-4 py-2 mr-2 text-white transition bg-[#b8860b] rounded hover:bg-[#b8860c]"
+          >
+            Events
+          </button>
 
-        <button
-          onClick={() => handleGraphTypeChange("bankReports")}
-          className="px-4 py-2 mr-2 text-white transition bg-red-600 rounded hover:bg-red-700"
-        >
-          Bank Reports
-        </button>
-        <button
-          onClick={() => handleGraphTypeChange("branchReports")}
-          className="px-4 py-2 mr-2 text-white transition bg-[#00008b] rounded hover:bg-[#00008c]"
-        >
-          Branch Reports
-        </button>
+          <button
+            onClick={() => handleGraphTypeChange("bankReports")}
+            className="px-4 py-2 mr-2 text-white transition bg-red-600 rounded hover:bg-red-700"
+          >
+            Bank Reports
+          </button>
+          <button
+            onClick={() => handleGraphTypeChange("branchReports")}
+            className="px-4 py-2 mr-2 text-white transition bg-[#00008b] rounded hover:bg-[#00008c]"
+          >
+            Branch Reports
+          </button>
+        </div>
+
+        {/* Toggle button */}
+        <div className="absolute space-x-2 top-[0.30px] right-4">
+          <button
+            onClick={toggleChartType}
+            className="px-4 py-2 font-bold text-black transition bg-gray-400 border-black rounded hover:bg-gray-500"
+            aria-pressed={chartType === "bar"}
+          >
+            {chartType === "line" ? "Bar" : "Line"} Chart
+          </button>
+          <button
+            onClick={handleDownload}
+            className="px-4 py-2 text-white transition bg-black rounded hover:bg-yellow-600"
+          >
+            Download as PNG
+          </button>
+        </div>
+
+        {chartType === "line" ? (
+          <Line
+            ref={chartRef}
+            data={chartData}
+            options={chartOptions}
+            width={400}
+            height={180}
+          />
+        ) : (
+          <Bar
+            ref={chartRef}
+            data={chartData}
+            options={chartOptions}
+            width={400}
+            height={180}
+          />
+        )}
       </div>
-
-      {/* Toggle button */}
-      <div className="absolute space-x-2 top-[0.30px] right-4">
-        <button
-          onClick={toggleChartType}
-          className="px-4 py-2 font-bold text-black transition bg-gray-400 border-black rounded hover:bg-gray-500"
-          aria-pressed={chartType === "bar"}
-        >
-          {chartType === "line" ? "Bar" : "Line"} Chart
-        </button>
-        <button
-          onClick={handleDownload}
-          className="px-4 py-2 text-white transition bg-black rounded hover:bg-yellow-600"
-        >
-          Download as PNG
-        </button>
-      </div>
-
-      {chartType === "line" ? (
-        <Line
-          ref={chartRef}
-          data={chartData}
-          options={chartOptions}
-          width={400}
-          height={180}
-        />
-      ) : (
-        <Bar
-          ref={chartRef}
-          data={chartData}
-          options={chartOptions}
-          width={400}
-          height={180}
-        />
-      )}
-    </div>
+    </Box>
   );
 };
 

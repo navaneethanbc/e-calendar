@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import TableStructure from "../components/Admin/TableStructure";
+import TableStructure from "../../components/Admin/TableStructure";
 
 function EventManage() {
   const [loading, setLoading] = useState(false);

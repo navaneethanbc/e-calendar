@@ -1,11 +1,24 @@
 import React from "react";
-import { AppBar, Box, Toolbar, Typography, IconButton } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Avatar,
+} from "@mui/material";
 
 import { Menu } from "@mui/icons-material";
 
 import image from "../../assets/icon.png";
+import { useNavigate } from "react-router-dom";
 
 const AdminHeader = ({ handleDrawer }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <AppBar
       position="static"
@@ -34,6 +47,16 @@ const AdminHeader = ({ handleDrawer }) => {
               Calendar
             </Typography>
           </div>
+        </Box>
+        <Box
+          flexGrow={1}
+          justifyContent={"right"}
+          display={"flex"}
+          alignItems={"center"}
+        >
+          <IconButton onClick={handleLogout} sx={{ mr: -1 }}>
+            <Avatar />
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>
