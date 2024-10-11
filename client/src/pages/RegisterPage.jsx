@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { Box } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
+import background from "../assets/background.png";
 
 const RegisterPage = () => {
   const theme = useTheme();
@@ -33,11 +34,7 @@ const RegisterPage = () => {
           padding={2}
           display={{ xs: "none", sm: "none", md: "block" }}
         >
-          <Box
-            component="img"
-            src="src/assets/background.png"
-            alt="background"
-          />
+          <Box component="img" src={background} alt="background" />
         </Box>
         <Box
           alignSelf={"center"}
@@ -46,7 +43,7 @@ const RegisterPage = () => {
         >
           <Box
             component="img"
-            src="src/assets/background.png"
+            src={background}
             alt="background"
             height={"30vh"}
           />

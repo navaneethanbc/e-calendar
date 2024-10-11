@@ -1,13 +1,12 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import addIcon from "../assets/add_icon.png";
 
 export const CreateButton = ({ open, handleModalOpen }) => {
   return (
-
     <Box position={"absolute"} top={100} zIndex={50} ml={2.5}>
       <button
         className="rounded-full bg-[#febe00] flex items-center justify-center shadow-lg hover:bg-[#febe00]"
-
         onClick={handleModalOpen}
         style={{
           width: open ? 150 : 50,
@@ -15,7 +14,7 @@ export const CreateButton = ({ open, handleModalOpen }) => {
           transition: "width 0.1s",
         }}
       >
-        <Box component="img" src={"src/assets/add_icon.png"} height={25} />
+        <Box component="img" src={addIcon} height={25} />
         <Typography
           fontSize={25}
           ml={1}
