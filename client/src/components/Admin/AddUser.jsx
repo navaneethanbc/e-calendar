@@ -74,13 +74,19 @@ const AddUserForm = () => {
         paddingBottom: "80px",
       }}
     >
-      <Typography
-        variant="h3"
-        gutterBottom
-        sx={{ color: "#febe00", fontSize: "bold" }}
-      >
-        Add New User
-      </Typography>
+      <div className="bg-[#504f4a]">
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{
+            color: "#febe00",
+            fontSize: "bold",
+            padding: "20px 3px 3px 20px",
+          }}
+        >
+          Add New User
+        </Typography>
+      </div>
 
       {error && <Alert severity="error">{error}</Alert>}
       {success && <Alert severity="success">{success}</Alert>}

@@ -18,11 +18,15 @@ const TableStructure = ({ headers, loading, dataSource }) => {
     return date.toLocaleString();
   };
   return (
-    <div>
+    <div className="bg-[#504f4a]">
       <Typography
         variant="h3"
         gutterBottom
-        sx={{ color: "#febe00", fontSize: "bold" }}
+        sx={{
+          color: "#febe00",
+          fontSize: "bold",
+          padding: "20px 3px 3px 20px",
+        }}
       >
         {headers}
       </Typography>

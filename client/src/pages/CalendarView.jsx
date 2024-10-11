@@ -142,6 +142,8 @@ const CalendarView = () => {
 
   useEffect(() => {
     fetchEvents();
+    console.log(localStorage.getItem("username"));
+    console.log(localStorage.getItem("employee_id"));
   }, [events]);
 
   useEffect(() => {
