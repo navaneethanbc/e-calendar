@@ -4,7 +4,6 @@ import RegisterPage from "./pages/RegisterPage";
 import CalendarView from "./pages/CalendarView";
 import Help from "./components/CalendarFunction/Help";
 import Terms from "./components/Htmlpages/Terms";
-import Cookies from "./components/Htmlpages/Cookies_policy";
 import PrivacyPolicy from "./components/Htmlpages/Privacy_policy";
 import PageContent from "./components/Admin/PageContent";
 import Users from "./pages/Users";
@@ -24,8 +23,7 @@ function App() {
           {user && <Route path="/calendar" element={<CalendarView />} />}
           <Route path="/calendar/help" element={<Help />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
 
           <Route path="/admin/*" element={<PageContent />}>
             <Route path="dashboard" element={<Dashboard />} />

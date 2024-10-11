@@ -25,6 +25,7 @@ import {
   EventAvailableTwoTone,
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
+import logo from "../assets/icon.png";
 
 import Notifications from "./NotificationPopUp";
 
@@ -74,13 +75,7 @@ const NavigationBar = ({
           >
             <Menu />
           </IconButton>
-          <Box
-            component="img"
-            src="src/assets/icon.png"
-            alt="Logo"
-            height={50}
-            mr={1}
-          />
+          <Box component="img" src={logo} alt="Logo" height={50} mr={1} />
           <div className="flex justify-start">
             <Typography
               variant="h1"

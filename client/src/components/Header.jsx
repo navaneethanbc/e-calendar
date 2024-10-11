@@ -1,5 +1,6 @@
 import React from "react";
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import logo from "../assets/icon.png";
 
 const Header = () => {
   return (
@@ -16,7 +17,7 @@ const Header = () => {
         <Toolbar>
           <Box
             component="img"
-            src="src/assets/icon.png"
+            src={logo}
             alt="Logo"
             height={{ xs: "8vh", md: "11vh" }}
             mr={{ xs: 2, md: 3 }}
