@@ -20,7 +20,9 @@ function Users() {
   const userDetails = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/admin/views`);
+      const response = await axios.get(
+        `http://e-calendar-cocq.vercel.app/admin/views`
+      );
       setDataSource(response.data.users);
     } catch (error) {
       setError("Error fetching user details.");

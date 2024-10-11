@@ -14,7 +14,9 @@ function EventManage() {
   const bankEvent = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8000/admin/bankevent`);
+      const response = await axios.get(
+        `http://e-calendar-cocq.vercel.app/admin/bankevent`
+      );
       setDataSourceBank(response.data);
     } catch (error) {
       setError("Error fetching user details.");
@@ -27,7 +29,7 @@ function EventManage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/branchevent/Branch A`
+        `http://e-calendar-cocq.vercel.app/admin/branchevent/Branch A`
       );
       setDataSourceBranchA(response.data);
     } catch (error) {
@@ -41,7 +43,7 @@ function EventManage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/branchevent/Branch B`
+        `http://e-calendar-cocq.vercel.app/admin/branchevent/Branch B`
       );
       setDataSourceBranchB(response.data);
     } catch (error) {
@@ -55,7 +57,7 @@ function EventManage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/branchevent/Branch C`
+        `http://e-calendar-cocq.vercel.app/admin/branchevent/Branch C`
       );
       setDataSourceBranchC(response.data);
     } catch (error) {
@@ -69,7 +71,7 @@ function EventManage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/branchevent/Branch D`
+        `http://e-calendar-cocq.vercel.app/admin/branchevent/Branch D`
       );
       setDataSourceBranchD(response.data);
     } catch (error) {

@@ -10,7 +10,7 @@ const Notifications = ({ onHide }) => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/notifications"
+          "http://e-calendar-cocq.vercel.app/api/notifications"
         );
         setNotifications(response.data);
       } catch (error) {
@@ -37,7 +37,9 @@ const Notifications = ({ onHide }) => {
 
   const handleNotificationClick = async (id) => {
     try {
-      await axios.post(`http://localhost:8000/api/notifications/read/${id}`);
+      await axios.post(
+        `http://e-calendar-cocq.vercel.app/api/notifications/read/${id}`
+      );
       setNotifications((prev) =>
         prev.map((n) => (n._id === id ? { ...n, hasBeenRead: true } : n))
       );

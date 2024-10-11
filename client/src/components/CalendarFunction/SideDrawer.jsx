@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import MyDatePicker from "./DayPicker";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import logo from "../assets/icon.png";
 
 const SideDrawer = ({
   open,
@@ -72,7 +73,7 @@ const SideDrawer = ({
             <Box display="flex" alignItems="center">
               <Box
                 component="img"
-                src="src/assets/icon.png"
+                src={logo}
                 alt="Logo"
                 height={50}
                 mr={1}

@@ -28,7 +28,7 @@ const Reset = ({ setIsModalOpen, username }) => {
     if (validatePassword()) {
       try {
         const response = await axios.post(
-          "http://localhost:8000/users/resetpassword",
+          "http://e-calendar-cocq.vercel.app/users/resetpassword",
           { username, password }
         );
         if (response.status === 200) {

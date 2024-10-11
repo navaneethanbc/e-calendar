@@ -65,7 +65,7 @@ const RegisterForm = () => {
     const userData = { fullname, ...restUserData };
 
     try {
-      const url = "http://localhost:8000/users/register";
+      const url = "http://e-calendar-cocq.vercel.app/users/register";
       const res = await axios.post(url, userData);
       navigate("/");
       console.log(res.message);
