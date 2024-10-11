@@ -250,7 +250,7 @@ const RegisterForm = () => {
       <div className="p-1 pb-0">
         <p className="text-xs text-gray-600">
           By clicking "Get Started", you agree to our{" "}
-          <Link to="/termsofservice" className="text-indigo-600">
+          <Link to="/terms" className="text-indigo-600">
             Terms of Service
           </Link>{" "}
           and{" "}
