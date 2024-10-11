@@ -54,7 +54,7 @@ const CalendarView = () => {
       console.log("Adding new event:", newEvent);
 
       const response = await axios.post(
-        "http://e-calendar-cocq.vercel.app/events/create",
+        "https://e-calendar-cocq.vercel.app/events/create",
         newEvent
       );
 
@@ -70,7 +70,7 @@ const CalendarView = () => {
   const handleEditEvent = async (updatedEvent) => {
     try {
       await axios.put(
-        `http://e-calendar-cocq.vercel.app/events/${updatedEvent.id}`,
+        `https://e-calendar-cocq.vercel.app/events/${updatedEvent.id}`,
         updatedEvent
       );
       const updatedEvents = events.map((event) =>
@@ -86,7 +86,7 @@ const CalendarView = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`http://e-calendar-cocq.vercel.app/events/${id}`);
+      await axios.delete(`https://e-calendar-cocq.vercel.app/events/${id}`);
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
@@ -99,7 +99,7 @@ const CalendarView = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.post(
-        "http://e-calendar-cocq.vercel.app/events/find/",
+        "https://e-calendar-cocq.vercel.app/events/find/",
         {
           username: localStorage.getItem("username"),
         }

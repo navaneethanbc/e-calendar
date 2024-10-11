@@ -33,7 +33,7 @@ const SigninForm = () => {
     }
 
     try {
-      const url = "http://e-calendar-cocq.vercel.app/users/login";
+      const url = "https://e-calendar-cocq.vercel.app/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", user.username);

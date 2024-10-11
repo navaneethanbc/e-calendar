@@ -52,7 +52,7 @@
 
 //   const userCount = async () => {
 //     try {
-//       const response = await axios.get(`http://e-calendar-cocq.vercel.app/admin/count`);
+//       const response = await axios.get(`https://e-calendar-cocq.vercel.app/admin/count`);
 //       setUsers(response.data.userCount);
 //     } catch (error) {
 //       console.log("Error userCount", error);
@@ -62,7 +62,7 @@
 //   const eventCount = async () => {
 //     try {
 //       const response = await axios.get(
-//         `http://e-calendar-cocq.vercel.app/admin/eventdetails`
+//         `https://e-calendar-cocq.vercel.app/admin/eventdetails`
 //       );
 //       const eventData = response.data;
 //       const total = eventData.reduce((sum, event) => sum + event.count, 0);
