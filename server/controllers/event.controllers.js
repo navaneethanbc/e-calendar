@@ -32,39 +32,50 @@ export const createEvent = async (req, res) => {
 
     // create the event guests relationships
     if (guests && guests.length > 0) {
-      for (const e of events) {
-        await Promise.all(
-          guests.map(async (guest) => {
-            await EventGuest.create(
-              [
-                {
-                  event_id: e._id,
-                  guest: guest,
-                },
-              ],
-              { session }
-            );
-          })
-        );
-      }
-    }
+      await Promise.all(
+        guests.map(async (guest) => {
+          await EventGuest.create(
+            [
+              {
+                event_id: event[0]._id,
+                guest: guest,
+              },
+            ],
+            { session }
+          );
 
-    // await Promise.all(
-    //   guests.map((guest) => {
-    //     Notification.create(
-    //       [
-    //         {
-    //           username: guest,
-    //           category: "Invite",
-    //           description: "",
-    //           designated_time: new Date(),
-    //           event_id: event[0]._id,
-    //         },
-    //       ],
-    //       { session }
-    //     );
-    //   })
-    // );
+          let description =
+            `You have been invited by ${rest.owner} to a ${rest.category} event: ${rest.title}\n` +
+            `Starts at: ${new Date(rest.starts_at).toLocaleString()}\n` +
+            `Ends at: ${new Date(rest.ends_at).toLocaleString()}\n`;
+
+          if (rest.recurrence) {
+            description += `Recurrence: ${rest.recurrence}\n`;
+          }
+          if (rest.meeting_link) {
+            description += `Meeting: Online\n`;
+          } else {
+            description += `Meeting: Physical\n`;
+          }
+          if (rest.location) {
+            description += `Location: ${rest.location}\n`;
+          }
+
+          const notification = await Notification.create(
+            [
+              {
+                assigned_to: guest,
+                category: "invite",
+                description: description.trim(),
+                designated_time: new Date(),
+                event_id: event[0]._id,
+              },
+            ],
+            { session }
+          );
+        })
+      );
+    }
 
     await session.commitTransaction();
     res.status(201).json({ message: "Event created successfully." });
