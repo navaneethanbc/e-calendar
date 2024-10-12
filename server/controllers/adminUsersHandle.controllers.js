@@ -182,3 +182,20 @@ export const addUser = async (req, res) => {
     res.status(500).json({ message: "Server error, unable to create user" });
   }
 };
+
+// admin
+export const userAdmin = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
+
+    let role = user.employee_id.slice(0, 3).toUpperCase();
+
+    if (role === "ADM") return res.json(role);
+    else {
+      return res.json({ messege: "not a admin" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Invalid user" });
+  }
+};

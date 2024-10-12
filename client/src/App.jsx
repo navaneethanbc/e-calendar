@@ -12,9 +12,30 @@ import Dashboard from "./pages/AdminPages/Dashboard";
 import EventManage from "./pages/AdminPages/EventManage";
 import Reports from "./pages/AdminPages/Reports";
 import Settings from "./pages/AdminPages/Settings";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [role, setRole] = useState("");
   const user = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+
+  const getAdmin = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/admin/getadmin/${username}`
+      );
+      setRole(response.data);
+    } catch (error) {
+      console.log("Error admin", error);
+    }
+  };
+
+  useEffect(() => {
+    if (username) {
+      getAdmin(username);
+    }
+  }, [username]);
 
   return (
     <>
@@ -28,13 +49,16 @@ function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
 
-          <Route path="/admin/*" element={<PageContent />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="events" element={<EventManage />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="users" element={<Users />} />
-          </Route>
+          {/* Admin routes, rendered only if the user role is ADM */}
+          {role === "ADM" && (
+            <Route path="/admin/*" element={<PageContent />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="events" element={<EventManage />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="users" element={<Users />} />
+            </Route>
+          )}
 
           {/* Catch-all route to redirect invalid URLs to home */}
           <Route path="*" element={<Navigate to="/" />} />

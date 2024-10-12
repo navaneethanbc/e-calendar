@@ -112,7 +112,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box sx={{ padding: 3, height: "90vh", overflowY: "auto" }}>
       <Box sx={{ display: "flex", paddingBottom: "10px" }}>
         <img
           src={Image}

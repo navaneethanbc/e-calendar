@@ -138,12 +138,10 @@ const CalendarView = () => {
     setFilteredEvents(filtered);
   };
 
-  const debouncedFilterEventsByCategory = debounce(filterEventsByCategory, 300);
+  const debouncedFilterEventsByCategory = debounce(filterEventsByCategory, 1);
 
   useEffect(() => {
     fetchEvents();
-    console.log(localStorage.getItem("username"));
-    console.log(localStorage.getItem("employee_id"));
   }, [events]);
 
   useEffect(() => {

@@ -16,6 +16,7 @@ import {
   deleteUser,
   addUser,
   viewUsersByBranch,
+  userAdmin,
 } from "../controllers/adminUsersHandle.controllers.js";
 
 const router = Router();
@@ -29,6 +30,7 @@ router.route("/deleteuser/:username").delete(deleteUser);
 router.route("/updateuser/:username").put(updateUsername);
 router.route("/userreport").get(userReport);
 router.route("/adduser").post(addUser);
+router.route("/getadmin/:username").get(userAdmin);
 
 // event
 
