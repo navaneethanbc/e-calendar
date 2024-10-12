@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import SearchEvents from "./EventsAndAvailability/SearchEvents";
+import SearchAvailability from "./EventsAndAvailability/SearchAvailability"
+import Profile from "./Profile";
+import axios from "axios"
+
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   Box,
-  Avatar,
   Button,
   FormControl,
   Select,
@@ -22,7 +25,6 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Search,
-  EventAvailableTwoTone,
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import logo from "../assets/icon.png";
@@ -38,16 +40,22 @@ const NavigationBar = ({
   selectedView,
   notifications,
   handleSelectView,
+  setResultEvents,
+  setShowCalendar,
+  searchOpen,
+  setSearchOpen,
+  searchevent,
+  setSearchEvent,
+  setResultAvailble,
+  setShowAvailable,
+  searchAvailable,
+  setSearchAvailable
 }) => {
-  const [searchOpen, setSearchOpen] = useState(false);
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
-  const navigate = useNavigate();
+  const [localEvents,setLocalEvents] = useState([]) // to store temporry resultevent 
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
@@ -58,6 +66,67 @@ const NavigationBar = ({
   };
 
   const openNotifications = Boolean(anchorElement);
+
+  //check if events required search componentts  not empty
+  const checkContent = () => {
+    if((!searchevent.title) && (!searchevent.category) && (!searchevent.from) && (!searchevent.to)){
+      return false
+    }
+    else if (searchevent.from && (!searchevent.to))  {
+      
+      return false; 
+    }
+    else if((!searchevent.from) && searchevent.to){
+      
+      return false
+    }
+    return true;
+  };
+
+  // function  to send api call for get searched events
+  const handleSearch = async () => {
+    if (searchOpen && checkContent()) {
+      try {
+        const response = await axios.post("https://e-calendar-cocq.vercel.app/events/find/", {
+          username: localStorage.getItem("username"),
+          title: searchevent.title,
+          from: searchevent.from,
+          to: searchevent.to
+        });
+
+        setShowCalendar(false)
+        setShowAvailable(false)
+  
+        if (response.data.events && response.data.events.length > 0) {
+          setResultEvents(response.data.events);
+          setLocalEvents(response.data.events)
+        } 
+        else {
+          setResultEvents([]);
+          setLocalEvents([])
+        }
+      }
+       catch (error) {
+        console.error("Error in searching events:", error);
+        setResultEvents([]);
+        setLocalEvents([])
+      } 
+    } 
+    else {
+      setSearchOpen(!searchOpen);
+    }
+  };
+
+  useEffect(()=>{
+    if(searchevent.category !== ""){
+      const filteredEvents = localEvents.filter((event)=>((event.category.toLowerCase()).includes(searchevent.category.toLowerCase())))
+      setResultEvents(filteredEvents)
+    }
+    else{
+      setResultEvents(localEvents)
+    }
+   
+  })
 
   return (
     <AppBar
@@ -119,7 +188,7 @@ const NavigationBar = ({
               <ArrowForwardIos />
             </IconButton>
           </div>
-          <div className="flex justify-center mr-8">
+          <Box className="flex justify-center mr-8" display={searchOpen?"none":""}>
             <Typography
               variant="h4"
               align="center"
@@ -131,7 +200,13 @@ const NavigationBar = ({
             >
               {headerTitle}
             </Typography>
-          </div>
+          </Box>
+          <Box display={!searchOpen?"none":""}>
+          <SearchEvents 
+              searchevent = {searchevent}
+              setSearchEvent = {setSearchEvent}
+              /> 
+          </Box>
         </Box>
         <Box
           flexGrow={1}
@@ -139,12 +214,18 @@ const NavigationBar = ({
           display={"flex"}
           alignItems={"center"}
         >
-          <IconButton>
+          <IconButton onClick={handleSearch}>
             <Search sx={{ height: 32, width: 32 }} />
           </IconButton>
-          <IconButton>
-            <EventAvailableTwoTone sx={{ height: 32, width: 32 }} />
-          </IconButton>
+
+          <SearchAvailability 
+              setResultAvailble={setResultAvailble}
+              setShowAvailable={setShowAvailable}
+              searchAvailable={searchAvailable}
+              setSearchAvailable={setSearchAvailable}
+              setShowCalendar={setShowCalendar}
+            />
+
           <IconButton onClick={handleNotificationClick}>
             <NotificationsIcon sx={{ height: 32, width: 32 }} />
           </IconButton>
@@ -218,9 +299,7 @@ const NavigationBar = ({
               </Select>
             </FormControl>
           </div>
-          <IconButton onClick={handleLogout} sx={{ mr: -2 }}>
-            <Avatar />
-          </IconButton>
+          <Profile />
         </Box>
       </Toolbar>
     </AppBar>
