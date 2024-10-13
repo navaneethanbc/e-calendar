@@ -1,8 +1,8 @@
 import React from 'react';
-import { TextField, Select, MenuItem, Button } from '@mui/material';
+import { TextField, Select, MenuItem } from '@mui/material';
 
 
-const SearchEvent = ({searchevent, setSearchEvent}) => {
+const SearchEvents = ({searchevent, setSearchEvent}) => {
 
   const handleChange = ({currentTarget: input})=>{
     setSearchEvent({...searchevent,[input.name]:input.value})
@@ -54,10 +54,10 @@ const SearchEvent = ({searchevent, setSearchEvent}) => {
           fontSize: '1rem',
         }}
       >
-         <MenuItem value="" >None</MenuItem> 
-        <MenuItem value="personal">Personal</MenuItem>
-        <MenuItem value="branch">Branch</MenuItem>
-        <MenuItem value="bank">Bank</MenuItem>
+         <MenuItem value="" >All</MenuItem> 
+        <MenuItem value="Personal">Personal</MenuItem>
+        <MenuItem value="Branch">Branch</MenuItem>
+        <MenuItem value="Bank">Bank</MenuItem>
       </Select>
       <TextField
         value={searchevent.from}
@@ -98,4 +98,4 @@ const SearchEvent = ({searchevent, setSearchEvent}) => {
   );
 };
 
-export default SearchEvent;
+export default SearchEvents;

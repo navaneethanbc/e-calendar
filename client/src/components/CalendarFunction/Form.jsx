@@ -2,23 +2,13 @@ import React from "react";
 import moment from "moment";
 
 const Form = ({
-  func,
+  EventFunction,
   show,
   popupRef,
   buttons,
-  title,
-  description,
-  startDateTime,
-  endDateTime,
-  meeting_link,
-  location,
-  category,
-  recurrence,
-  reminder,
-  guests,
+  event,
   handleChange,
-  errStart,
-  errEnd,
+  errors,
   locationIcon,
   linkIcon,
 }) => {
@@ -27,16 +17,16 @@ const Form = ({
   };
 
   const getMinEndDateTime = () => {
-    if ({ startDateTime }) {
-      return { startDateTime };
+    if (event.startDateTime) {
+      return event.startDateTime;
     }
     return getCurrentDateTimeLocal();
   };
 
   const handleMeetingLinkClick = () => {
-    if ({ meeting_link }) {
+    if (event.meeting_link) {
       try {
-        const url = new URL({ meeting_link });
+        const url = new URL(event.meeting_link);
         window.open(url.href, "_blank");
       } catch (e) {
         console.error("Invalid URL:", e);
@@ -62,7 +52,7 @@ const Form = ({
             id="sidebar-title"
             className="text-3xl font-bold md:text-2xl lg:text-4xl"
           >
-            {func}
+            {EventFunction}
           </h1>
           {buttons}
         </div>
@@ -77,10 +67,13 @@ const Form = ({
             type="text"
             placeholder="Event Title"
             className="w-full p-2 border border-gray-300 rounded"
-            value={title}
+            value={event.title}
             onChange={handleChange}
             aria-required="true"
           />
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+          )}
 
           <label htmlFor="description" className="block mb-1 font-bold">
             Description
@@ -90,7 +83,7 @@ const Form = ({
             name="description"
             placeholder="Event Description"
             className="w-full p-2 border border-gray-300 rounded"
-            value={description}
+            value={event.description}
             onChange={handleChange}
           />
 
@@ -104,13 +97,15 @@ const Form = ({
                 name="startDateTime"
                 type="datetime-local"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={startDateTime}
+                value={event.startDateTime}
                 onChange={handleChange}
                 aria-required="true"
                 min={getCurrentDateTimeLocal()}
               />
-              {errStart && (
-                <p className="mt-1 text-sm text-red-500">{errStart}</p>
+              {errors.startDateTime && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.startDateTime}
+                </p>
               )}
             </div>
 
@@ -123,12 +118,16 @@ const Form = ({
                 name="endDateTime"
                 type="datetime-local"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={endDateTime}
+                value={event.endDateTime}
                 onChange={handleChange}
                 aria-required="true"
                 min={getMinEndDateTime()}
               />
-              {errEnd && <p className="mt-1 text-sm text-red-500">{errEnd}</p>}
+              {errors.endDateTime && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.endDateTime}
+                </p>
+              )}
             </div>
           </div>
 
@@ -147,14 +146,14 @@ const Form = ({
                 type="url"
                 placeholder="Meeting Link"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={meeting_link}
+                value={event.meeting_link}
                 onChange={handleChange}
               />
               <button
                 type="button"
                 className="p-0 mt-0 text-blue-500 hover:text-blue-700"
                 onClick={handleMeetingLinkClick}
-                disabled={!meeting_link}
+                disabled={!event.meeting_link}
               >
                 Open Link
               </button>
@@ -174,7 +173,7 @@ const Form = ({
                 type="text"
                 placeholder="Location"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={location}
+                value={event.location}
                 onChange={handleChange}
               />
             </div>
@@ -188,7 +187,7 @@ const Form = ({
             name="guests"
             type="text"
             className="w-full p-2 border border-gray-300 rounded"
-            value={guests}
+            value={event.guests}
             onChange={handleChange}
           />
 
@@ -201,7 +200,7 @@ const Form = ({
                 id="category"
                 name="category"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={category}
+                value={event.category}
                 onChange={handleChange}
               >
                 <option value="Personal">Personal</option>
@@ -218,10 +217,10 @@ const Form = ({
                 id="recurrence"
                 name="recurrence"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={recurrence}
+                value={event.recurrence}
                 onChange={handleChange}
               >
-                <option value="Non-recurring">Non-recurring</option>
+                <option value="Non-recurring"></option>
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
                 <option value="Monthly">Monthly</option>
@@ -237,10 +236,10 @@ const Form = ({
                 id="reminder"
                 name="reminder"
                 className="w-full p-2 border border-gray-300 rounded"
-                value={reminder}
+                value={event.reminder}
                 onChange={handleChange}
               >
-                <option value="No reminder">No reminder</option>
+                <option value="No reminder"></option>
                 <option value="15 minutes">15 minutes</option>
                 <option value="30 minutes">30 minutes</option>
                 <option value="1 hour">1 hour</option>

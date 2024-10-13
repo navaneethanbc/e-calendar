@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import MyDatePicker from "./DayPicker";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import logo from "../../assets/icon.png";
 
 const SideDrawer = ({
   open,
@@ -67,15 +68,10 @@ const SideDrawer = ({
             <MyDatePicker selected={selected} onSelect={onSelect} />
           </div>
         ) : (
+          // mobile size
           <>
             <Box display="flex" alignItems="center">
-              <Box
-                component="img"
-                src="src/assets/icon.png"
-                alt="Logo"
-                height={50}
-                mr={1}
-              />
+              <Box component="img" src={logo} alt="Logo" height={50} mr={1} />
               <Typography
                 variant="h1"
                 fontFamily={"Kanit"}

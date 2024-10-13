@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import addIcon from "../assets/add_icon.png";
 
 export const CreateButton = ({ open, handleModalOpen }) => {
   return (
@@ -13,7 +14,7 @@ export const CreateButton = ({ open, handleModalOpen }) => {
           transition: "width 0.1s",
         }}
       >
-        <Box component="img" src={"src/assets/add_icon.png"} height={25} />
+        <Box component="img" src={addIcon} height={25} />
         <Typography
           fontSize={25}
           ml={1}

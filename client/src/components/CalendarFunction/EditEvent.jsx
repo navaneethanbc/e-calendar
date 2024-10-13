@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
+import Snackbar from "@mui/material/Snackbar";
+import Fade from "@mui/material/Fade";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPencilAlt,
@@ -24,17 +26,27 @@ const EditFunc = ({
     startDateTime: "",
     endDateTime: "",
     category: "Personal",
-    recurrence: "Non-recurring",
-    reminder: "No reminder",
+    recurrence: "",
+    reminder: "",
     location: "",
     guests: [],
   });
   const [errors, setErrors] = useState({
+    title: "",
     startDateTime: "",
     endDateTime: "",
   });
 
-  const popupRef = useRef(null); // Create a ref for the popup
+  const popupRef = useRef(null);
+
+  // State for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  // Snackbar handlers
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -63,10 +75,11 @@ const EditFunc = ({
           ? moment(selectedEvent.end).format("YYYY-MM-DDTHH:mm")
           : "",
         category: selectedEvent.extendedProps?.category || "Personal",
-        recurrence: selectedEvent.extendedProps?.recurrence || "Non-recurring",
-        reminder: selectedEvent.extendedProps?.reminder || "No reminder",
+        recurrence: selectedEvent.extendedProps?.recurrence || "",
+        reminder: selectedEvent.extendedProps?.reminder || "",
         location: selectedEvent.extendedProps?.location || "",
         guests: selectedEvent.extendedProps?.guests || [],
+        owner: selectedEvent.extendedProps?.owner,
       };
 
       setFormData(updatedFormData);
@@ -87,6 +100,9 @@ const EditFunc = ({
 
   const handleSubmit = () => {
     const newErrors = {};
+    if (!formData.title) {
+      newErrors.title = "Title is required";
+    }
 
     if (!formData.startDateTime) {
       newErrors.startDateTime = "Start date is required.";
@@ -106,32 +122,45 @@ const EditFunc = ({
       return;
     }
 
-    const updatedEvent = {
-      id: selectedEvent.id,
-      title: formData.title,
-      description: formData.description,
-      meeting_link: formData.meeting_link,
-      starts_at: moment(formData.startDateTime).toDate(),
-      ends_at: moment(formData.endDateTime).toDate(),
-      category: formData.category,
-      recurrence: formData.recurrence,
-      reminder: formData.reminder,
-      location: formData.location,
-      guests: formData.guests,
-    };
+    if (formData.owner === localStorage.getItem("username")) {
+      const updatedEvent = {
+        id: selectedEvent.id,
+        title: formData.title,
+        description: formData.description,
+        meeting_link: formData.meeting_link,
+        starts_at: moment(formData.startDateTime).toDate(),
+        ends_at: moment(formData.endDateTime).toDate(),
+        category: formData.category,
+        recurrence: formData.recurrence,
+        reminder: formData.reminder,
+        location: formData.location,
+        guests: formData.guests,
+      };
 
-    if (formData.id) {
-      // Make sure the id exists for the event update
-      updatedEvent._id = formData.id;
+      if (formData.id) {
+        updatedEvent._id = formData.id;
+      }
+      onEditEvent(updatedEvent);
+    } else {
+      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarOpen(true);
     }
-    onEditEvent(updatedEvent);
+
     resetForm();
     onHide();
   };
 
   const handleDelete = () => {
-    if (selectedEvent && selectedEvent.id) {
+    if (
+      selectedEvent &&
+      selectedEvent.id &&
+      selectedEvent.extendedProps.owner === localStorage.getItem("username")
+    ) {
       onDeleteEvent(selectedEvent.id);
+    } else {
+      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarOpen(true);
+      onHide();
     }
   };
 
@@ -157,27 +186,36 @@ const EditFunc = ({
   };
 
   return (
-    <Form
-      func="Edit Event"
-      show={show}
-      popupRef={popupRef}
-      buttons={Button()}
-      title={formData.title}
-      description={formData.description}
-      startDateTime={formData.startDateTime}
-      endDateTime={formData.endDateTime}
-      meeting_link={formData.meeting_link}
-      location={formData.location}
-      category={formData.category}
-      recurrence={formData.recurrence}
-      reminder={formData.reminder}
-      guests={formData.guests}
-      handleChange={handleChange}
-      errStart={errors.startDateTime}
-      errEnd={errors.endDateTime}
-      locationIcon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
-      linkIcon={<FontAwesomeIcon icon={faLink} />}
-    />
+    <div>
+      <Form
+        EventFunction="Edit Event"
+        show={show}
+        popupRef={popupRef}
+        buttons={Button()}
+        event={formData}
+        handleChange={handleChange}
+        errors={errors}
+        locationIcon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
+        linkIcon={<FontAwesomeIcon icon={faLink} />}
+      />
+
+      <Snackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        TransitionComponent={Fade}
+        message={snackbarMessage}
+        autoHideDuration={1800}
+        ContentProps={{
+          sx: {
+            backgroundColor: "#febe00",
+            color: "black",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            padding: "16px",
+          },
+        }}
+      />
+    </div>
   );
 };
 

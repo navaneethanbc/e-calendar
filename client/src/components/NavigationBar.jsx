@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import SearchEvent from "./SearchEvent"
+import SearchEvents from "./EventsAndAvailability/SearchEvents";
+import SearchAvailability from "./EventsAndAvailability/SearchAvailability";
+import Profile from "./Profile";
 import axios from "axios";
+
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   Box,
-  Avatar,
   Button,
   FormControl,
   Select,
+  List,
+  ListItem,
+  ListItemText,
+  Popover,
   MenuItem,
   Menu as DropMenu,
 } from "@mui/material";
@@ -20,9 +25,11 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Search,
-  EventAvailableTwoTone,
-  Notifications,
+  Notifications as NotificationsIcon,
 } from "@mui/icons-material";
+import logo from "../assets/icon.png";
+
+import Notifications from "./NotificationPopUp";
 
 const NavigationBar = ({
   handleDrawer,
@@ -31,87 +38,96 @@ const NavigationBar = ({
   handleNext,
   headerTitle,
   selectedView,
-  handleSelectView, 
+  notifications,
+  handleSelectView,
   setResultEvents,
   setShowCalendar,
-  resultEvents
+  searchOpen,
+  setSearchOpen,
+  searchevent,
+  setSearchEvent,
+  setResultAvailble,
+  setShowAvailable,
+  searchAvailable,
+  setSearchAvailable,
 }) => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [anchorElement, setAnchorElement] = useState(null);
+  const [localEvents, setLocalEvents] = useState([]); // to store temporry resultevent
 
-  // to store search states
-  const [searchevent, setSearchEvent] = useState({
-    username:"",
-    title:"",
-    from:"",
-    to:"",
-    category:"",
-  })
-  const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
-  const [errorMessage, setErrorMessage] = useState("") //to store error message from  handle search function
-  //const [localEvents,setLocalEvents] = useState({}) // to store temporry resultevent i need to chek this 
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
   };
+
+  const handleNotificationClose = () => {
+    setAnchorElement(null);
+  };
+
+  const openNotifications = Boolean(anchorElement);
 
   //check if events required search componentts  not empty
   const checkContent = () => {
-    if (searchevent.title || (searchevent.startDate && searchevent.endDate) ) {
-      return true;
+    if (
+      !searchevent.title &&
+      !searchevent.category &&
+      !searchevent.from &&
+      !searchevent.to
+    ) {
+      return false;
+    } else if (searchevent.from && !searchevent.to) {
+      return false;
+    } else if (!searchevent.from && searchevent.to) {
+      return false;
     }
-    return false;
+    return true;
   };
-  
-// function  api call for get searched events
+
+  // function  to send api call for get searched events
   const handleSearch = async () => {
     if (searchOpen && checkContent()) {
       try {
-        const response = await axios.post("http://localhost:8000/events/find/", {
-          username: localStorage.getItem("username"),
-          title: searchevent.title,
-          from: searchevent.from,
-          to: searchevent.to
-        });
+        const response = await axios.post(
+          "https://e-calendar-cocq.vercel.app/events/find/",
+          {
+            username: localStorage.getItem("username"),
+            title: searchevent.title,
+            from: searchevent.from,
+            to: searchevent.to,
+          }
+        );
 
-        setShowCalendar(false)
-  
+        setShowCalendar(false);
+        setShowAvailable(false);
+
         if (response.data.events && response.data.events.length > 0) {
           setResultEvents(response.data.events);
-          setErrorMessage("");
-        } 
-        else {
+          setLocalEvents(response.data.events);
+        } else {
           setResultEvents([]);
-          setErrorMessage(response.data.message || "No events found");
+          setLocalEvents([]);
         }
-      }
-       catch (error) {
+      } catch (error) {
         console.error("Error in searching events:", error);
         setResultEvents([]);
-        setErrorMessage(error.response?.data?.message || "An error occurred while searching events");
-      } 
-      finally {
-        setSearchOpen(false);
+        setLocalEvents([]);
       }
-    } 
-    else {
+    } else {
       setSearchOpen(!searchOpen);
     }
   };
 
-  
-  // useEffect(()=>{
-  //   console.log(localEvents)
-    
-  //   console.log(localEvents)
-  //   //console.log(resultEvents)
-  //   if(searchevent.category !== ""){
-  //     const filteredEvents = localEvents.filter((event)=>((event.category.toLowerCase()).includes(searchevent.category.toLowerCase())))
-  //     setResultEvents(filteredEvents)
-  //   }
-   
-  // },[searchevent.category])
-
+  useEffect(() => {
+    if (searchevent.category !== "") {
+      const filteredEvents = localEvents.filter((event) =>
+        event.category
+          .toLowerCase()
+          .includes(searchevent.category.toLowerCase())
+      );
+      setResultEvents(filteredEvents);
+    } else {
+      setResultEvents(localEvents);
+    }
+  });
 
   return (
     <AppBar
@@ -129,13 +145,7 @@ const NavigationBar = ({
           >
             <Menu />
           </IconButton>
-          <Box
-            component="img"
-            src="src/assets/icon.png"
-            alt="Logo"
-            height={50}
-            mr={1}
-          />
+          <Box component="img" src={logo} alt="Logo" height={50} mr={1} />
           <div className="flex justify-start">
             <Typography
               variant="h1"
@@ -178,9 +188,10 @@ const NavigationBar = ({
               <ArrowForwardIos />
             </IconButton>
           </div>
-          <Box 
-          className="flex justify-center mr-8"
-          display={searchOpen?"none":""}>
+          <Box
+            className="flex justify-center mr-8"
+            display={searchOpen ? "none" : ""}
+          >
             <Typography
               variant="h4"
               align="center"
@@ -192,13 +203,12 @@ const NavigationBar = ({
             >
               {headerTitle}
             </Typography>
-          </Box> 
-          <Box
-            display={!searchOpen?"none":""}>
-            <SearchEvent 
-            searchevent = {searchevent}
-            setSearchEvent = {setSearchEvent}
-            /> 
+          </Box>
+          <Box display={!searchOpen ? "none" : ""}>
+            <SearchEvents
+              searchevent={searchevent}
+              setSearchEvent={setSearchEvent}
+            />
           </Box>
         </Box>
         <Box
@@ -207,23 +217,77 @@ const NavigationBar = ({
           display={"flex"}
           alignItems={"center"}
         >
-           
           <IconButton onClick={handleSearch}>
             <Search sx={{ height: 32, width: 32 }} />
           </IconButton>
-          <IconButton>
-            <EventAvailableTwoTone sx={{ height: 32, width: 32 }} />
+
+          <SearchAvailability
+            setResultAvailble={setResultAvailble}
+            setShowAvailable={setShowAvailable}
+            searchAvailable={searchAvailable}
+            setSearchAvailable={setSearchAvailable}
+            setShowCalendar={setShowCalendar}
+          />
+
+          <IconButton onClick={handleNotificationClick}>
+            <NotificationsIcon sx={{ height: 32, width: 32 }} />
           </IconButton>
-          <IconButton>
-            <Notifications sx={{ height: 32, width: 32 }} />
-          </IconButton>
+          {showNotifications && (
+            <Notifications onHide={() => setShowNotifications(false)} />
+          )}
+
+          <Popover
+            open={openNotifications}
+            anchorEl={anchorElement}
+            onClose={handleNotificationClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <List sx={{ width: "350px", maxHeight: "450px", overflow: "auto" }}>
+              <ListItem>
+                <ListItemText
+                  primary={<Typography variant="h5">Notifications</Typography>}
+                />
+              </ListItem>
+              {notifications.length > 0 ? (
+                notifications.map((notification) => (
+                  <ListItem key={notification.id} divider>
+                    <ListItemText
+                      primary={notification.content}
+                      secondary={
+                        <>
+                          <Typography variant="body2" color="text.secondary">
+                            {notification.time}
+                          </Typography>
+                          <Button color="primary" size="small">
+                            View full notification
+                          </Button>
+                        </>
+                      }
+                    />
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem>
+                  <ListItemText primary="no notification available" />
+                </ListItem>
+              )}
+              <ListItem>
+                <Button fullWidth color="primary">
+                  See all
+                </Button>
+              </ListItem>
+            </List>
+          </Popover>
+
           <div className="flex justify-end ml-4 mr-4">
-            <FormControl variant="outlined" size="small" sx={{ 
-              width: "95px", 
-              height:"2rem",
-              color:"black",
-              fontSize:"1rem",
-              fontFamily:"kanit"}}>
+            <FormControl variant="outlined" size="small" sx={{ width: 95 }}>
               <Select
                 size="small"
                 labelId="viewSelect-label"
@@ -238,9 +302,7 @@ const NavigationBar = ({
               </Select>
             </FormControl>
           </div>
-          <IconButton onClick={handleLogout} sx={{ mr: -2 }}>
-            <Avatar />
-          </IconButton>
+          <Profile />
         </Box>
       </Toolbar>
     </AppBar>

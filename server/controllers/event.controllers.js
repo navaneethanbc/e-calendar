@@ -1,6 +1,7 @@
 import { Event } from "../models/event.model.js";
 import { EventGuest } from "../models/event_guest.model.js";
 import { incrementDate, dateLimit } from "../utils/eventUtils.js";
+import { User } from "../models/user.model.js";
 import { Notification } from "../models/notification.model.js";
 import mongoose from "mongoose";
 
@@ -31,39 +32,50 @@ export const createEvent = async (req, res) => {
 
     // create the event guests relationships
     if (guests && guests.length > 0) {
-      for (const e of events) {
-        await Promise.all(
-          guests.map(async (guest) => {
-            await EventGuest.create(
-              [
-                {
-                  event_id: e._id,
-                  guest: guest,
-                },
-              ],
-              { session }
-            );
-          })
-        );
-      }
-    }
+      await Promise.all(
+        guests.map(async (guest) => {
+          await EventGuest.create(
+            [
+              {
+                event_id: event[0]._id,
+                guest: guest,
+              },
+            ],
+            { session }
+          );
 
-    // await Promise.all(
-    //   guests.map((guest) => {
-    //     Notification.create(
-    //       [
-    //         {
-    //           username: guest,
-    //           category: "Invite",
-    //           description: "",
-    //           designated_time: new Date(),
-    //           event_id: event[0]._id,
-    //         },
-    //       ],
-    //       { session }
-    //     );
-    //   })
-    // );
+          let description =
+            `You have been invited by ${rest.owner} to a ${rest.category} event: ${rest.title}\n` +
+            `Starts at: ${new Date(rest.starts_at).toLocaleString()}\n` +
+            `Ends at: ${new Date(rest.ends_at).toLocaleString()}\n`;
+
+          if (rest.recurrence) {
+            description += `Recurrence: ${rest.recurrence}\n`;
+          }
+          if (rest.meeting_link) {
+            description += `Meeting: Online\n`;
+          } else {
+            description += `Meeting: Physical\n`;
+          }
+          if (rest.location) {
+            description += `Location: ${rest.location}\n`;
+          }
+
+          const notification = await Notification.create(
+            [
+              {
+                assigned_to: guest,
+                category: "invite",
+                description: description.trim(),
+                designated_time: new Date(),
+                event_id: event[0]._id,
+              },
+            ],
+            { session }
+          );
+        })
+      );
+    }
 
     await session.commitTransaction();
     res.status(201).json({ message: "Event created successfully." });
@@ -105,175 +117,98 @@ const createRecurringEvents = async (event, parent_event_id, session) => {
     throw new Error(error.message);
   }
 };
-// ths is navanee s new code but not support for me need to check
-// export const getEvents = async (req, res) => {
-//   try {
-//     const { username, from, to, title } = req.body;
-
-//     let events = [];
-
-//     const addConditions = (queryArray) => {
-//       if (from && to) {
-//         queryArray.push({
-//           $or: [
-//             { starts_at: { $gte: from, $lte: to } },
-//             { ends_at: { $gte: from, $lte: to } },
-//           ],
-//         });
-//       }
-
-//       if (title) {
-//         queryArray.push({ title: { $regex: title, $options: "i" } });
-//       }
-//     };
-
-//     const ownEventQuery = [{ owner: username }, { category: "Personal" }];
-//     addConditions(ownEventQuery);
-
-//     const ownEvents = await Event.find({
-//       $and: ownEventQuery,
-//     });
-
-//     events.push(...ownEvents);
-
-//     let branchEvents = [];
-
-//     const branch = (await User.findOne({ username: username })).branch;
-
-//     const sameBranchUsers = (await User.find({ branch: branch })).map(
-//       (user) => user.username
-//     );
-
-//     if (sameBranchUsers.length > 0) {
-//       const branchEventQuery = [
-//         { owner: { $in: sameBranchUsers } },
-//         { category: "Branch" },
-//       ];
-
-//       addConditions(branchEventQuery);
-
-//       branchEvents = await Event.find({
-//         $and: branchEventQuery,
-//       });
-//     }
-
-//     events.push(...branchEvents);
-
-//     let bankEvents = [];
-
-//     const bankEventQuery = [{ category: "Bank" }];
-
-//     addConditions(bankEventQuery);
-
-//     bankEvents = await Event.find({
-//       $and: bankEventQuery,
-//     });
-
-//     events.push(...bankEvents);
-
-//     let invitedEvents = [];
-
-//     const eventGuests = await EventGuest.find(
-//       { $and: [{ username: username }, { status: "Accepted" }] },
-//       { event_id: 1 }
-//     );
-
-//     if (eventGuests.length > 0) {
-//       const inviteEventQuery = [
-//         { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
-//       ];
-
-//       addConditions(inviteEventQuery);
-
-//       invitedEvents = await Event.find({
-//         $and: inviteEventQuery,
-//       });
-//     }
-
-//     events.push(...invitedEvents);
-
-//     res.status(200).json({ events });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 
 export const getEvents = async (req, res) => {
   try {
-   
     const { username, from, to, title } = req.body;
 
-    //check is "from" before than of  "to" or not
-    if (new Date(from) > new Date(to)) {
-      return res.status(400).json({ message: 'Invalid date range' });
-    }
-    //check username if this usename has any events
-    // if it take more time then comment it
-    const event = await Event.findOne({"owner":username})
-    if(!event){
-      return res.status(404).json({message:"this user have no events or username is  wrong"})
-    } 
+    let events = [];
+
     const addConditions = (queryArray) => {
       if (from && to) {
         queryArray.push({
           $or: [
-            { starts_at: { $gte: new Date(from), $lte: new Date(to) } },
-            { ends_at: { $gte: new Date(from), $lte: new Date(to) } },
+            { starts_at: { $gte: from, $lte: to } },
+            { ends_at: { $gte: from, $lte: to } },
           ],
         });
       }
 
-      if (title && title.trim() !== '') {
-        queryArray.push({ title: { $regex: title.trim(), $options: "i" } });
+      if (title) {
+        queryArray.push({ title: { $regex: title, $options: "i" } });
       }
-
-      //check if category exist then 
-      // if (category && category.trim() !== '') {
-      //   queryArray.push({ category: category.trim() });
-      // }
     };
 
-    const query = { owner: username };
-    const conditions = [];
-    addConditions(conditions);
+    const ownEventQuery = [{ owner: username }, { category: "Personal" }];
+    addConditions(ownEventQuery);
 
-    if (conditions.length > 0) {
-      query.$and = conditions;
+    const ownEvents = await Event.find({
+      $and: ownEventQuery,
+    });
+
+    events.push(...ownEvents);
+
+    let branchEvents = [];
+
+    const branch = (await User.findOne({ username: username })).branch;
+
+    const sameBranchUsers = (await User.find({ branch: branch })).map(
+      (user) => user.username
+    );
+
+    if (sameBranchUsers.length > 0) {
+      const branchEventQuery = [
+        { owner: { $in: sameBranchUsers } },
+        { category: "Branch" },
+      ];
+
+      addConditions(branchEventQuery);
+
+      branchEvents = await Event.find({
+        $and: branchEventQuery,
+      });
     }
 
-    const ownEvents = await Event.find(query);
+    events.push(...branchEvents);
 
-    const eventGuests = await EventGuest.find(
-      { username: username, status: "Accepted" },
-      { event_id: 1 }
-    );
+    let bankEvents = [];
+
+    const bankEventQuery = [{ category: "Bank" }];
+
+    addConditions(bankEventQuery);
+
+    bankEvents = await Event.find({
+      $and: bankEventQuery,
+    });
+
+    events.push(...bankEvents);
 
     let invitedEvents = [];
 
+    const eventGuests = await EventGuest.find(
+      { $and: [{ username: username }, { status: "Accepted" }] },
+      { event_id: 1 }
+    );
+
     if (eventGuests.length > 0) {
-      const inviteEventIds = eventGuests.map(guest => guest.event_id);
-      const inviteQuery = { 
-        _id: { $in: inviteEventIds },
-        ...conditions.length > 0 ? { $and: conditions } : {}
-      };
+      const inviteEventQuery = [
+        { _id: { $in: eventGuests.map((eventGuest) => eventGuest.event_id) } },
+      ];
 
-      invitedEvents = await Event.find(inviteQuery);
+      addConditions(inviteEventQuery);
+
+      invitedEvents = await Event.find({
+        $and: inviteEventQuery,
+      });
     }
 
-    const events = [...ownEvents, ...invitedEvents];
-
-    if (events.length === 0) {
-      return res.status(200).json({ message: 'No events found', events });
-    }
+    events.push(...invitedEvents);
 
     res.status(200).json({ events });
   } catch (error) {
-    console.error('Error in getEvents:', error);
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 export const getEvent = async (req, res) => {
   try {
@@ -299,19 +234,21 @@ export const editEvent = async (req, res) => {
     await EventGuest.deleteMany({ event_id: req.params.id }, { session });
 
     // create the new event guests
-    await Promise.all(
-      guests.map(async (guest) => {
-        await EventGuest.create(
-          [
-            {
-              event_id: req.params.id,
-              guest: guest,
-            },
-          ],
-          { session }
-        );
-      })
-    );
+    if (guests && guests.length > 0) {
+      await Promise.all(
+        guests.map(async (guest) => {
+          await EventGuest.create(
+            [
+              {
+                event_id: req.params.id,
+                guest: guest,
+              },
+            ],
+            { session }
+          );
+        })
+      );
+    }
 
     await session.commitTransaction();
   } catch (error) {

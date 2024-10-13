@@ -1,18 +1,18 @@
-import { Box, TextField, Typography, Button, Modal } from "@mui/material";
+import { Box, TextField, Typography, Modal } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../index.css";
-import ResetPassword from "./ResetPassword";
+import ResetPassword from "./ForgotPassword/ResetPassword";
 
 const SigninForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   const [error, setError] = useState("");
-  const [isModalOpen,setIsModalOpen] = useState(false)
 
   const handleChange = ({ currentTarget: input }) => {
     setUser({ ...user, [input.name]: input.value });
@@ -33,7 +33,7 @@ const SigninForm = () => {
     }
 
     try {
-      const url = "http://localhost:8000/users/login";
+      const url = "https://e-calendar-cocq.vercel.app/users/login";
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", user.username);
@@ -49,52 +49,73 @@ const SigninForm = () => {
         setError("Something went wrong. Please try again later.");
       }
     }
-  }
+  };
+
+  // Function to handle Enter key release
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      handleSignin(event); // Trigger sign-in on Enter key release
+    }
+  };
 
   return (
-    
-    <Box width={320} margin={2}>
+    <Box
+      width={{ xs: "80vw", sm: "50vw", md: "22vw" }}
+      ml={{ md: "4vw", xs: 0 }}
+      padding={2}
+      bgcolor={"white"}
+      borderRadius={3}
+    >
       <Typography
-        
         fontFamily={"Kanit"}
-        fontSize={{ xs: 25, sm: 45 }}
+        fontSize={45}
         fontWeight={"bold"}
-        mt={{ xs: 0, sm: -2 }}
-        mb={{ xs: 0, sm: -1 }}
+        height={45}
+        lineHeight={1}
+        mb={1}
       >
         Welcome
       </Typography>
 
-      <div>
-        <TextField
-          type=""
-          placeholder="Username"
-          name="username"
-          onChange={handleChange}
-          value={user.username}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </div>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="text"
+        placeholder="Username"
+        name="username"
+        onChange={handleChange}
+        value={user.username}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+      ></TextField>
+      {/* </div> */}
 
-      <div className="mt-2">
-        <TextField
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          value={user.password}
-          required
-          size="small"
-          fullWidth
-          margin="dense"
-        ></TextField>
-      </div>
+      {/* <div className="p-1"> */}
+      <TextField
+        type="password"
+        placeholder="Password"
+        name="password"
+        onChange={handleChange}
+        value={user.password}
+        required
+        size="small"
+        fullWidth
+        margin="dense"
+        onKeyUp={handleKeyUp}
+      ></TextField>
+      <Link
+        className="-mt-1 text-indigo-600 text-right text-sm block"
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
+      >
+        Forgot password?
+      </Link>
+      {/* </div> */}
 
-      <div>
-        <div className="text-xs mt-1">
+      <div className="p-1 pt-0">
+        <div className="text-sm">
           {error ? (
             <div className="text-red-500">{error}</div>
           ) : (
@@ -103,45 +124,31 @@ const SigninForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full flex mt-1 justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
+          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleSignin}
         >
           Sign in
         </button>
-
-        <Button 
-          variant="text"
-          onClick={()=>{setIsModalOpen(true)}}
-          sx={{color: '#4f46e5 ', fontSize: '0.875rem',p:0, mt:1, textTransform: 'none'}}>
-          Forgot Password?
-        </Button>
       </div>
 
-      <div>
-        <Typography
-        variant="body2"
-        align="center"
-        sx={{mt:1}}>
-        New to Calendar?{" "}
-        <Link to="/register" className="text-indigo-600">
+      <div className="pt-1">
+        <p className="text-xm text-center text-gray-600">
+          New to Calendar?{" "}
+          <Link to="/register" className="text-indigo-600">
             Register Now
           </Link>
-        </Typography>
+        </p>
       </div>
       <Modal
         open={isModalOpen}
-        onClose={()=>{setIsModalOpen(false)}}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
       >
-        <ResetPassword 
-        setIsModalOpen={setIsModalOpen}/>
+        <ResetPassword setIsModalOpen={setIsModalOpen} />
       </Modal>
     </Box>
   );
 };
 
 export default SigninForm;
-
-
-
-
-

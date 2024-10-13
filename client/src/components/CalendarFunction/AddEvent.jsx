@@ -5,6 +5,7 @@ import { faMapMarkerAlt, faLink } from "@fortawesome/free-solid-svg-icons";
 import Form from "./Form";
 
 const AddFunc = ({ show, onHide, onAddEvent }) => {
+  const owner = localStorage.getItem("username");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -12,14 +13,14 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
     startDateTime: "",
     endDateTime: "",
     category: "Personal",
-    recurrence: "Non-recurring",
-    reminder: "No reminder",
+    recurrence: "",
+    reminder: "",
     location: "",
-    owner: localStorage.getItem("username"),
     guests: [],
   });
 
   const [errors, setErrors] = useState({
+    title: "",
     startDateTime: "",
     endDateTime: "",
   });
@@ -32,7 +33,12 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
         onHide();
       }
     };
-    document.addEventListener("mousedown", handleClickOutside); // Attach the event listener to detect clicks outside
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [onHide]);
 
   const handleChange = (e) => {
@@ -45,6 +51,9 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
 
   const handleSubmit = () => {
     const newErrors = {};
+    if (!formData.title) {
+      newErrors.title = "Title is required";
+    }
     if (!formData.startDateTime) {
       newErrors.startDateTime = "Start date is required.";
     }
@@ -75,6 +84,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       reminder: formData.reminder,
       location: formData.location,
       guests: formData.guests,
+      owner: owner,
     };
     onAddEvent(eventDetails);
 
@@ -91,8 +101,8 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       startDateTime: "",
       endDateTime: "",
       category: "Personal",
-      recurrence: "Non-recurring",
-      reminder: "No reminder",
+      recurrence: "",
+      reminder: "",
       location: "",
       guests: [],
     });
@@ -115,23 +125,13 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
 
   return (
     <Form
-      func="Add Event"
+      EventFunction="Add Event"
       show={show}
       popupRef={popupRef}
       buttons={Button()}
-      title={formData.title}
-      description={formData.description}
-      startDateTime={formData.startDateTime}
-      endDateTime={formData.endDateTime}
-      meeting_link={formData.meeting_link}
-      location={formData.location}
-      category={formData.category}
-      recurrence={formData.recurrence}
-      reminder={formData.reminder}
-      guests={formData.guests}
+      event={formData}
       handleChange={handleChange}
-      errStart={errors.startDateTime}
-      errEnd={errors.endDateTime}
+      errors={errors}
       locationIcon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
       linkIcon={<FontAwesomeIcon icon={faLink} />}
     />

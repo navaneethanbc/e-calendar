@@ -1,10 +1,10 @@
-import React from 'react';
-import { Button, Card, CardContent, Typography, Grid, Box } from '@mui/material';
+import React from 'react'
+import {Card, CardContent, Typography, Grid, Box } from '@mui/material';
 
-const ShowEvents = ({ resultEvents, setShowCalendar }) => {
-
+const ShowEvents = ({resultEvents}) => {
   return (
-    <Box sx={{ p: 3, bgcolor:"#F5F5DC", height:"100vh", overflow:"auto" }}>
+    <div>
+        <Box sx={{ p: 3, bgcolor:"#F5F5DC", height:"100vh", overflow:"auto" }}>
       <Typography variant="h4" gutterBottom align='center' fontFamily={'kanit'}>
         Events
       </Typography>
@@ -46,19 +46,10 @@ const ShowEvents = ({ resultEvents, setShowCalendar }) => {
       ) : (
         <Typography variant="h3">No events found.</Typography>
       )}
-      <Box
-      sx={{position:"fixed",bottom:"2rem", right:"2rem"}}>
-        <Button 
-          variant="contained"
-          align="right" 
-          onClick={()=>{setShowCalendar(true)}}
-          sx={{ mt: 2 , bgcolor: "#febe00"}}
-        >
-          go To Calendar
-        </Button>
-      </Box>
-    </Box>
-  );
-};
 
-export default ShowEvents;
+    </Box>
+    </div>
+  )
+}
+
+export default ShowEvents
