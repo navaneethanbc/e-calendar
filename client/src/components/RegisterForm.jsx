@@ -68,7 +68,7 @@ const RegisterForm = () => {
       const url = "https://e-calendar-cocq.vercel.app/users/register";
       const res = await axios.post(url, userData);
       navigate("/");
-      console.log(res.message);
+      // console.log(res.message);
     } catch (error) {
       if (
         error.response &&
