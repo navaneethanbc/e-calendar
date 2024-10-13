@@ -8,7 +8,7 @@ import AddFunc from "../components/CalendarFunction/AddEvent";
 import EditFunc from "../components/CalendarFunction/EditEvent";
 import axios from "axios";
 import { debounce } from "lodash";
-import ShowEvents from "../components/CalendarFunction/ShowEvents";
+import ShowSearchResult from "../components/EventsAndAvailability/ShowSearchResult";
 import SideDrawer from "../components/CalendarFunction/SideDrawer";
 
 import NavigationBar from "../components/NavigationBar";
@@ -34,14 +34,26 @@ const CalendarView = () => {
   );
   const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [searchResult, setSearchResult] = useState(events);
   const [notifications, setNotifications] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
+  const [resultEvents, setResultEvents] = useState({}); // to store events got from the backend by search
+  const [resultAvailable, setResultAvailble] = useState({}); // to store  availabilitty got from backend
+  const [showCalendar, setShowCalendar] = useState(true); // to decide calendar or events to show
+  const [showAvailable, setShowAvailable] = useState(false); // switch between calendar and show events
+  // to store search event states
+  const [searchevent, setSearchEvent] = useState({
+    username: "",
+    title: "",
+    from: "",
+    to: "",
+    category: "",
+  });
+  // to store search availability search
+  const [searchAvailable, setSearchAvailable] = useState({
+    username: "",
+    fromDate: "",
+    toDate: "",
+  });
 
   const calendarRef = useRef(null);
 
@@ -54,7 +66,7 @@ const CalendarView = () => {
       console.log("Adding new event:", newEvent);
 
       const response = await axios.post(
-        "http://localhost:8000/events/create",
+        "https://e-calendar-cocq.vercel.app/events/create",
         newEvent
       );
 
@@ -70,7 +82,7 @@ const CalendarView = () => {
   const handleEditEvent = async (updatedEvent) => {
     try {
       await axios.put(
-        `http://localhost:8000/events/${updatedEvent.id}`,
+        `https://e-calendar-cocq.vercel.app/events/${updatedEvent.id}`,
         updatedEvent
       );
       const updatedEvents = events.map((event) =>
@@ -86,7 +98,7 @@ const CalendarView = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/events/${id}`);
+      await axios.delete(`https://e-calendar-cocq.vercel.app/events/${id}`);
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
@@ -98,9 +110,12 @@ const CalendarView = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/events/find/", {
-        username: localStorage.getItem("username"),
-      });
+      const response = await axios.post(
+        "https://e-calendar-cocq.vercel.app/events/find/",
+        {
+          username: localStorage.getItem("username"),
+        }
+      );
 
       const transformedEvents = response.data.events.map((event) => ({
         title: event.title,
@@ -243,6 +258,16 @@ const CalendarView = () => {
         selectedView={selectedView}
         handleSelectView={handleSelectView}
         notifications={notifications}
+        setResultEvents={setResultEvents}
+        setShowCalendar={setShowCalendar}
+        searchOpen={searchOpen}
+        setSearchOpen={setSearchOpen}
+        searchevent={searchevent}
+        setSearchEvent={setSearchEvent}
+        setResultAvailble={setResultAvailble}
+        setShowAvailable={setShowAvailable}
+        searchAvailable={searchAvailable}
+        setSearchAvailable={setSearchAvailable}
       />
       <CreateButton
         open={open}
@@ -278,7 +303,7 @@ const CalendarView = () => {
               },
             }}
           >
-            {!showSearch ? (
+            {showCalendar ? (
               <FullCalendar
                 ref={calendarRef}
                 plugins={[
@@ -307,7 +332,17 @@ const CalendarView = () => {
                 )}
               />
             ) : (
-              <ShowEvents searchResult={searchResult} />
+              <ShowSearchResult
+                resultEvents={resultEvents}
+                resultAvailable={resultAvailable}
+                setShowCalendar={setShowCalendar}
+                setSearchOpen={setSearchOpen}
+                setSearchEvent={setSearchEvent}
+                setSearchAvailable={setSearchAvailable}
+                showAvailable={showAvailable}
+                setShowAvailable={setShowAvailable}
+                searchAvailable={searchAvailable}
+              />
             )}
           </Box>
         </Box>

@@ -12,6 +12,7 @@ import { Menu } from "@mui/icons-material";
 
 import image from "../../assets/icon.png";
 import { useNavigate } from "react-router-dom";
+import Profile from "../Profile";
 
 const AdminHeader = ({ handleDrawer }) => {
   const navigate = useNavigate();
@@ -54,9 +55,7 @@ const AdminHeader = ({ handleDrawer }) => {
           display={"flex"}
           alignItems={"center"}
         >
-          <IconButton onClick={handleLogout} sx={{ mr: -1 }}>
-            <Avatar />
-          </IconButton>
+          <Profile />
         </Box>
       </Toolbar>
     </AppBar>

@@ -4,6 +4,8 @@ import { Box } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
 import SigninForm from "../components/SigninForm";
+import background from "../assets/background.png";
+import mobilebg from "../assets/mobilebg.png";
 
 const SigninPage = () => {
   const theme = useTheme();
@@ -34,7 +36,7 @@ const SigninPage = () => {
         >
           <Box
             component="img"
-            src={isSm ? "src/assets/mobilebg.png" : "src/assets/background.png"}
+            src={isSm ? mobilebg : background}
             alt="background"
             height={{ xs: "45vh", md: "60vh" }}
           />
@@ -47,11 +49,7 @@ const SigninPage = () => {
           padding={2}
           display={{ xs: "none", md: "block" }}
         >
-          <Box
-            component="img"
-            src="src/assets/background.png"
-            alt="background"
-          />
+          <Box component="img" src={background} alt="background" />
         </Box>
       </Box>
       <Footer />

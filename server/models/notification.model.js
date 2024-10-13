@@ -10,7 +10,7 @@ const notificationSchema = new Schema({
     required: true,
     ref: "Event",
   },
-  username: {
+  assigned_to: {
     type: String,
     required: true,
     ref: "User",
