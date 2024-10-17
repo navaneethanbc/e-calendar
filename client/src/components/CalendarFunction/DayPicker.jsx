@@ -1,14 +1,4 @@
-// import React from "react";
-// import { DayPicker } from "react-day-picker";
-// import "react-day-picker/style.css";
-
-// function MyDatePicker({ selected, onSelect }) {
-//   return <DayPicker mode="single" selected={selected} onSelect={onSelect} />;
-// }
-
-// export default MyDatePicker;
-
-import * as React from "react";
+import React from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
@@ -34,7 +24,10 @@ export default function MyDatePicker({ selected, onSelect }) {
         closeOnSelect={false}
         displayStaticWrapperAs="desktop"
         sx={{
-          backgroundColor: "beige",
+          backgroundColor: "transparent",
+          height: "38vh",
+          width: "12vw",
+          ml: { sm: "-1.2vw", md: "-0.5vw" },
         }}
       />
     </LocalizationProvider>

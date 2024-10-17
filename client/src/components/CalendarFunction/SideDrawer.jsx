@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+  Button,
+} from "@mui/material";
 import MyDatePicker from "./DayPicker";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import logo from "../../assets/icon.png";
+import {
+  CalendarMonthRounded,
+  CalendarTodayRounded,
+  EventAvailableRounded,
+  HelpOutlineRounded,
+  ListRounded,
+  SearchRounded,
+  ViewWeekRounded,
+} from "@mui/icons-material";
 
 const SideDrawer = ({
   open,
@@ -11,6 +24,7 @@ const SideDrawer = ({
   onCategoryChange,
   handleSelectView,
   select,
+  setOpen,
 }) => {
   const [selectedCategories, setSelectedCategories] = useState({
     Personal: true,
@@ -33,7 +47,7 @@ const SideDrawer = ({
     }
   }, [select]);
 
-  const handleCatagoryChecked = (event) => {
+  const handleCategoryChecked = (event) => {
     const { id, checked } = event.target;
     setSelectedCategories((prev) => ({ ...prev, [id]: checked }));
     onCategoryChange(id, checked);
@@ -42,130 +56,169 @@ const SideDrawer = ({
   const handleButtonClick = (value) => {
     setSelectedView(value);
     handleSelectView(value);
+    setOpen((prevOpen) => {
+      const newOpen = !prevOpen;
+      localStorage.setItem("drawerOpen", newOpen); // Save new state to local storage
+      return newOpen;
+    });
   };
 
   const isSelected = (view) => selectedView === view;
 
   return (
     <Box
-      height="calc(100vh - 64px)"
+      height={{ sm: "91.6vh", xs: "92.6vh" }}
       bgcolor={"beige"}
-      width={open ? "25%" : "0%"}
+      width={!open ? 0 : { md: "25vw", sm: "54vw", xs: "100vw" }}
       sx={{
         transition: "width 0.3s",
         overflow: "hidden",
-        "@media (max-width:1440px)": { width: open ? "30%" : "0%" },
-        "@media (max-width:1200px)": { width: open ? "43%" : "0%" },
-        "@media (max-width:768px)": {
-          width: open ? "63%" : "0%",
-        },
-        "@media (max-width:642px)": { width: open ? "100%" : "0%" },
       }}
     >
       <Box position={"relative"} top={100} sx={{ transition: "width 0.3s" }}>
         {!isMobile ? (
-          <div className="items-center mb-4 border-b-4 border-gray-300 md:h-[300px] lg:h-auto">
+          <Box mt={"1vh"} mb={"1vh"} height="40vh">
             <MyDatePicker selected={selected} onSelect={onSelect} />
-          </div>
+          </Box>
         ) : (
           // mobile size
-          <>
-            <Box display="flex" alignItems="center">
-              <Box component="img" src={logo} alt="Logo" height={50} mr={1} />
-              <Typography
-                variant="h1"
-                fontFamily={"Kanit"}
-                sx={{
-                  fontSize: { xs: "20px", sm: "24px" },
-                  color: "#363533",
-                }}
-                flexGrow={1}
-              >
-                Calendar
-              </Typography>
-            </Box>
+          <Box
+            ml={3}
+            className="flex flex-col text-[12px] sm:text-[15px] md:text-[14px] lg:text-[16px]"
+          >
+            <Button
+              startIcon={<CalendarTodayRounded />}
+              onClick={() => handleButtonClick("timeGridDay")}
+              sx={{
+                textTransform: "none",
+                justifyContent: "flex-start",
+                color: isSelected("timeGridDay") ? "#f0c987" : "#363533",
+                fontSize: "2.4vh",
+              }}
+            >
+              Day View
+            </Button>
 
-            <br />
+            <Button
+              startIcon={<ViewWeekRounded />}
+              onClick={() => handleButtonClick("timeGridWeek")}
+              sx={{
+                textTransform: "none",
+                justifyContent: "flex-start",
+                color: isSelected("timeGridWeek") ? "#f0c987" : "#363533",
+                fontSize: "2.4vh",
+              }}
+            >
+              Week View
+            </Button>
 
-            <div className="flex flex-col text-[12px] sm:text-[15px] md:text-[14px] lg:text-[16px]">
-              <button
-                className={`flex items-center px-4 py-4 font-bold border-t-4 border-gray-300 btn ${
-                  isSelected("timeGridDay") ? "text-yellow-700" : "text-black"
-                }`}
-                value="timeGridDay"
-                onClick={() => handleButtonClick("timeGridDay")}
-              >
-                <i className="mr-3 fas fa-calendar-day"></i>Day
-              </button>
+            <Button
+              startIcon={<CalendarMonthRounded />}
+              onClick={() => handleButtonClick("dayGridMonth")}
+              sx={{
+                textTransform: "none",
+                justifyContent: "flex-start",
+                color: isSelected("dayGridMonth") ? "#f0c987" : "#363533",
+                fontSize: "2.4vh",
+              }}
+            >
+              Month View
+            </Button>
 
-              <button
-                className={`flex items-center px-4 py-4 font-bold border-t-4 border-gray-300 btn ${
-                  isSelected("timeGridWeek") ? "text-yellow-700" : "text-black"
-                }`}
-                value="timeGridWeek"
-                onClick={() => handleButtonClick("timeGridWeek")}
-              >
-                <i className="mr-3 icon fa fa-calendar-week"></i> Week
-              </button>
-
-              <button
-                className={`flex items-center px-4 py-4 font-bold border-t-4 border-gray-300 btn ${
-                  isSelected("dayGridMonth") ? "text-yellow-700" : "text-black"
-                }`}
-                value="dayGridMonth"
-                onClick={() => handleButtonClick("dayGridMonth")}
-              >
-                <i className="mr-3 icon fa fa-calendar-alt"></i> Month
-              </button>
-
-              <button
-                className={`flex items-center px-4 py-4 font-bold border-t-4 border-b-4 border-gray-300 btn ${
-                  isSelected("listWeek") ? "text-yellow-700" : "text-black"
-                }`}
-                value="listWeek"
-                onClick={() => handleButtonClick("listWeek")}
-              >
-                <i className="mr-3 icon fa fa-list"></i> List
-              </button>
-              <br />
-            </div>
-          </>
+            <Button
+              startIcon={<ListRounded />}
+              onClick={() => handleButtonClick("listWeek")}
+              sx={{
+                textTransform: "none",
+                justifyContent: "flex-start",
+                color: isSelected("listWeek") ? "#f0c987" : "#363533",
+                fontSize: "2.4vh",
+              }}
+            >
+              List View
+            </Button>
+          </Box>
         )}
 
-        <div className="flex flex-col text-[12px] sm:text-[15px] md:text-[13px] lg:text-[16px]">
+        <Box display="flex" flexDirection="column" mt={3} ml={7}>
           {["Personal", "Branch", "Bank"].map((category) => (
-            <div key={category} className="flex flex-col px-4 mb-3 space-y-2">
-              <div className="flex items-center space-x-2">
-                <input
+            <FormControlLabel
+              key={category}
+              control={
+                <Checkbox
                   id={category}
-                  type="checkbox"
-                  className="w-4 h-4 form-checkbox"
-                  style={{
-                    accentColor:
-                      category === "Personal"
-                        ? "#b8860b"
-                        : category === "Branch"
-                        ? "#00008b"
-                        : "#FF0000",
-                  }}
-                  onChange={handleCatagoryChecked}
                   checked={selectedCategories[category]}
+                  onChange={handleCategoryChecked}
+                  sx={{
+                    color:
+                      category === "Personal"
+                        ? "#d4a5a5"
+                        : category === "Branch"
+                        ? "#769fcd"
+                        : "#b0c4b1",
+                    "&.Mui-checked": {
+                      color:
+                        category === "Personal"
+                          ? "#d4a5a5"
+                          : category === "Branch"
+                          ? "#769fcd"
+                          : "#b0c4b1",
+                    },
+                  }}
                 />
-                <label htmlFor={category} className="font-medium text-gray-700">
-                  {category}
-                </label>
-              </div>
-            </div>
+              }
+              label={category}
+              sx={{ color: "#363533" }}
+            />
           ))}
-        </div>
+        </Box>
 
-        <div className="flex items-center px-4 mt-2 space-x-2 border-t-4 border-gray-300 text-[12px] sm:text-[15px] md:text-[14px] lg:text-[16px]">
-          <a href="calendar/help" style={{ textDecoration: "underline" }}>
-            <br />
-            <i className="mr-3 fas fa-question-circle"></i>
+        <Box
+          display={{ xs: "flex", sm: "none" }}
+          flexDirection={"column"}
+          gap={1}
+          mt={3}
+          ml={3}
+        >
+          <Button
+            size="medium"
+            startIcon={<SearchRounded />}
+            sx={{
+              color: "#363533",
+              bgcolor: "transparent",
+              width: "45vw",
+              textTransform: "none",
+              fontSize: "2.4vh",
+              justifyContent: "flex-start",
+            }}
+          >
+            Search Events
+          </Button>
+          <Button
+            size="medium"
+            startIcon={<EventAvailableRounded />}
+            sx={{
+              color: "#363533",
+              bgcolor: "transparent",
+              width: "45vw",
+              textTransform: "none",
+              fontSize: "2.4vh",
+              justifyContent: "flex-start",
+            }}
+          >
+            Check Availability
+          </Button>
+        </Box>
+
+        <Box ml={3} position={"absolute"} bottom={-150}>
+          <a
+            href="calendar/help"
+            style={{ textDecoration: "underline", fontSize: "2.4vh" }}
+          >
+            <HelpOutlineRounded />
             Help and Feedback
           </a>
-        </div>
+        </Box>
       </Box>
     </Box>
   );

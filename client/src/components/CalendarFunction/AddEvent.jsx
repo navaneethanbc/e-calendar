@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt, faLink } from "@fortawesome/free-solid-svg-icons";
 import Form from "./Form";
+import { AddLinkRounded, AddLocationRounded } from "@mui/icons-material";
 
 const AddFunc = ({ show, onHide, onAddEvent }) => {
   const owner = localStorage.getItem("username");
@@ -132,8 +131,8 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       event={formData}
       handleChange={handleChange}
       errors={errors}
-      locationIcon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
-      linkIcon={<FontAwesomeIcon icon={faLink} />}
+      locationIcon={<AddLocationRounded />}
+      linkIcon={<AddLinkRounded />}
     />
   );
 };

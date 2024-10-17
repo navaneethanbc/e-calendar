@@ -8,6 +8,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
+      required: true,
       unique: true,
       trim: true,
       index: true,
@@ -15,11 +16,13 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      required: true,
       minlength: 6,
       maxlength: 1024,
     },
     email: {
       type: String,
+      required: true,
       required: true,
       unique: true,
       trim: true,
@@ -28,10 +31,12 @@ const userSchema = new Schema(
     fullname: {
       type: String,
       required: true,
+      required: true,
       trim: true,
     },
     employee_id: {
       type: String,
+      required: true,
       required: true,
       unique: true,
       trim: true,
