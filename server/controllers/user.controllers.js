@@ -76,6 +76,7 @@ export const loginUser = async (req, res) => {
 
     res.status(200).send({
       accessToken,
+      fullname: user.fullname,
       role: user.role,
       message: "Successfully signed in.",
     });
