@@ -72,8 +72,14 @@ export const loginUser = async (req, res) => {
     const accessToken = generateAuthToken(user);
 
     user.last_login = new Date();
+    await user.save();
 
-    res.status(200).send({ accessToken, message: "Successfully signed in." });
+    res.status(200).send({
+      accessToken,
+      name: user.fullname,
+      role: user.role,
+      message: "Successfully signed in.",
+    });
   } catch (error) {
     // res.status(500).send({ message: "Something went wrong!" });
     res.status(500).send({ message: error.message });

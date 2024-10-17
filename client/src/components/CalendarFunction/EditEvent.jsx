@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 import Snackbar from "@mui/material/Snackbar";
 import Fade from "@mui/material/Fade";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPencilAlt,
-  faTrash,
-  faMapMarkerAlt,
-  faLink,
-} from "@fortawesome/free-solid-svg-icons";
 import Form from "./Form";
+import {
+  DeleteRounded,
+  EditLocationRounded,
+  EditRounded,
+  LinkRounded,
+} from "@mui/icons-material";
 
 const EditFunc = ({
   show,
@@ -171,7 +170,7 @@ const EditFunc = ({
           className="p-2 text-white bg-black rounded hover:bg-yellow-500"
           onClick={handleSubmit}
         >
-          <FontAwesomeIcon icon={faPencilAlt} />
+          <EditRounded />
         </button>
 
         <button
@@ -179,7 +178,7 @@ const EditFunc = ({
           onClick={handleDelete}
           aria-label="Delete Event"
         >
-          <FontAwesomeIcon icon={faTrash} />
+          <DeleteRounded />
         </button>
       </div>
     );
@@ -195,8 +194,8 @@ const EditFunc = ({
         event={formData}
         handleChange={handleChange}
         errors={errors}
-        locationIcon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
-        linkIcon={<FontAwesomeIcon icon={faLink} />}
+        locationIcon={<EditLocationRounded />}
+        linkIcon={<LinkRounded />}
       />
 
       <Snackbar
@@ -207,7 +206,7 @@ const EditFunc = ({
         autoHideDuration={1800}
         ContentProps={{
           sx: {
-            backgroundColor: "#febe00",
+            backgroundColor: "#fee27f",
             color: "black",
             fontSize: "1.1rem",
             fontWeight: "bold",

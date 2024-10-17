@@ -134,10 +134,10 @@ const CalendarView = () => {
         },
         color:
           event.category === "Personal"
-            ? "#b8860b"
+            ? "#d4a5a5"
             : event.category === "Bank"
-            ? "red"
-            : "#00008b",
+            ? "#b0c4b1"
+            : "#769fcd",
       }));
 
       setEvents(transformedEvents);
@@ -289,18 +289,16 @@ const CalendarView = () => {
             onCategoryChange={handleCategoryChange}
             handleSelectView={handleSelectView}
             select={selectedView}
+            setOpen={setOpen}
           />
 
           <Box
-            height="calc(100vh - 64px)"
-            width={"100%"}
+            height={{ sm: "91.6vh", xs: "92.6vh" }}
+            width={!open ? "100vw" : { sm: "100vw", xs: 0 }}
+            // display={!open ? "block" : { sm: "block", xs: "none" }}
             sx={{
               transition: "width 0.3s",
               overflow: "hidden",
-              "@media (max-width: 600px)": {
-                width: open ? "0%" : "100%",
-                display: open ? "none" : "block",
-              },
             }}
           >
             {showCalendar ? (
@@ -330,6 +328,8 @@ const CalendarView = () => {
                 eventContent={(eventInfo) => (
                   <div className="cursor-pointer">{eventInfo.event.title}</div>
                 )}
+                fixedWeekCount={false}
+                dayMaxEventRows={true}
               />
             ) : (
               <ShowSearchResult

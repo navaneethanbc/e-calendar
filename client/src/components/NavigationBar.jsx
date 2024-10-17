@@ -133,7 +133,10 @@ const NavigationBar = ({
     <AppBar
       position="static"
       variant="outlined"
-      sx={{ bgcolor: "#febe00", height: 64 }}
+      sx={{
+        bgcolor: "#fee27f",
+        height: { sm: "8.4vh", xs: "7.4vh" },
+      }}
     >
       <Toolbar>
         <Box display={"flex"} alignItems={"center"}>
@@ -153,6 +156,7 @@ const NavigationBar = ({
               fontSize={{ xs: 20, sm: 24 }}
               color={"#363533"}
               flexGrow={1}
+              display={{ xs: "none", sm: "block" }}
             >
               Calendar
             </Typography>
@@ -200,6 +204,7 @@ const NavigationBar = ({
               fontFamily={"Kanit"}
               fontSize={{ xs: 12, sm: 20 }}
               color={"#363533"}
+              display={{ xs: "none", sm: "block" }}
             >
               {headerTitle}
             </Typography>
@@ -218,7 +223,13 @@ const NavigationBar = ({
           alignItems={"center"}
         >
           <IconButton onClick={handleSearch}>
-            <Search sx={{ height: 32, width: 32 }} />
+            <Search
+              sx={{
+                height: "4vh",
+                width: "4vh",
+                display: { xs: "none", sm: "block" },
+              }}
+            />
           </IconButton>
 
           <SearchAvailability
@@ -229,8 +240,39 @@ const NavigationBar = ({
             setShowCalendar={setShowCalendar}
           />
 
+          {/* <div className="flex justify-end ml-4 mr-4"> */}
+          <FormControl
+            variant="outlined"
+            size="small"
+            sx={{
+              width: 95,
+              display: { xs: "none", sm: "block" },
+              mr: 2,
+              ml: 2,
+            }}
+          >
+            <Select
+              size="small"
+              labelId="viewSelect-label"
+              id="viewSelect"
+              value={selectedView}
+              onChange={(e) => handleSelectView(e.target.value)}
+            >
+              <MenuItem value="timeGridDay">Day</MenuItem>
+              <MenuItem value="timeGridWeek">Week</MenuItem>
+              <MenuItem value="dayGridMonth">Month</MenuItem>
+              <MenuItem value="listWeek">List</MenuItem>
+            </Select>
+          </FormControl>
+          {/* </div> */}
+
           <IconButton onClick={handleNotificationClick}>
-            <NotificationsIcon sx={{ height: 32, width: 32 }} />
+            <NotificationsIcon
+              sx={{
+                height: "4vh",
+                width: "4vh",
+              }}
+            />
           </IconButton>
           {showNotifications && (
             <Notifications onHide={() => setShowNotifications(false)} />
@@ -285,23 +327,6 @@ const NavigationBar = ({
               </ListItem>
             </List>
           </Popover>
-
-          <div className="flex justify-end ml-4 mr-4">
-            <FormControl variant="outlined" size="small" sx={{ width: 95 }}>
-              <Select
-                size="small"
-                labelId="viewSelect-label"
-                id="viewSelect"
-                value={selectedView}
-                onChange={(e) => handleSelectView(e.target.value)}
-              >
-                <MenuItem value="timeGridDay">Day</MenuItem>
-                <MenuItem value="timeGridWeek">Week</MenuItem>
-                <MenuItem value="dayGridMonth">Month</MenuItem>
-                <MenuItem value="listWeek">List</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
           <Profile />
         </Box>
       </Toolbar>

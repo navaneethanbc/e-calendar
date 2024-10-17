@@ -1,31 +1,41 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import addIcon from "../assets/add_icon.png";
 
 export const CreateButton = ({ open, handleModalOpen }) => {
   return (
-    <Box position={"absolute"} top={100} zIndex={50} ml={2.5}>
-      <button
-        className="rounded-full bg-[#febe00] flex items-center justify-center shadow-lg hover:bg-[#febe00]"
+    <Box
+      position={"absolute"}
+      top={{ xs: "90vh", sm: "10vh" }}
+      zIndex={50}
+      ml={{ xs: "80vw", sm: "1vw" }}
+    >
+      <Button
         onClick={handleModalOpen}
-        style={{
-          width: open ? 150 : 50,
-          height: 50,
-          transition: "width 0.1s",
+        sx={{
+          borderRadius: 10,
+          backgroundColor: "transparent",
+          width: !open ? 0 : { xs: "40vw", sm: "25vh", md: "12vw" },
+          height: "8vh",
+          display: !open ? "flex" : { xs: "none", sm: "flex" },
+          boxShadow: 3,
+          "&:hover": {
+            backgroundColor: "#fff",
+          },
         }}
       >
-        <Box component="img" src={addIcon} height={25} />
+        <Box component="img" src={addIcon} height="4vh" />
         <Typography
-          fontSize={25}
+          fontSize={{ sm: "4vh", xs: "5vh" }}
           ml={1}
           fontFamily={"Kanit"}
-          color={"#252525"}
+          color={"#363533"}
           textTransform={"none"}
           display={open ? "block" : "none"}
         >
           Create
         </Typography>
-      </button>
+      </Button>
     </Box>
   );
 };
