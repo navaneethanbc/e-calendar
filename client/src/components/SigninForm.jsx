@@ -37,6 +37,7 @@ const SigninForm = () => {
       const res = await axios.post(url, user);
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("role", res.data.role);
+      localStorage.setItem("name", res.data.fullname);
       localStorage.setItem("username", user.username);
       window.location = "/calendar";
     } catch (error) {
