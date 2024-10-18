@@ -1,8 +1,9 @@
 import {
-  Dashboard as DashboardIcon,
-  People as PeopleIcon,
-  Event as EventIcon,
-  FileDownload as FileDownloadIcon,
+  ManageAccountsRounded,
+  SummarizeRounded,
+  EventRounded,
+  PeopleRounded,
+  DashboardRounded,
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText, Box } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -22,23 +23,28 @@ function SideMenu({ open }) {
   const menuItems = [
     {
       label: "Dashboard",
-      icon: <DashboardIcon />,
+      icon: <DashboardRounded />,
       key: "/admin/dashboard",
     },
     {
-      label: "Reports",
-      icon: <FileDownloadIcon />,
-      key: "/admin/reports",
+      label: "Users",
+      icon: <PeopleRounded />,
+      key: "/admin/users",
+    },
+    {
+      label: "Manage Users",
+      icon: <ManageAccountsRounded />,
+      key: "/admin/settings",
     },
     {
       label: "Events",
-      icon: <EventIcon />,
+      icon: <EventRounded />,
       key: "/admin/events",
     },
     {
-      label: "Users",
-      icon: <PeopleIcon />,
-      key: "/admin/users",
+      label: "Reports",
+      icon: <SummarizeRounded />,
+      key: "/admin/reports",
     },
   ];
 
@@ -61,7 +67,6 @@ function SideMenu({ open }) {
       <List>
         {menuItems.map((item) => (
           <ListItem
-            button
             key={item.key}
             selected={selectedKeys === item.key}
             onClick={() => {
@@ -69,30 +74,25 @@ function SideMenu({ open }) {
               setSelectedKeys(item.key);
             }}
             sx={{
-              bgcolor: selectedKeys === item.key ? "yellow" : "transparent",
+              bgcolor: selectedKeys === item.key ? "#000000" : "transparent",
               "&:hover": {
-                bgcolor: selectedKeys === item.key ? "orange" : "lightgray",
+                bgcolor: selectedKeys === item.key ? "black" : "lightgray",
               },
+              cursor: "pointer",
             }}
-            className={selectedKeys === item.key ? "text-yellow-500" : ""}
+            component="div"
           >
             <ListItemIcon
               sx={{
-                color:
-                  selectedKeys === item.key ? "text-yellow-500" : "inherit",
+                color: selectedKeys === item.key ? "#febe00" : "inherit",
               }}
             >
               {item.icon}
             </ListItemIcon>
             <ListItemText
               primary={item.label}
-              primaryTypographyProps={{
-                className:
-                  selectedKeys === item.key ? "text-yellow-500" : "text-black",
-              }}
               sx={{
-                color:
-                  selectedKeys === item.key ? "text-yellow-500" : "inherit",
+                color: selectedKeys === item.key ? "#febe00" : "black",
               }}
             />
           </ListItem>

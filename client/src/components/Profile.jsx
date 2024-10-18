@@ -7,8 +7,9 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
+  CalendarMonthRounded,
   DashboardRounded,
   LogoutRounded,
   PersonRounded,
@@ -17,6 +18,7 @@ import {
 
 const Profile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const role = localStorage.getItem("role");
 
@@ -31,6 +33,15 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
+    handleClose();
+  };
+
+  const handleDashboardOrCalendar = () => {
+    if (location.pathname.startsWith("/admin/")) {
+      navigate("/calendar");
+    } else {
+      navigate("/admin/dashboard");
+    }
     handleClose();
   };
 
@@ -56,12 +67,24 @@ const Profile = () => {
           <ListItemText primary="Profile" />
         </MenuItem>
 
-        <MenuItem sx={{ display: role === "admin" ? "content" : "none" }}>
-          <ListItemIcon>
-            <DashboardRounded />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </MenuItem>
+        {role === "admin" && (
+          <MenuItem onClick={handleDashboardOrCalendar}>
+            <ListItemIcon>
+              {location.pathname.startsWith("/admin/") ? (
+                <CalendarMonthRounded />
+              ) : (
+                <DashboardRounded />
+              )}
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                location.pathname.startsWith("/admin/")
+                  ? "Calendar"
+                  : "Dashboard"
+              }
+            />
+          </MenuItem>
+        )}
 
         <MenuItem>
           <ListItemIcon>

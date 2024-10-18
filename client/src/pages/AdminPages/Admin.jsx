@@ -1,8 +1,8 @@
 import React from "react";
-import SideMenu from "../components/Admin/SideMenu";
-import PageContent from "../components/Admin/PageContent";
-import Footer from "../components/Footer";
-import AdminHeader from "../components/Admin/AdminHeader";
+import SideMenu from "../../components/Admin/SideMenu";
+import PageContent from "../../components/Admin/PageContent";
+import Footer from "../../components/Footer";
+import AdminHeader from "../../components/Admin/AdminHeader";
 import { Box } from "@mui/material";
 
 const Admin = () => {

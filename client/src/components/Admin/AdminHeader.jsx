@@ -1,9 +1,17 @@
 import React from "react";
-import { AppBar, Box, Toolbar, Typography, IconButton } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Avatar,
+} from "@mui/material";
 
 import { Menu } from "@mui/icons-material";
 
 import image from "../../assets/icon.png";
+import Profile from "../Profile";
 
 const AdminHeader = ({ handleDrawer }) => {
   return (
@@ -34,6 +42,14 @@ const AdminHeader = ({ handleDrawer }) => {
               Calendar
             </Typography>
           </div>
+        </Box>
+        <Box
+          flexGrow={1}
+          justifyContent={"right"}
+          display={"flex"}
+          alignItems={"center"}
+        >
+          <Profile />
         </Box>
       </Toolbar>
     </AppBar>
