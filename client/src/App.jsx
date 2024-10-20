@@ -13,6 +13,8 @@ import Reports from "./pages/AdminPages/Reports";
 import Settings from "./pages/AdminPages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
 
+// deployment check
+
 function App() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
