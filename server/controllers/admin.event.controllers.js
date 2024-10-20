@@ -14,7 +14,7 @@ export const eventDetails = async (req, res) => {
         },
       },
       {
-        $sort: { _id: 1 }, // Sort by the date in ascending order
+        $sort: { _id: 1 }, 
       },
     ]);
     res.json(eventData);
