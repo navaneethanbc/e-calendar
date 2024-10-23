@@ -78,7 +78,7 @@ export const inviteResponse = async (req, res) => {
       // create an invite response notification for the event creator
       await Notification.create({
         category: "Invite Response",
-        event_id: event_id,
+        event_id: event._id,
         assigned_to: event.owner,
         description: `${user.fullname} (${invite.assigned_to}) declined your invitation to ${event.title}.`,
         designated_time: new Date(),
@@ -86,6 +86,7 @@ export const inviteResponse = async (req, res) => {
     }
 
     await eventGuest.save();
+    res.status(200).json({ message: "Response recorded successfully." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

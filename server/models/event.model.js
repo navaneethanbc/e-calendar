@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import { EventGuest } from "./event_guest.model.js";
 
 const eventSchema = new Schema({
   title: {
