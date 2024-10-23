@@ -102,20 +102,21 @@ export const sendOtp = async (req, res) => {
     //console.log("Found user:", user);
 
     if (!user) {
-      return res.status(404).send({ message: "username is invalid " });
+      return res.status(404).send({ message: "Username is invalid" });
     }
 
     const token = crypto.randomInt(1000, 10000).toString();
     user.resetToken = token;
+    user.otpVerified = false;
     user.resetTokenExpires = new Date(Date.now() + 5 * 60 * 1000);
     await user.save();
 
     const emailSubject = `Password Reset OTP for ${user.fullname}`;
-    const emailBody = `Use this otp for your password reset. OTP: ${token}  \nIt will expires in 5 minutes`;
+    const emailBody = `Use this otp for your password reset. OTP: ${token}  \nIt will expire in 5 minutes`;
 
     res
       .status(200)
-      .send({ message: "OTP generated successfully. Check your email inbox" });
+      .send({ message: "OTP generated successfully. Check your email" });
     await sendEmail(user.email, emailSubject, emailBody);
   } catch (error) {
     console.error("Detailed error in forgot password process:", error);
@@ -131,12 +132,12 @@ export const verifyOtp = async (req, res) => {
       return res.status(404).send({ message: "Username is invalid" });
     }
     if (!user.resetToken || user.resetTokenExpires < Date.now()) {
-      return res
-        .status(400)
-        .send({ message: "Your OTP is invalid or expired" });
+      return res.status(400).send({ message: "Your OTP is expired" });
     }
-    if (user.resetToken !== otp) {
-      return res.status(400).send({ message: "OTP you entered is wrong." });
+
+    const isTokenValid = await user.isResetTokenCorrect(otp);
+    if (!isTokenValid) {
+      return res.status(400).send({ message: "Invalid OTP" });
     }
 
     user.otpVerified = true;
