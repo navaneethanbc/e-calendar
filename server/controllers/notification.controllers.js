@@ -6,8 +6,6 @@ import { EventGuest } from "../models/event_guest.model.js";
 // get all notifications for a user
 export const getNotifications = async (req, res) => {
   try {
-    // const { username } = req.body;
-
     const notifications = await Notification.find(
       {
         assigned_to: req.params.username,
@@ -25,15 +23,23 @@ export const getNotifications = async (req, res) => {
 // mark a notification as read
 export const markAsRead = async (req, res) => {
   try {
-    const { notification_id } = req.body;
-
-    const notification = await Notification.findById(notification_id);
-
-    notification.is_read = true;
-
-    await notification.save();
+    await Notification.findByIdAndUpdate(req.params._id, { is_read: true });
 
     res.status(200).json({ message: "Notification marked as read." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// mark all as read
+export const markAllAsRead = async (req, res) => {
+  try {
+    await Notification.updateMany(
+      { assigned_to: req.params.username, is_read: false },
+      { is_read: true }
+    );
+
+    res.status(200).json({ message: "All notifications marked as read." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -42,92 +48,45 @@ export const markAsRead = async (req, res) => {
 // guest responds to an invitation
 export const inviteResponse = async (req, res) => {
   try {
-    const { invite_id, response } = req.body;
-
-    const invite = await Notification.findById(invite_id);
+    const invite = await Notification.findById(req.params._id);
+    const response = req.query.response;
 
     const event = await Event.findById(invite.event_id);
-    const guestEvent = await EventGuest.findOne({
+    const eventGuest = await EventGuest.findOne({
       event_id: invite.event_id,
-      username: invite.username,
+      guest: invite.assigned_to,
     });
-    const user = await User.findOne({ username: invite.username });
+    const user = await User.findOne({ username: invite.assigned_to });
 
-    if (response === "Accepted") {
-      guestEvent.status = "Accepted";
-      event.guests.push(invite.username); // add the guest to the event
-
-      // create a reminder notification for the guest
-      if (event.reminder !== "No Reminder") {
-        const reminder = new Notification({
-          category: "Reminder",
-          event_id: event._id,
-          username: invite.username,
-        });
-
-        switch (event.reminder) {
-          case "15 minutes before":
-            reminder.description = `Reminder: ${event.title} starts in 15 minutes.`;
-            reminder.designated_time = new Date(
-              event.starts_at - 15 * 60 * 1000
-            );
-            break;
-          case "30 minutes before":
-            reminder.description = `Reminder: ${event.title} starts in 30 minutes.`;
-            reminder.designated_time = new Date(
-              event.starts_at - 30 * 60 * 1000
-            );
-            break;
-          case "1 hour before":
-            reminder.description = `Reminder: ${event.title} starts in 1 hour.`;
-            reminder.designated_time = new Date(
-              event.starts_at - 60 * 60 * 1000
-            );
-            break;
-          case "1 day before":
-            reminder.description = `Reminder: ${event.title} starts in 1 day.`;
-            reminder.designated_time = new Date(
-              event.starts_at - 24 * 60 * 60 * 1000
-            );
-            break;
-          case "1 week before":
-            reminder.description = `Reminder: ${event.title} starts in 1 week.`;
-            reminder.designated_time = new Date(
-              event.starts_at - 7 * 24 * 60 * 60 * 1000
-            );
-            break;
-          default:
-            break;
-        }
-        await reminder.save();
-      }
+    if (response === "accepted") {
+      eventGuest.status = "accepted";
+      event.guests.push(invite.assigned_to); // add the guest to the event
 
       // create an invite response notification for the event creator
       await Notification.create({
         category: "Invite Response",
         event_id: event._id,
-        username: event.username,
-        description: `${user.fullname} (${invite.username}) accepted your invitation to ${event.title}.`,
+        assigned_to: event.owner,
+        description: `${user.fullname} (${invite.assigned_to}) accepted your invitation to ${event.title}.`,
         designated_time: new Date(),
-        is_read: false,
       });
 
       await event.save();
-    } else if (response === "Declined") {
-      guestEvent.status = "Declined";
+    } else if (response === "declined") {
+      eventGuest.status = "declined";
 
       // create an invite response notification for the event creator
       await Notification.create({
         category: "Invite Response",
-        event_id: event_id,
-        username: event.username,
-        description: `${user.fullname} (${invite.username}) declined your invitation to ${event.title}.`,
+        event_id: event._id,
+        assigned_to: event.owner,
+        description: `${user.fullname} (${invite.assigned_to}) declined your invitation to ${event.title}.`,
         designated_time: new Date(),
-        is_read: false,
       });
     }
 
-    await guestEvent.save();
+    await eventGuest.save();
+    res.status(200).json({ message: "Response recorded successfully." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
