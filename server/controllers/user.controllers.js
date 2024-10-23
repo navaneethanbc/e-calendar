@@ -114,10 +114,10 @@ export const sendOtp = async (req, res) => {
     const emailSubject = `Password Reset OTP for ${user.fullname}`;
     const emailBody = `Use this otp for your password reset. OTP: ${token}  \nIt will expire in 5 minutes`;
 
+    await sendEmail(user.email, emailSubject, emailBody);
     res
       .status(200)
       .send({ message: "OTP generated successfully. Check your email" });
-    await sendEmail(user.email, emailSubject, emailBody);
   } catch (error) {
     console.error("Detailed error in forgot password process:", error);
     res.status(500).send({ message: "Error in forgot password process" });
