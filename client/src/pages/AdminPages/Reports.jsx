@@ -39,7 +39,7 @@ const Reports = () => {
   const fetchAllEvents = async () => {
     try {
       const response = await axios.get(
-        `https://e-calendar-cocq.vercel.app/admin/eventdetails`
+        `http://localhost:8000/admin/eventdetails`
       );
       setEventData(response.data);
     } catch (error) {
@@ -50,7 +50,7 @@ const Reports = () => {
   const fetchUserReport = async () => {
     try {
       const response = await axios.get(
-        `https://e-calendar-cocq.vercel.app/admin/userreport`
+        `http://localhost:8000/admin/userreport`
       );
       setUserData(response.data);
     } catch (error) {
@@ -61,7 +61,7 @@ const Reports = () => {
   const fetchBankReport = async () => {
     try {
       const response = await axios.get(
-        `https://e-calendar-cocq.vercel.app/admin/eventdetailsbank`
+        `http://localhost:8000/admin/eventdetailsbank`
       );
       setBankReportData(response.data);
     } catch (error) {
@@ -72,7 +72,7 @@ const Reports = () => {
   const fetchBranchReport = async () => {
     try {
       const response = await axios.get(
-        `https://e-calendar-cocq.vercel.app/admin/eventdetailsbranch`
+        `http://localhost:8000/admin/eventdetailsbranch`
       );
       setBranchReportData(response.data);
     } catch (error) {

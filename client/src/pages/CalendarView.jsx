@@ -34,7 +34,7 @@ const CalendarView = () => {
   );
   const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  
   const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
   const [resultEvents, setResultEvents] = useState({}); // to store events got from the backend by search
   const [resultAvailable, setResultAvailble] = useState({}); // to store  availabilitty got from backend
@@ -66,7 +66,7 @@ const CalendarView = () => {
       console.log("Adding new event:", newEvent);
 
       const response = await axios.post(
-        "https://e-calendar-cocq.vercel.app/events/create",
+        "http://localhost:8000/events/create",
         newEvent
       );
 
@@ -82,7 +82,7 @@ const CalendarView = () => {
   const handleEditEvent = async (updatedEvent) => {
     try {
       await axios.put(
-        `https://e-calendar-cocq.vercel.app/events/${updatedEvent.id}`,
+        `http://localhost:8000/events/${updatedEvent.id}`,
         updatedEvent
       );
       const updatedEvents = events.map((event) =>
@@ -98,7 +98,7 @@ const CalendarView = () => {
 
   const handleDeleteEvent = async (id) => {
     try {
-      await axios.delete(`https://e-calendar-cocq.vercel.app/events/${id}`);
+      await axios.delete(`http://localhost:8000/events/${id}`);
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
@@ -111,7 +111,7 @@ const CalendarView = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.post(
-        "https://e-calendar-cocq.vercel.app/events/find/",
+        "http://localhost:8000/events/find/",
         {
           username: localStorage.getItem("username"),
         }
@@ -249,7 +249,6 @@ const CalendarView = () => {
   return (
     <>
       <NavigationBar
-        open={open}
         handleDrawer={handleDrawer}
         handleToday={handleToday}
         handlePrev={handlePrev}
@@ -257,7 +256,6 @@ const CalendarView = () => {
         headerTitle={headerTitle}
         selectedView={selectedView}
         handleSelectView={handleSelectView}
-        notifications={notifications}
         setResultEvents={setResultEvents}
         setShowCalendar={setShowCalendar}
         searchOpen={searchOpen}

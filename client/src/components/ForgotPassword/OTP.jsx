@@ -38,7 +38,7 @@ const OTP = ({ setOtpVerified, username, setUsername }) => {
     if (checkUsername()) {
       try {
         const response = await axios.post(
-          "https://e-calendar-cocq.vercel.app/users/otp",
+          "http://localhost:8000/users/otp",
           {
             username,
           }
@@ -68,7 +68,7 @@ const OTP = ({ setOtpVerified, username, setUsername }) => {
     }
     try {
       const response = await axios.post(
-        "https://e-calendar-cocq.vercel.app/users/otpverify",
+        "http://localhost:8000/users/otpverify",
         { username, otp: code }
       );
 

@@ -33,13 +33,13 @@ const DashboardChart = () => {
       try {
         // Fetch users
         const usersResponse = await axios.get(
-          "https://e-calendar-cocq.vercel.app/admin/views"
+          "http://localhost:8000/admin/views"
         );
         const users = usersResponse.data.users;
 
         // Fetch event details grouped by user
         const eventsResponse = await axios.get(
-          "https://e-calendar-cocq.vercel.app/admin/eventcountwithusers"
+          "http://localhost:8000/admin/eventcountwithusers"
         );
         const events = eventsResponse.data;
 

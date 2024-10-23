@@ -27,12 +27,12 @@ const BranchWithUsers = () => {
         branches.map(async (branchName) => {
           // Fetch users for the branch
           const userResponse = await axios.get(
-            `https://e-calendar-cocq.vercel.app/admin/branchusers/${branchName}`
+            `http://localhost:8000/admin/branchusers/${branchName}`
           );
 
           // Fetch branch events for the branch
           const eventResponse = await axios.get(
-            `https://e-calendar-cocq.vercel.app/admin/branchevent/${branchName}`
+            `http://localhost:8000/admin/branchevent/${branchName}`
           );
 
           return {

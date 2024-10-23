@@ -43,7 +43,7 @@ const AddUserForm = () => {
 
     try {
       const response = await axios.post(
-        "https://e-calendar-cocq.vercel.app/admin/adduser",
+        "http://localhost:8000/admin/adduser",
         formData
       );
       setSuccess("User created successfully!");

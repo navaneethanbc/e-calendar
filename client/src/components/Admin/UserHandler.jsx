@@ -34,7 +34,7 @@ const UserHandler = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://e-calendar-cocq.vercel.app/admin/views`
+        `http://localhost:8000/admin/views`
       );
       setUsers(response.data.users);
       setLoading(false);
@@ -71,7 +71,7 @@ const UserHandler = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `https://e-calendar-cocq.vercel.app/admin/deleteuser/${selectedUser.username}`
+          `http://localhost:8000/admin/deleteuser/${selectedUser.username}`
         );
         setUsers(
           users.filter((user) => user.username !== selectedUser.username)
@@ -88,7 +88,7 @@ const UserHandler = () => {
     const newUsername = newUsernames[selectedUser.username];
     try {
       await axios.put(
-        `https://e-calendar-cocq.vercel.app/admin/updateuser/${selectedUser.username}`,
+        `http://localhost:8000/admin/updateuser/${selectedUser.username}`,
         {
           newUsername,
         }

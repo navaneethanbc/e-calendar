@@ -10,7 +10,7 @@ const Notifications = ({ onHide }) => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "https://e-calendar-cocq.vercel.app/api/notifications"
+          "http://localhost:8000/api/notifications"
         );
         setNotifications(response.data);
       } catch (error) {
@@ -38,7 +38,7 @@ const Notifications = ({ onHide }) => {
   const handleNotificationClick = async (id) => {
     try {
       await axios.post(
-        `https://e-calendar-cocq.vercel.app/api/notifications/read/${id}`
+        `http://localhost:8000/api/notifications/read/${id}`
       );
       setNotifications((prev) =>
         prev.map((n) => (n._id === id ? { ...n, hasBeenRead: true } : n))
@@ -104,7 +104,7 @@ const Notifications = ({ onHide }) => {
       ) : (
         <div className="flex items-center justify-center h-full">
           <p className="text-xl font-medium text-gray-500">
-            No notifications available.
+            No notifications availablesna.
           </p>
         </div>
       )}

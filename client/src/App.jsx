@@ -12,6 +12,7 @@ import EventManage from "./pages/AdminPages/EventManage";
 import Reports from "./pages/AdminPages/Reports";
 import Settings from "./pages/AdminPages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
+import SettingPage from "./components/SettingPage";
 
 // deployment check
 
@@ -25,6 +26,8 @@ function App() {
         <Routes>
           <Route path="/" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/settings" element={<SettingPage />} />
+          
 
           {token ? (
             <>
