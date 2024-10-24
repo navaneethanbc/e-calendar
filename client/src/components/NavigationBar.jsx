@@ -25,7 +25,6 @@ import {
   Search,
 } from "@mui/icons-material";
 
-
 const NavigationBar = ({
   handleDrawer,
   handleToday,
@@ -69,12 +68,15 @@ const NavigationBar = ({
   const handleSearch = async () => {
     if (searchOpen && checkContent()) {
       try {
-        const response = await axios.post("https://e-calendar-cocq.vercel.app/events/find/", {
-          username: localStorage.getItem("username"),
-          title: searchevent.title,
-          from: searchevent.from,
-          to: searchevent.to,
-        });
+        const response = await axios.post(
+          "https://e-calendar-cocq.vercel.app/events/find/",
+          {
+            username: localStorage.getItem("username"),
+            title: searchevent.title,
+            from: searchevent.from,
+            to: searchevent.to,
+          }
+        );
 
         setShowCalendar(false);
         setShowAvailable(false);
