@@ -25,7 +25,8 @@ const ShowNotifications = () => {
   const isOpen = Boolean(anchorEl);
 
   useEffect(() => {
-    fetchNotifications();
+     fetchNotifications();    
+ 
   }, []);
 
   const fetchNotifications = async () => {
@@ -114,21 +115,21 @@ const ShowNotifications = () => {
       >
         <Box sx={{
           p: 2,
-          bgcolor: '#363533',
+          bgcolor: '#805f14',
           color: 'common.white',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <Typography variant="h6">
+          <Typography variant="h5">
             Notifications
           </Typography>
           <Button
-            color="inherit"
+            color='inherit'
             size="small"
             disabled={notifications.length === 0}
             onClick={handleMarkAllRead}
-            sx={{ textTransform: 'none' }}
+            sx={{ textTransform: 'none', color:'#bbde10' }}
           >
             Mark All as Read
           </Button>

@@ -17,10 +17,10 @@ const NotificationItem = ({ notification, handleMarkRead, handleRespond }) => {
       <ListItem
         divider
         sx={{
-          bgcolor: notification.is_read ? 'transparent' : 'rgba(250, 150, 250, 0.1)',
+          bgcolor: notification.is_read ? 'transparent' : '#faf5d2',
           transition: 'background-color 0.2s',
           '&:hover': {
-            bgcolor: 'action.hover'
+            bgcolor: '#ccccca'
           }
         }}
       >
@@ -29,7 +29,7 @@ const NotificationItem = ({ notification, handleMarkRead, handleRespond }) => {
           primary={
             <Box sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
               {!notification.is_read && (
-                <CircleIcon sx={{ fontSize: 8, color: 'primary.main' }} />
+                <CircleIcon sx={{ fontSize: 8, color: '#dada10' }} />
               )}
               <Typography
                 variant="subtitle2"
@@ -105,12 +105,12 @@ const NotificationItem = ({ notification, handleMarkRead, handleRespond }) => {
                 <Typography
                   variant="caption"
                   sx={{
-                    color: notification.status === 'accepted' ? 'success.main' : 'error.main',
+                    color: notification.status === 'declined' ? 'error.main' : 'success.main',
                     display: 'block',
                     mt: 1
                   }}
                 >
-                  {notification.status === 'accepted' ? 'Accepted' : 'Declined'}
+                  {notification.status === 'declined' ? 'Declined' : 'Accepted'}
                 </Typography>
               )}
             </Box>
