@@ -186,7 +186,7 @@ export const getEvents = async (req, res) => {
     let invitedEvents = [];
 
     const eventGuests = await EventGuest.find(
-      { $and: [{ username: username }, { status: "accepted" }] },
+      { $and: [{ guest: username }, { status: "accepted" }] },
       { event_id: 1 }
     );
 

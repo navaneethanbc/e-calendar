@@ -10,6 +10,7 @@ export const getNotifications = async (req, res) => {
       {
         assigned_to: req.params.username,
         designated_time: { $lte: new Date() },
+        is_read : false,
       },
       { category: 1, description: 1, designated_time: 1, is_read: 1 }
     );
