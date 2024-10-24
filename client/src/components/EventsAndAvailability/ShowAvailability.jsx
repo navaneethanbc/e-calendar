@@ -48,6 +48,9 @@ const ShowAvailability = ({ resultAvailable, searchAvailable }) => {
             ))}
           </List>
         ) : (
+          (searchAvailable.username &&
+          searchAvailable.fromDate &&
+          searchAvailable.toDate)? (
           <Paper
             elevation={2}
             sx={{
@@ -63,6 +66,19 @@ const ShowAvailability = ({ resultAvailable, searchAvailable }) => {
               {new Date(searchAvailable.toDate).toLocaleString()}.
             </Typography>
           </Paper>
+          ):(<Paper
+            elevation={2}
+            sx={{
+              padding: 3,
+              marginTop: 3,
+              backgroundColor: "#f0f0f0",
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6" color="error">
+              Please enter a valid username and date range.
+            </Typography>
+          </Paper>)
         )}
       </Box>
     </Box>

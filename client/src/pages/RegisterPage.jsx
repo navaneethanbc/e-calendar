@@ -2,15 +2,10 @@ import React from "react";
 import RegisterForm from "../components/RegisterForm";
 import Header from "../components/Header";
 import { Box } from "@mui/material";
-import { useMediaQuery, useTheme } from "@mui/system";
 import Footer from "../components/Footer";
 import background from "../assets/background.png";
 
 const RegisterPage = () => {
-  const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-  const isMd = useMediaQuery(theme.breakpoints.down("md"));
-
   return (
     <Box
       display={"flex"}

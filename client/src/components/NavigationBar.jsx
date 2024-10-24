@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import SearchEvents from "./EventsAndAvailability/SearchEvents";
 import SearchAvailability from "./EventsAndAvailability/SearchAvailability";
+import ShowNotifications from "./NotificationComponents/ShowNotifications";
+import logo from "../assets/icon.png";
 import Profile from "./Profile";
 import axios from "axios";
 
@@ -13,10 +15,6 @@ import {
   Button,
   FormControl,
   Select,
-  List,
-  ListItem,
-  ListItemText,
-  Popover,
   MenuItem,
   Menu as DropMenu,
 } from "@mui/material";
@@ -25,11 +23,7 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Search,
-  Notifications as NotificationsIcon,
 } from "@mui/icons-material";
-import logo from "../assets/icon.png";
-
-import Notifications from "./NotificationPopUp";
 
 const NavigationBar = ({
   handleDrawer,
@@ -38,7 +32,6 @@ const NavigationBar = ({
   handleNext,
   headerTitle,
   selectedView,
-  notifications,
   handleSelectView,
   setResultEvents,
   setShowCalendar,
@@ -51,19 +44,8 @@ const NavigationBar = ({
   searchAvailable,
   setSearchAvailable,
 }) => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [anchorElement, setAnchorElement] = useState(null);
+  //const [showNotification, setShowNotification] = useState(false);
   const [localEvents, setLocalEvents] = useState([]); // to store temporry resultevent
-
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-  };
-
-  const handleNotificationClose = () => {
-    setAnchorElement(null);
-  };
-
-  const openNotifications = Boolean(anchorElement);
 
   //check if events required search componentts  not empty
   const checkContent = () => {
@@ -86,12 +68,15 @@ const NavigationBar = ({
   const handleSearch = async () => {
     if (searchOpen && checkContent()) {
       try {
-        const response = await axios.post("/events/find/", {
-          username: localStorage.getItem("username"),
-          title: searchevent.title,
-          from: searchevent.from,
-          to: searchevent.to,
-        });
+        const response = await axios.post(
+          "https://e-calendar-cocq.vercel.app/events/find/",
+          {
+            username: localStorage.getItem("username"),
+            title: searchevent.title,
+            from: searchevent.from,
+            to: searchevent.to,
+          }
+        );
 
         setShowCalendar(false);
         setShowAvailable(false);
@@ -261,69 +246,7 @@ const NavigationBar = ({
               <MenuItem value="listWeek">List</MenuItem>
             </Select>
           </FormControl>
-          {/* </div> */}
-
-          <IconButton onClick={handleNotificationClick}>
-            <NotificationsIcon
-              sx={{
-                height: "4vh",
-                width: "4vh",
-              }}
-            />
-          </IconButton>
-          {showNotifications && (
-            <Notifications onHide={() => setShowNotifications(false)} />
-          )}
-
-          <Popover
-            open={openNotifications}
-            anchorEl={anchorElement}
-            onClose={handleNotificationClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <List sx={{ width: "350px", maxHeight: "450px", overflow: "auto" }}>
-              <ListItem>
-                <ListItemText
-                  primary={<Typography variant="h5">Notifications</Typography>}
-                />
-              </ListItem>
-              {notifications.length > 0 ? (
-                notifications.map((notification) => (
-                  <ListItem key={notification.id} divider>
-                    <ListItemText
-                      primary={notification.content}
-                      secondary={
-                        <>
-                          <Typography variant="body2" color="text.secondary">
-                            {notification.time}
-                          </Typography>
-                          <Button color="primary" size="small">
-                            View full notification
-                          </Button>
-                        </>
-                      }
-                    />
-                  </ListItem>
-                ))
-              ) : (
-                <ListItem>
-                  <ListItemText primary="no notification available" />
-                </ListItem>
-              )}
-              <ListItem>
-                <Button fullWidth color="primary">
-                  See all
-                </Button>
-              </ListItem>
-            </List>
-          </Popover>
+          <ShowNotifications />
           <Profile />
         </Box>
       </Toolbar>

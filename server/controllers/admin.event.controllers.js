@@ -118,7 +118,7 @@ export const bankEvent = async (req, res) => {
 
     return res.status(200).json(bankEvents);
   } catch (error) {
-    console.error("Error fetching branch events:", error);
+    // console.error("Error fetching branch events:", error);
     return res.status(500).json({ message: "Server error", error });
   }
 };

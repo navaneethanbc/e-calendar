@@ -119,7 +119,7 @@ const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
       <div className="flex items-center space-x-2">
         <button
           type="button"
-          className="p-2 text-white bg-black rounded hover:bg-yellow-500"
+          className="p-2 text-white bg-black rounded hover:bg-black-500"
           onClick={handleSubmit}
         >
           Submit
