@@ -66,7 +66,6 @@ const userSchema = new Schema(
     },
     otpVerified: {
       type: Boolean,
-      default: false,
     },
   },
   {
@@ -75,9 +74,15 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
   try {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.isModified("password")) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+
+    if (this.isModified("resetToken") && this.resetToken) {
+      this.resetToken = await bcrypt.hash(this.resetToken, 6);
+    }
+
     next();
   } catch (error) {
     console.log(error);
@@ -89,13 +94,13 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+userSchema.methods.isResetTokenCorrect = async function (token) {
+  return await bcrypt.compare(token, this.resetToken);
+};
+
 userSchema.methods.generateAuthToken = function () {
   return generateAuthToken(this);
 };
-
-// userSchema.methods.generateRefreshToken = function () {
-//   return generateRefreshToken(this);
-// };
 
 userSchema.plugin(mongooseAggregatePaginate);
 

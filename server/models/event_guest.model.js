@@ -14,8 +14,8 @@ const eventGuestSchema = new Schema({
   status: {
     type: String,
     required: false,
-    enum: ["Accepted", "Declined", "Pending"],
-    default: "Pending",
+    enum: ["accepted", "declined", "pending"],
+    default: "pending",
   },
 });
 
