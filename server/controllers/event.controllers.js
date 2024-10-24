@@ -186,7 +186,7 @@ export const getEvents = async (req, res) => {
     let invitedEvents = [];
 
     const eventGuests = await EventGuest.find(
-      { $and: [{ username: username }, { status: "Accepted" }] },
+      { $and: [{ username: username }, { status: "accepted" }] },
       { event_id: 1 }
     );
 
@@ -266,22 +266,24 @@ export const deleteEvent = async (req, res) => {
   session.startTransaction();
 
   try {
-    const { deleteType } = req.body;
+    const deleteType = req.query.type || "single";
     let deletedEvents = [];
 
-    const event = await Event.findByIdAndDelete(req.params.id, { session });
+    const event = await Event.findById(req.params.id);
 
-    deletedEvents.push(event._id);
+    // console.log(deleteType);
+    // console.log(typeof deleteType);
+    // console.log(event);
 
-    if (deleteType !== "this event") {
+    if (deleteType !== "single") {
       let query;
 
       if (event.parent_event_id) {
-        if (deleteType === "this and following events") {
+        if (deleteType === "following") {
           query = {
             $and: [
               { parent_event_id: event.parent_event_id },
-              { starts_at: { $gt: event.starts_at } },
+              { starts_at: { $gte: event.starts_at } },
             ],
           };
         } else {
@@ -305,18 +307,26 @@ export const deleteEvent = async (req, res) => {
       }
 
       deletedEvents.push(...eventsToDelete);
+    } else {
+      await Event.findByIdAndDelete(req.params.id, { session });
+
+      deletedEvents.push(event._id);
     }
 
-    await EventGuest.deleteMany(
-      { event_id: { $in: deletedEvents } },
-      { session }
-    );
+    if (deletedEvents.length > 0) {
+      await EventGuest.deleteMany(
+        { event_id: { $in: deletedEvents } },
+        { session }
+      );
+    }
 
     await session.commitTransaction();
     res.status(200).json({ message: "Event deleted successfully." });
   } catch (error) {
     await session.abortTransaction();
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: `Failed to delete event: ${error.message}` });
   } finally {
     session.endSession();
   }
@@ -343,7 +353,7 @@ export const getAvailablity = async (req, res) => {
     );
 
     const invitedEvents = await EventGuest.find(
-      { $and: [{ guest: username }, { status: "Accepted" }] },
+      { $and: [{ guest: username }, { status: "accepted" }] },
       { event_id: 1 }
     );
 
