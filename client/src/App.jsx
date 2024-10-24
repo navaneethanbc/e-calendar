@@ -29,7 +29,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingPage />} />
-          
 
           {token ? (
             <>

@@ -189,7 +189,7 @@ const EditFunc = ({
           startIcon={<EditRounded />}
           sx={{
             backgroundColor: "black",
-            "&:hover": { backgroundColor: "#fee27f" },
+            "&:hover": { backgroundColor: "black" },
           }}
         >
           Edit
