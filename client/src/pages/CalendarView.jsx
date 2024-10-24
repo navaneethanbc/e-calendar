@@ -34,7 +34,7 @@ const CalendarView = () => {
   );
   const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  
   const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
   const [resultEvents, setResultEvents] = useState({}); // to store events got from the backend by search
   const [resultAvailable, setResultAvailble] = useState({}); // to store  availabilitty got from backend
@@ -247,7 +247,6 @@ const CalendarView = () => {
   return (
     <>
       <NavigationBar
-        open={open}
         handleDrawer={handleDrawer}
         handleToday={handleToday}
         handlePrev={handlePrev}
@@ -255,7 +254,6 @@ const CalendarView = () => {
         headerTitle={headerTitle}
         selectedView={selectedView}
         handleSelectView={handleSelectView}
-        notifications={notifications}
         setResultEvents={setResultEvents}
         setShowCalendar={setShowCalendar}
         searchOpen={searchOpen}
