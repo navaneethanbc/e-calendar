@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import SearchEvents from "./EventsAndAvailability/SearchEvents";
 import SearchAvailability from "./EventsAndAvailability/SearchAvailability";
+import ShowNotifications from "./NotificationComponents/ShowNotifications";
+import logo from "../assets/icon.png";
 import Profile from "./Profile";
 import axios from "axios";
 
@@ -22,10 +24,7 @@ import {
   ArrowForwardIos,
   Search,
 } from "@mui/icons-material";
-import logo from "../assets/icon.png";
-import ShowNotifications from "./ShowNotifications";
 
-//import Notifications from "./NotificationPopUp";
 
 const NavigationBar = ({
   handleDrawer,
@@ -248,13 +247,6 @@ const NavigationBar = ({
               <MenuItem value="listWeek">List</MenuItem>
             </Select>
           </FormControl>
-          {/* </div> */}
-
-          
-          {/* {showNotification && (
-            <Notifications onHide={() => setShowNotification(false)} />
-          )} */}
-
           <ShowNotifications />
           <Profile />
         </Box>
