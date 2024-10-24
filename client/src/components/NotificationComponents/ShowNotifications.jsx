@@ -66,7 +66,8 @@ const ShowNotifications = () => {
     try {
       await axios.post(`https://e-calendar-cocq.vercel.app/notifications/respond/${id}?response=${response}`);
       await handleMarkRead(id);
-      await fetchNotifications();
+      // await fetchNotifications();
+      setNotifications(prev => prev.map(notification =>notification._id === id ? { ...notification, status: response} : notification));
     } catch (error) {
       console.error("Error responding to notification:", error);
     }
@@ -165,8 +166,8 @@ const ShowNotifications = () => {
               <NotificationItem
                 key={notification._id}
                 notification={notification}
-                onMarkRead={handleMarkRead}
-                onRespond={handleRespond}
+                handleMarkRead={handleMarkRead}
+                handleRespond={handleRespond}
               />
             ))
           )}

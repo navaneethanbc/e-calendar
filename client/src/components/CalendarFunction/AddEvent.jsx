@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 import Form from "./Form";
-import { AddLinkRounded, AddLocationRounded } from "@mui/icons-material";
+import {
+  AddLinkRounded,
+  AddLocationRounded,
+  CloseRounded,
+} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
-const AddFunc = ({ show, onHide, onAddEvent }) => {
+const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
   const owner = localStorage.getItem("username");
   const [formData, setFormData] = useState({
     title: "",
@@ -24,27 +29,23 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
     endDateTime: "",
   });
 
-  const popupRef = useRef(null); // Create a ref for the popup
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        onHide();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up when component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onHide]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleGuestChange = (e) => {
+    const value = e.target.value;
+    const guestsArray = value
+      .split(",")
+      .map((guest) => guest.trim())
+      .filter(Boolean);
+    setFormData((prevData) => ({
+      ...prevData,
+      guests: guestsArray,
     }));
   };
 
@@ -85,10 +86,15 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       guests: formData.guests,
       owner: owner,
     };
-    onAddEvent(eventDetails);
+    handleAddEvent(eventDetails);
 
     resetForm();
-    onHide();
+    hideForm();
+  };
+
+  const handleClose = () => {
+    resetForm();
+    hideForm();
   };
 
   // Function to reset the form data
@@ -118,6 +124,9 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
         >
           Submit
         </button>
+        <IconButton onClick={handleClose}>
+          <CloseRounded />
+        </IconButton>
       </div>
     );
   };
@@ -125,11 +134,11 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
   return (
     <Form
       EventFunction="Add Event"
-      show={show}
-      popupRef={popupRef}
+      showForm={showForm}
       buttons={Button()}
       event={formData}
       handleChange={handleChange}
+      handleGuestChange={handleGuestChange}
       errors={errors}
       locationIcon={<AddLocationRounded />}
       linkIcon={<AddLinkRounded />}

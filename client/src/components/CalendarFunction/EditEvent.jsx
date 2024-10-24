@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
-import Snackbar from "@mui/material/Snackbar";
-import Fade from "@mui/material/Fade";
+import { Menu, MenuItem, Snackbar, Fade } from "@mui/material";
 import Form from "./Form";
 import {
+  CloseRounded,
   DeleteRounded,
   EditLocationRounded,
   EditRounded,
   LinkRounded,
 } from "@mui/icons-material";
+import { Button as MUIButton, IconButton } from "@mui/material";
 
 const EditFunc = ({
-  show,
-  onHide,
-  onEditEvent,
-  onDeleteEvent,
+  showForm,
+  hideForm,
+  handleEditEvent,
+  handleDeleteEvent,
   selectedEvent,
 }) => {
   const [formData, setFormData] = useState({
@@ -36,29 +37,18 @@ const EditFunc = ({
     endDateTime: "",
   });
 
-  const popupRef = useRef(null);
-
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  // State for Delete Dropdown Menu
+  const [anchor, setAnchor] = useState(null);
+  const openMenu = Boolean(anchor);
 
   // Snackbar handlers
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        onHide();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onHide]);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -90,6 +80,18 @@ const EditFunc = ({
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleGuestChange = (e) => {
+    const value = e.target.value;
+    const guestsArray = value
+      .split(",")
+      .map((guest) => guest.trim())
+      .filter(Boolean);
+    setFormData((prevData) => ({
+      ...prevData,
+      guests: guestsArray,
     }));
   };
 
@@ -139,47 +141,82 @@ const EditFunc = ({
       if (formData.id) {
         updatedEvent._id = formData.id;
       }
-      onEditEvent(updatedEvent);
+      handleEditEvent(updatedEvent);
     } else {
-      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarMessage("No access to edit or delete this event");
       setSnackbarOpen(true);
     }
 
     resetForm();
-    onHide();
+    hideForm();
   };
 
-  const handleDelete = () => {
+  const handleMenuClick = (event) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchor(null);
+  };
+
+  const handleDelete = (type) => {
     if (
       selectedEvent &&
       selectedEvent.id &&
       selectedEvent.extendedProps.owner === localStorage.getItem("username")
     ) {
-      onDeleteEvent(selectedEvent.id);
+      handleDeleteEvent(selectedEvent.id, type);
     } else {
-      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarMessage("No access to edit or delete this event");
       setSnackbarOpen(true);
-      onHide();
     }
+    handleMenuClose();
+    hideForm();
   };
 
-  const Button = () => {
+  const handleClose = () => {
+    resetForm();
+    hideForm();
+  };
+
+  const ActionButtons = () => {
     return (
       <div className="flex items-center space-x-2">
-        <button
-          className="p-2 text-white bg-black rounded hover:bg-yellow-500"
+        <MUIButton
+          variant="contained"
+          color="primary"
           onClick={handleSubmit}
+          startIcon={<EditRounded />}
+          sx={{
+            backgroundColor: "black",
+            "&:hover": { backgroundColor: "#fee27f" },
+          }}
         >
-          <EditRounded />
-        </button>
+          Edit
+        </MUIButton>
 
-        <button
-          className="p-2 text-white bg-red-500 rounded hover:bg-red-900"
-          onClick={handleDelete}
+        <IconButton
           aria-label="Delete Event"
+          onClick={handleMenuClick}
+          sx={{
+            color: "white",
+            backgroundColor: "red",
+            borderRadius: "10px",
+            "&:hover": { backgroundColor: "darkred" },
+          }}
         >
           <DeleteRounded />
-        </button>
+        </IconButton>
+        <Menu anchorEl={anchor} open={openMenu} onClose={handleMenuClose}>
+          <MenuItem onClick={() => handleDelete("single")}>This event</MenuItem>
+          <MenuItem onClick={() => handleDelete("following")}>
+            This event and the following events
+          </MenuItem>
+          <MenuItem onClick={() => handleDelete("all")}>All events</MenuItem>
+        </Menu>
+        <IconButton onClick={handleClose}>
+          <CloseRounded />
+        </IconButton>
       </div>
     );
   };
@@ -188,11 +225,11 @@ const EditFunc = ({
     <div>
       <Form
         EventFunction="Edit Event"
-        show={show}
-        popupRef={popupRef}
-        buttons={Button()}
+        showForm={showForm}
+        buttons={ActionButtons()}
         event={formData}
         handleChange={handleChange}
+        handleGuestChange={handleGuestChange}
         errors={errors}
         locationIcon={<EditLocationRounded />}
         linkIcon={<LinkRounded />}

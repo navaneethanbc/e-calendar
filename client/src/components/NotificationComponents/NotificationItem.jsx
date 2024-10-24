@@ -1,7 +1,7 @@
 import { ListItem, ListItemText, Box, Typography,Button } from "@mui/material";
 import {Circle as CircleIcon} from '@mui/icons-material'
 
-const NotificationItem = ({ notification, onMarkRead, onRespond }) => {
+const NotificationItem = ({ notification, handleMarkRead, handleRespond }) => {
     const formatDate = (dateString) => {
       const date = new Date(dateString);
       return date.toLocaleString('en-US', {
@@ -69,7 +69,7 @@ const NotificationItem = ({ notification, onMarkRead, onRespond }) => {
                 </Typography>
                 {!notification.is_read && (
                   <Button
-                    onClick={() => onMarkRead(notification._id)}
+                    onClick={() => handleMarkRead(notification._id)}
                     size="small"
                     sx={{ textTransform: 'none' }}
                   >
@@ -82,7 +82,7 @@ const NotificationItem = ({ notification, onMarkRead, onRespond }) => {
                 <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                   <Button
                     size="small"
-                    onClick={() => onRespond(notification._id, 'accepted')}
+                    onClick={() => {handleRespond(notification._id, 'accepted'); notification.status = "accepted"}}
                     variant="contained"
                     color="success"
                     sx={{ textTransform: 'none' }}
@@ -91,7 +91,7 @@ const NotificationItem = ({ notification, onMarkRead, onRespond }) => {
                   </Button>
                   <Button
                     size="small"
-                    onClick={() => onRespond(notification._id, 'declined')}
+                    onClick={() => {handleRespond(notification._id, 'declined'); notification.status = "declined"}}
                     variant="contained"
                     color="error"
                     sx={{ textTransform: 'none' }}

@@ -1,13 +1,14 @@
 import React from "react";
 import moment from "moment";
+import { Box } from "@mui/material";
 
 const Form = ({
   EventFunction,
-  show,
-  popupRef,
+  showForm,
   buttons,
   event,
   handleChange,
+  handleGuestChange,
   errors,
   locationIcon,
   linkIcon,
@@ -35,19 +36,18 @@ const Form = ({
   };
 
   return (
-    <div
+    <Box
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ${
-        show ? "block" : "hidden"
+        showForm ? "block" : "hidden"
       }`}
     >
-      <div
-        ref={popupRef}
+      <Box
         className="relative w-full max-w-xs p-6 bg-white rounded-lg shadow-xl sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl"
         role="dialog"
         aria-labelledby="sidebar-title"
-        style={{ maxHeight: "90vh", overflowY: "auto" }}
+        sx={{ maxHeight: "90vh", overflowY: "auto" }}
       >
-        <div className="flex items-center justify-between">
+        <Box className="flex items-center justify-between">
           <h1
             id="sidebar-title"
             className="text-3xl font-bold md:text-2xl lg:text-4xl"
@@ -55,9 +55,9 @@ const Form = ({
             {EventFunction}
           </h1>
           {buttons}
-        </div>
+        </Box>
 
-        <div className="mt-4 space-y-2 text-sm sidebar-body sm:text-base md:text-xs lg:text-base">
+        <Box className="mt-4 space-y-2 text-sm sidebar-body sm:text-base md:text-xs lg:text-base">
           <label htmlFor="title" className="block mb-1 font-bold">
             Title
           </label>
@@ -87,8 +87,8 @@ const Form = ({
             onChange={handleChange}
           />
 
-          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <div className="flex-1">
+          <Box className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+            <Box className="flex-1">
               <label htmlFor="startDateTime" className="block mb-1 font-bold">
                 Start Date
               </label>
@@ -107,9 +107,9 @@ const Form = ({
                   {errors.startDateTime}
                 </p>
               )}
-            </div>
+            </Box>
 
-            <div className="flex-1">
+            <Box className="flex-1">
               <label htmlFor="endDateTime" className="block mb-1 font-bold">
                 End Date
               </label>
@@ -128,11 +128,11 @@ const Form = ({
                   {errors.endDateTime}
                 </p>
               )}
-            </div>
-          </div>
+            </Box>
+          </Box>
 
-          <div className="flex space-x-4">
-            <div className="flex-1">
+          <Box className="flex space-x-4">
+            <Box className="flex-1">
               <label
                 htmlFor="meeting_link"
                 className="flex items-center mb-1 space-x-1 font-bold"
@@ -157,9 +157,9 @@ const Form = ({
               >
                 Open Link
               </button>
-            </div>
+            </Box>
 
-            <div className="flex-1">
+            <Box className="flex-1">
               <label
                 htmlFor="location"
                 className="flex items-center mb-1 space-x-1 font-bold"
@@ -176,8 +176,8 @@ const Form = ({
                 value={event.location}
                 onChange={handleChange}
               />
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           <label htmlFor="Guest" className="block mb-1 font-bold">
             Guest
@@ -188,11 +188,11 @@ const Form = ({
             type="text"
             className="w-full p-2 border border-gray-300 rounded"
             value={event.guests}
-            onChange={handleChange}
+            onChange={handleGuestChange}
           />
 
-          <div className="flex space-x-4">
-            <div className="flex-1">
+          <Box className="flex space-x-4">
+            <Box className="flex-1">
               <label htmlFor="category" className="block mb-1 font-bold">
                 Category
               </label>
@@ -207,9 +207,9 @@ const Form = ({
                 <option value="Branch">Branch</option>
                 <option value="Bank">Bank</option>
               </select>
-            </div>
+            </Box>
 
-            <div className="flex-1">
+            <Box className="flex-1">
               <label htmlFor="recurrence" className="block mb-1 font-bold">
                 Recurrence
               </label>
@@ -226,9 +226,9 @@ const Form = ({
                 <option value="Monthly">Monthly</option>
                 <option value="Yearly">Yearly</option>
               </select>
-            </div>
+            </Box>
 
-            <div className="flex-1">
+            <Box className="flex-1">
               <label htmlFor="reminder" className="block mb-1 font-bold">
                 Reminder
               </label>
@@ -246,11 +246,11 @@ const Form = ({
                 <option value="1 day">1 day</option>
                 <option value="1 week">1 week</option>
               </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
