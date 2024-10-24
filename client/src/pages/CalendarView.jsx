@@ -34,7 +34,7 @@ const CalendarView = () => {
   );
   const [headerTitle, setHeaderTitle] = useState("");
   const [dayPicker, setDayPicker] = useState(null);
-  
+
   const [searchOpen, setSearchOpen] = useState(false); // state to decide showing the search bar or not
   const [resultEvents, setResultEvents] = useState({}); // to store events got from the backend by search
   const [resultAvailable, setResultAvailble] = useState({}); // to store  availabilitty got from backend
