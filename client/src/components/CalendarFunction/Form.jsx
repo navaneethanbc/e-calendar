@@ -5,7 +5,6 @@ import { Box } from "@mui/material";
 const Form = ({
   EventFunction,
   showForm,
-  popupRef,
   buttons,
   event,
   handleChange,
@@ -43,7 +42,6 @@ const Form = ({
       }`}
     >
       <Box
-        ref={popupRef}
         className="relative w-full max-w-xs p-6 bg-white rounded-lg shadow-xl sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl"
         role="dialog"
         aria-labelledby="sidebar-title"

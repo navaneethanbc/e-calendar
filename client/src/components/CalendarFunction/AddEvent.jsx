@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 import Form from "./Form";
-import { AddLinkRounded, AddLocationRounded } from "@mui/icons-material";
+import {
+  AddLinkRounded,
+  AddLocationRounded,
+  CloseRounded,
+} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
   const owner = localStorage.getItem("username");
@@ -23,22 +28,6 @@ const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
     startDateTime: "",
     endDateTime: "",
   });
-
-  const popupRef = useRef(null); // Create a ref for the popup
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        hideForm();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up when component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +92,11 @@ const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
     hideForm();
   };
 
+  const handleClose = () => {
+    resetForm();
+    hideForm();
+  };
+
   // Function to reset the form data
   const resetForm = () => {
     setFormData({
@@ -130,6 +124,9 @@ const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
         >
           Submit
         </button>
+        <IconButton onClick={handleClose}>
+          <CloseRounded />
+        </IconButton>
       </div>
     );
   };
@@ -138,7 +135,6 @@ const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
     <Form
       EventFunction="Add Event"
       showForm={showForm}
-      popupRef={popupRef}
       buttons={Button()}
       event={formData}
       handleChange={handleChange}

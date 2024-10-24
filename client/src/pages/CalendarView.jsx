@@ -63,18 +63,12 @@ const CalendarView = () => {
 
   const handleAddEvent = async (newEvent) => {
     try {
-      console.log("Adding new event:", newEvent);
+      // console.log("Adding new event:", newEvent);
 
       const response = await axios.post(
         "https://e-calendar-cocq.vercel.app/events/create",
         newEvent
       );
-
-      const updatedEvents = [...events, response.data];
-
-      setEvents(updatedEvents);
-      filterEventsByCategory(updatedEvents);
-      setShowAddEventForm(false); // Close AddEventBar after event is added
     } catch (error) {
       console.log("Error adding event:", error);
     }
@@ -86,24 +80,16 @@ const CalendarView = () => {
         `https://e-calendar-cocq.vercel.app/events/${updatedEvent.id}`,
         updatedEvent
       );
-      const updatedEvents = events.map((event) =>
-        event.id === updatedEvent.id ? { ...event, ...updatedEvent } : event
-      );
-      setEvents(updatedEvents);
-      filterEventsByCategory(updatedEvents); // Update filtered events after editing
-      setShowEditEventForm(false);
     } catch (error) {
       console.log("Error updating event:", error);
     }
   };
 
-  const handleDeleteEvent = async (id) => {
+  const handleDeleteEvent = async (id, type) => {
     try {
-      await axios.delete(`https://e-calendar-cocq.vercel.app/events/${id}`);
-      const updatedEvents = events.filter((event) => event.id !== id);
-      setEvents(updatedEvents);
-      filterEventsByCategory(updatedEvents); // Update filtered events after deletion
-      setShowEditEventForm(false);
+      await axios.delete(`https://e-calendar-cocq.vercel.app/events/${id}`, {
+        params: { type },
+      });
     } catch (error) {
       console.error("Error deleting event:", error);
     }

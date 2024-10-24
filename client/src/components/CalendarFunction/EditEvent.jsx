@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
-import Snackbar from "@mui/material/Snackbar";
-import Fade from "@mui/material/Fade";
+import { Menu, MenuItem, Snackbar, Fade } from "@mui/material";
 import Form from "./Form";
 import {
+  CloseRounded,
   DeleteRounded,
   EditLocationRounded,
   EditRounded,
@@ -37,30 +37,18 @@ const EditFunc = ({
     endDateTime: "",
   });
 
-  const popupRef = useRef(null);
-
   // State for Snackbar
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  // State for Delete Dropdown Menu
+  const [anchor, setAnchor] = useState(null);
+  const openMenu = Boolean(anchor);
 
   // Snackbar handlers
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        hideForm();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -163,18 +151,32 @@ const EditFunc = ({
     hideForm();
   };
 
-  const handleDelete = () => {
+  const handleMenuClick = (event) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchor(null);
+  };
+
+  const handleDelete = (type) => {
     if (
       selectedEvent &&
       selectedEvent.id &&
       selectedEvent.extendedProps.owner === localStorage.getItem("username")
     ) {
-      handleDeleteEvent(selectedEvent.id);
+      handleDeleteEvent(selectedEvent.id, type);
     } else {
       setSnackbarMessage("No access to edit or delete this event");
       setSnackbarOpen(true);
-      hideForm();
     }
+    handleMenuClose();
+    hideForm();
+  };
+
+  const handleClose = () => {
+    resetForm();
+    hideForm();
   };
 
   const ActionButtons = () => {
@@ -195,7 +197,7 @@ const EditFunc = ({
 
         <IconButton
           aria-label="Delete Event"
-          onClick={handleDelete}
+          onClick={handleMenuClick}
           sx={{
             color: "white",
             backgroundColor: "red",
@@ -204,6 +206,16 @@ const EditFunc = ({
           }}
         >
           <DeleteRounded />
+        </IconButton>
+        <Menu anchorEl={anchor} open={openMenu} onClose={handleMenuClose}>
+          <MenuItem onClick={() => handleDelete("single")}>This event</MenuItem>
+          <MenuItem onClick={() => handleDelete("following")}>
+            This event and the following events
+          </MenuItem>
+          <MenuItem onClick={() => handleDelete("all")}>All events</MenuItem>
+        </Menu>
+        <IconButton onClick={handleClose}>
+          <CloseRounded />
         </IconButton>
       </div>
     );
@@ -214,7 +226,6 @@ const EditFunc = ({
       <Form
         EventFunction="Edit Event"
         showForm={showForm}
-        popupRef={popupRef}
         buttons={ActionButtons()}
         event={formData}
         handleChange={handleChange}
