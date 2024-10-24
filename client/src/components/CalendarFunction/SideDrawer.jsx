@@ -19,9 +19,9 @@ import {
 
 const SideDrawer = ({
   open,
-  selected,
-  onSelect,
-  onCategoryChange,
+  dayPicker,
+  handleDayPicker,
+  handleCategoryChange,
   handleSelectView,
   select,
   setOpen,
@@ -50,7 +50,7 @@ const SideDrawer = ({
   const handleCategoryChecked = (event) => {
     const { id, checked } = event.target;
     setSelectedCategories((prev) => ({ ...prev, [id]: checked }));
-    onCategoryChange(id, checked);
+    handleCategoryChange(id, checked);
   };
 
   const handleButtonClick = (value) => {
@@ -78,7 +78,7 @@ const SideDrawer = ({
       <Box position={"relative"} top={100} sx={{ transition: "width 0.3s" }}>
         {!isMobile ? (
           <Box mt={"1vh"} mb={"1vh"} height="40vh">
-            <MyDatePicker selected={selected} onSelect={onSelect} />
+            <MyDatePicker selected={dayPicker} onSelect={handleDayPicker} />
           </Box>
         ) : (
           // mobile size

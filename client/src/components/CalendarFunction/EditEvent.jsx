@@ -9,12 +9,13 @@ import {
   EditRounded,
   LinkRounded,
 } from "@mui/icons-material";
+import { Button as MUIButton, IconButton } from "@mui/material";
 
 const EditFunc = ({
-  show,
-  onHide,
-  onEditEvent,
-  onDeleteEvent,
+  showForm,
+  hideForm,
+  handleEditEvent,
+  handleDeleteEvent,
   selectedEvent,
 }) => {
   const [formData, setFormData] = useState({
@@ -50,15 +51,16 @@ const EditFunc = ({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        onHide();
+        hideForm();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onHide]);
+  }, []);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -90,6 +92,18 @@ const EditFunc = ({
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleGuestChange = (e) => {
+    const value = e.target.value;
+    const guestsArray = value
+      .split(",")
+      .map((guest) => guest.trim())
+      .filter(Boolean);
+    setFormData((prevData) => ({
+      ...prevData,
+      guests: guestsArray,
     }));
   };
 
@@ -139,14 +153,14 @@ const EditFunc = ({
       if (formData.id) {
         updatedEvent._id = formData.id;
       }
-      onEditEvent(updatedEvent);
+      handleEditEvent(updatedEvent);
     } else {
-      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarMessage("No access to edit or delete this event");
       setSnackbarOpen(true);
     }
 
     resetForm();
-    onHide();
+    hideForm();
   };
 
   const handleDelete = () => {
@@ -155,31 +169,42 @@ const EditFunc = ({
       selectedEvent.id &&
       selectedEvent.extendedProps.owner === localStorage.getItem("username")
     ) {
-      onDeleteEvent(selectedEvent.id);
+      handleDeleteEvent(selectedEvent.id);
     } else {
-      setSnackbarMessage("No have to access to edit or delete this event");
+      setSnackbarMessage("No access to edit or delete this event");
       setSnackbarOpen(true);
-      onHide();
+      hideForm();
     }
   };
 
-  const Button = () => {
+  const ActionButtons = () => {
     return (
       <div className="flex items-center space-x-2">
-        <button
-          className="p-2 text-white bg-black rounded hover:bg-yellow-500"
+        <MUIButton
+          variant="contained"
+          color="primary"
           onClick={handleSubmit}
+          startIcon={<EditRounded />}
+          sx={{
+            backgroundColor: "black",
+            "&:hover": { backgroundColor: "#fee27f" },
+          }}
         >
-          <EditRounded />
-        </button>
+          Edit
+        </MUIButton>
 
-        <button
-          className="p-2 text-white bg-red-500 rounded hover:bg-red-900"
-          onClick={handleDelete}
+        <IconButton
           aria-label="Delete Event"
+          onClick={handleDelete}
+          sx={{
+            color: "white",
+            backgroundColor: "red",
+            borderRadius: "10px",
+            "&:hover": { backgroundColor: "darkred" },
+          }}
         >
           <DeleteRounded />
-        </button>
+        </IconButton>
       </div>
     );
   };
@@ -188,11 +213,12 @@ const EditFunc = ({
     <div>
       <Form
         EventFunction="Edit Event"
-        show={show}
+        showForm={showForm}
         popupRef={popupRef}
-        buttons={Button()}
+        buttons={ActionButtons()}
         event={formData}
         handleChange={handleChange}
+        handleGuestChange={handleGuestChange}
         errors={errors}
         locationIcon={<EditLocationRounded />}
         linkIcon={<LinkRounded />}

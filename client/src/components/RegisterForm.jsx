@@ -238,7 +238,7 @@ const RegisterForm = () => {
         margin="dense"
         onKeyUp={handleKeyUp}
       />
-      <div className="text-sm -mt-1">
+      <div className="-mt-1 text-sm">
         {user.confirmPassword && user.confirmPassword !== user.password ? (
           <div className="text-red-500">Passwords do not match</div>
         ) : (
@@ -270,7 +270,7 @@ const RegisterForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
+          className="flex justify-center w-full p-1 text-white bg-black rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started
