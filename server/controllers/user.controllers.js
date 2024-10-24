@@ -160,7 +160,7 @@ export const resetPassword = async (req, res) => {
     //console.log("username accepted")
     const { error } = validateResetPassword({ username, password });
     if (error) {
-      console.log("Error in response generate");
+      // console.log("Error in response generate");
       return res.status(400).send({ message: error.details[0].message });
     }
     //console.log("error accepted")
@@ -180,7 +180,7 @@ export const resetPassword = async (req, res) => {
     //console.log("undeifined accepted")
     res.status(200).send({ message: "Password reset successful" });
   } catch (error) {
-    console.error("Error in password reset:", error);
+    // console.error("Error in password reset:", error);
     res.status(500).send({ message: "Error in password reset process" });
   }
 };
