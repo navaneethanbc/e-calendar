@@ -35,6 +35,41 @@ const RegisterForm = () => {
     { label: "Branch D", value: "option4" },
   ];
 
+  const schema = Joi.object({
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .required()
+      .messages({
+        "string.email": "Please enter a valid email address",
+        "string.empty": "Email address cannot be empty",
+      }),
+    employee_id: Joi.string()
+      .pattern(new RegExp(/^(ADM|MNG|EMP|TRN)[0-9]{6}$/))
+      .required()
+      .messages({
+        "string.pattern.base": "Please enter a valid Employee ID",
+        "string.empty": "Employee ID cannot be empty",
+      }),
+    branch: Joi.string().required().messages({
+      "string.empty": "Please select a branch",
+    }),
+    username: Joi.string().alphanum().required().messages({
+      "string.alphanum": "Username must contain only alphabets and numbers",
+      "string.empty": "Username cannot be empty",
+    }),
+    password: passwordComplexity().required().messages({
+      "passwordComplexity.tooShort":
+        "Password must contain atleast 8 characters.",
+      "passwordComplexity.lowercase":
+        "Password must contain atleast one lowercase letter.",
+      "passwordComplexity.uppercase":
+        "Password must contain atleast one uppercase letter.",
+      "passwordComplexity.numeric": "Password must contain atleast one number.",
+      "passwordComplexity.symbol": "Password must contain atleast one symbol",
+      "string.empty": "Password cannot be empty.",
+    }),
+  });
+
   const handleChange = ({ currentTarget: input }) => {
     setUser({ ...user, [input.name]: input.value });
     setError("");
@@ -47,10 +82,32 @@ const RegisterForm = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
 
-    const { firstname, surname, ...restUserData } = user;
+    const { firstname, surname, password, confirmPassword, ...restUserData } =
+      user;
 
     if (!firstname || !surname) {
       setError("Please fill both the name fields");
+      return;
+    }
+
+    // Validate user data
+    const validation = schema.validate(
+      {
+        email: user.email,
+        employee_id: user.employee_id,
+        branch: user.branch,
+        username: user.username,
+        password: user.password,
+      },
+      { abortEarly: true }
+    );
+    if (validation.error) {
+      setError(validation.error.details[0].message);
+      return;
+    }
+
+    if (confirmPassword !== password) {
+      setError("Passwords do not match");
       return;
     }
 
@@ -62,7 +119,7 @@ const RegisterForm = () => {
       surname.trim().slice(1).toLowerCase();
     const fullname = `${firstName} ${surName}`;
 
-    const userData = { fullname, ...restUserData };
+    const userData = { fullname, password, ...restUserData };
 
     try {
       const url = "https://e-calendar-cocq.vercel.app/users/register";
@@ -77,7 +134,7 @@ const RegisterForm = () => {
       ) {
         setError(error.response.data.message);
       } else {
-        console.error("Unexpected error:", error);
+        // console.error("Unexpected error:", error);
         setError("Something went wrong. Please try again later.");
       }
     }
@@ -238,9 +295,9 @@ const RegisterForm = () => {
         margin="dense"
         onKeyUp={handleKeyUp}
       />
-      <div className="-mt-1 text-sm">
-        {user.confirmPassword && user.confirmPassword !== user.password ? (
-          <div className="text-red-500">Passwords do not match</div>
+      <div className="text-sm -mt-1">
+        {error ? (
+          <div className="text-red-500">{error}</div>
         ) : (
           <div className="invisible">PlaceHolder</div>
         )}
@@ -260,17 +317,10 @@ const RegisterForm = () => {
         </p>
       </div>
 
-      <div className="p-1 pt-0">
-        <div className="text-sm">
-          {error ? (
-            <div className="text-red-500">{error}</div>
-          ) : (
-            <div className="invisible">PlaceHolder</div>
-          )}
-        </div>
+      <div className="p-1 pt-2">
         <button
           type="submit"
-          className="flex justify-center w-full p-1 text-white bg-black rounded-md hover:bg-yellow-500"
+          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
           onClick={handleRegister}
         >
           Get Started
