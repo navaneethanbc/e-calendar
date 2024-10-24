@@ -70,7 +70,7 @@ const NavigationBar = ({
     if (searchOpen && checkContent()) {
       try {
         const response = await axios.post(
-          "http://localhost:8000/events/find/",
+          "https://e-calendar-cocq.vercel.app/events/find/",
           {
             username: localStorage.getItem("username"),
             title: searchevent.title,

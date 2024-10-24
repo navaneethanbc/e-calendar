@@ -34,7 +34,7 @@ const ShowNotifications = () => {
       if (!username) {
         throw new Error("Username not found");
       }
-      const response = await axios.get(`http://localhost:8000/notifications/${username}`);
+      const response = await axios.get(`https://e-calendar-cocq.vercel.app/notifications/${username}`);
       setNotifications(response.data.notifications || []);
       setError(null);
     } catch (error) {
@@ -45,7 +45,7 @@ const ShowNotifications = () => {
 
   const handleMarkRead = async (id) => {
     try {
-      await axios.patch(`http://localhost:8000/notifications/mark/${id}`);
+      await axios.patch(`https://e-calendar-cocq.vercel.app/notifications/mark/${id}`);
       await fetchNotifications();
     } catch (error) {
       console.error("Error marking as read:", error);
@@ -55,7 +55,7 @@ const ShowNotifications = () => {
   const handleMarkAllRead = async () => {
     try {
       const username = localStorage.getItem("username");
-      await axios.patch(`http://localhost:8000/notifications/markall/${username}`);
+      await axios.patch(`https://e-calendar-cocq.vercel.app/notifications/markall/${username}`);
       await fetchNotifications();
     } catch (error) {
       console.error("Error marking all as read:", error);
@@ -64,7 +64,7 @@ const ShowNotifications = () => {
 
   const handleRespond = async (id, response) => {
     try {
-      await axios.post(`http://localhost:8000/notifications/respond/${id}?response=${response}`);
+      await axios.post(`https://e-calendar-cocq.vercel.app/notifications/respond/${id}?response=${response}`);
       await handleMarkRead(id);
       await fetchNotifications();
     } catch (error) {

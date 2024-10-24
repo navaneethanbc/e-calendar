@@ -42,7 +42,7 @@ const SearchAvailability = ({
     try {
       // consider the api address is local...
       const response = await axios.post(
-        "http://localhost:8000/events/availability",
+        "https://e-calendar-cocq.vercel.app/events/availability",
         {
           username: searchAvailable.username,
           from: searchAvailable.fromDate,

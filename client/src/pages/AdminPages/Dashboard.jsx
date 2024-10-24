@@ -59,7 +59,7 @@ function Dashboard() {
   const userCount = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/count`
+        `https://e-calendar-cocq.vercel.app/admin/count`
       );
       setUsers(response.data.userCount);
     } catch (error) {
@@ -70,7 +70,7 @@ function Dashboard() {
   const eventCount = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/eventdetails`
+        `https://e-calendar-cocq.vercel.app/admin/eventdetails`
       );
       const eventData = response.data;
       const total = eventData.reduce((sum, event) => sum + event.count, 0);
@@ -83,7 +83,7 @@ function Dashboard() {
   const bankEventCount = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/eventdetailsbank`
+        `https://e-calendar-cocq.vercel.app/admin/eventdetailsbank`
       );
       const eventData = response.data;
       const total = eventData.reduce((sum, event) => sum + event.count, 0);
@@ -96,7 +96,7 @@ function Dashboard() {
   const branchEventCount = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/eventdetailsbranch`
+        `https://e-calendar-cocq.vercel.app/admin/eventdetailsbranch`
       );
       const eventData = response.data;
       const total = eventData.reduce((sum, event) => sum + event.count, 0);

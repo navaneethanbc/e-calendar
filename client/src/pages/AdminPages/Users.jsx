@@ -21,7 +21,7 @@ function Users() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/admin/views`
+        `https://e-calendar-cocq.vercel.app/admin/views`
       );
       setDataSource(response.data.users);
     } catch (error) {
