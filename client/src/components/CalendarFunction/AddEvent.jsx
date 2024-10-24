@@ -3,7 +3,7 @@ import moment from "moment";
 import Form from "./Form";
 import { AddLinkRounded, AddLocationRounded } from "@mui/icons-material";
 
-const AddFunc = ({ show, onHide, onAddEvent }) => {
+const AddFunc = ({ showForm, hideForm, handleAddEvent }) => {
   const owner = localStorage.getItem("username");
   const [formData, setFormData] = useState({
     title: "",
@@ -29,7 +29,7 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        onHide();
+        hideForm();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -38,13 +38,25 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onHide]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleGuestChange = (e) => {
+    const value = e.target.value;
+    const guestsArray = value
+      .split(",")
+      .map((guest) => guest.trim())
+      .filter(Boolean);
+    setFormData((prevData) => ({
+      ...prevData,
+      guests: guestsArray,
     }));
   };
 
@@ -85,10 +97,10 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
       guests: formData.guests,
       owner: owner,
     };
-    onAddEvent(eventDetails);
+    handleAddEvent(eventDetails);
 
     resetForm();
-    onHide();
+    hideForm();
   };
 
   // Function to reset the form data
@@ -125,11 +137,12 @@ const AddFunc = ({ show, onHide, onAddEvent }) => {
   return (
     <Form
       EventFunction="Add Event"
-      show={show}
+      showForm={showForm}
       popupRef={popupRef}
       buttons={Button()}
       event={formData}
       handleChange={handleChange}
+      handleGuestChange={handleGuestChange}
       errors={errors}
       locationIcon={<AddLocationRounded />}
       linkIcon={<AddLinkRounded />}

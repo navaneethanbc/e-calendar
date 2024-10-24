@@ -16,8 +16,8 @@ import { CreateButton } from "../components/CreateButton";
 import { Box } from "@mui/material";
 
 const CalendarView = () => {
-  const [showAddOffcanvas, setShowAddOffcanvas] = useState(false);
-  const [showEditOffcanvas, setShowEditOffcanvas] = useState(false);
+  const [showAddEventForm, setShowAddEventForm] = useState(false);
+  const [showEditEventForm, setShowEditEventForm] = useState(false);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState({
@@ -57,8 +57,8 @@ const CalendarView = () => {
 
   const calendarRef = useRef(null);
 
-  const toggleAddOffcanvas = () => {
-    setShowAddOffcanvas(!showAddOffcanvas);
+  const toggleForm = () => {
+    setShowAddEventForm(!showAddEventForm);
   };
 
   const handleAddEvent = async (newEvent) => {
@@ -71,9 +71,10 @@ const CalendarView = () => {
       );
 
       const updatedEvents = [...events, response.data];
+
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents);
-      setShowAddOffcanvas(false); // Close AddEventBar after event is added
+      setShowAddEventForm(false); // Close AddEventBar after event is added
     } catch (error) {
       console.log("Error adding event:", error);
     }
@@ -90,7 +91,7 @@ const CalendarView = () => {
       );
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after editing
-      setShowEditOffcanvas(false);
+      setShowEditEventForm(false);
     } catch (error) {
       console.log("Error updating event:", error);
     }
@@ -102,7 +103,7 @@ const CalendarView = () => {
       const updatedEvents = events.filter((event) => event.id !== id);
       setEvents(updatedEvents);
       filterEventsByCategory(updatedEvents); // Update filtered events after deletion
-      setShowEditOffcanvas(false);
+      setShowEditEventForm(false);
     } catch (error) {
       console.error("Error deleting event:", error);
     }
@@ -146,9 +147,20 @@ const CalendarView = () => {
     }
   };
 
+  // const filterEventsByCategory = (allEvents) => {
+  //   const filtered = allEvents.filter(
+  //     (event) => selectedCategories[event.extendedProps.category]
+  //   );
+  //   setFilteredEvents(filtered);
+  // };
+
   const filterEventsByCategory = (allEvents) => {
+    // Add a safety check for extendedProps and category
     const filtered = allEvents.filter(
-      (event) => selectedCategories[event.extendedProps.category]
+      (event) =>
+        event.extendedProps &&
+        event.extendedProps.category &&
+        selectedCategories[event.extendedProps.category]
     );
     setFilteredEvents(filtered);
   };
@@ -165,7 +177,7 @@ const CalendarView = () => {
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event.event); // Set the selected event
-    setShowEditOffcanvas(true);
+    setShowEditEventForm(true);
   };
 
   useEffect(() => {
@@ -273,20 +285,16 @@ const CalendarView = () => {
         open={open}
         handleModalOpen={() => {
           setSelectedEvent(null);
-          toggleAddOffcanvas();
+          toggleForm();
         }}
       />
       <div>
         <Box display={"flex"}>
           <SideDrawer
             open={open}
-            eventFcn={() => {
-              setSelectedEvent(null);
-              toggleAddOffcanvas();
-            }}
-            selected={dayPicker}
-            onSelect={handleDayPicker}
-            onCategoryChange={handleCategoryChange}
+            dayPicker={dayPicker}
+            handleDayPicker={handleDayPicker}
+            handleCategoryChange={handleCategoryChange}
             handleSelectView={handleSelectView}
             select={selectedView}
             setOpen={setOpen}
@@ -315,7 +323,7 @@ const CalendarView = () => {
                 selectable={true}
                 dateClick={() => {
                   setSelectedEvent();
-                  toggleAddOffcanvas();
+                  toggleForm();
                 }}
                 eventClick={handleSelectEvent}
                 headerToolbar={false}
@@ -347,17 +355,17 @@ const CalendarView = () => {
           </Box>
         </Box>
         <AddFunc
-          show={showAddOffcanvas}
-          onHide={() => setShowAddOffcanvas(false)}
-          onAddEvent={handleAddEvent}
+          showForm={showAddEventForm}
+          hideForm={() => setShowAddEventForm(false)}
+          handleAddEvent={handleAddEvent}
         />
         <EditFunc
-          show={showEditOffcanvas}
-          onHide={() => setShowEditOffcanvas(false)}
-          onEditEvent={handleEditEvent}
+          showForm={showEditEventForm}
+          hideForm={() => setShowEditEventForm(false)}
+          handleEditEvent={handleEditEvent}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
-          onDeleteEvent={handleDeleteEvent}
+          handleDeleteEvent={handleDeleteEvent}
         />
       </div>
     </>

@@ -45,6 +45,10 @@ const Profile = () => {
     handleClose();
   };
 
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
   return (
     <div>
       <IconButton onClick={handleClick} sx={{ mr: -2 }}>
@@ -60,7 +64,7 @@ const Profile = () => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <PersonRounded />
           </ListItemIcon>

@@ -107,7 +107,7 @@ const SigninForm = () => {
         onKeyUp={handleKeyUp}
       ></TextField>
       <Link
-        className="-mt-1 text-indigo-600 text-right text-sm block"
+        className="block -mt-1 text-sm text-right text-indigo-600"
         onClick={() => {
           setIsModalOpen(true);
         }}
@@ -126,7 +126,7 @@ const SigninForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full flex justify-center bg-black text-white p-1 rounded-md hover:bg-yellow-500"
+          className="flex justify-center w-full p-1 text-white bg-black rounded-md hover:bg-yellow-500"
           onClick={handleSignin}
         >
           Sign in
@@ -134,7 +134,7 @@ const SigninForm = () => {
       </div>
 
       <div className="pt-1">
-        <p className="text-xm text-center text-gray-600">
+        <p className="text-center text-gray-600 text-xm">
           New to Calendar?{" "}
           <Link to="/register" className="text-indigo-600">
             Register Now
